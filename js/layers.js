@@ -226,7 +226,7 @@ addLayer("mem", {
         },
         42:{ title: "Set Up The Lab.",
         fullDisplay(){
-            if(hasAchievement('a',21)) return "<b>The Lab</b></br>The Lab has been set up. Now go for more professional researches."
+            if(hasAchievement('a',55)) return "<b>The Lab</b></br>The Lab has been set up. Now go for more professional researches."
             return "<b>Set Up The Lab.</b></br>With the experiences and the resources you have, you are now going to set up a lab to research all these things.</br></br>Cost: 1e135 Fragments</br>75 Red Dolls</br>1e107 Forgotten Drops"
         },
         canAfford(){return player.points.gte(1e135)&&player.kou.points.gte(75)&&player.lethe.points.gte(1e107)},
