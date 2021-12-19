@@ -10,3 +10,8 @@ D:Dark Matters
 //row3
 R:Red Dolls
 F:Forgotten Drops
+
+//row4
+LA:Research Points
+LA.power:Research Power
+LA.buyables:Research Transformers
