@@ -933,6 +933,27 @@ addLayer("kou", {
             goalDescription: "5e20 Fragments with all L&D's upgrades purchased.",
             rewardDescription: "You can have more than 17 Guiding Beacons.",
         },
+        51:{
+            name: "Red Comet",
+            completionLimit: 1,
+            challengeDescription: "Enduring all Happiness Challenges above.",
+            unlocked() { return (player.kou.points.gte(70)&&player.lethe.points.gte(1e100)&&hasChallenge('kou',42))||hasChallenge('kou',51)},
+            countsAs : [11,12,21,22,31,32,41,42],
+            onEnter(){
+                doReset('light',true);
+                doReset('dark',true);
+                doReset('mem',true);
+                player.mem.upgrades = [];
+                if (hasAchievement('a',21)) player.mem.upgrades.push(41);
+                player.dark.upgrades = [];
+                player.light.upgrades = [];
+                player.lethe.upgrades = [];
+            },
+            goal() { return new Decimal(1e27) },
+            currencyDisplayName: "Fragments",
+            currencyInternalName: "points",
+            rewardDescription: "You have no idea why you complete this challenge.",
+        },
     },
 })
 
