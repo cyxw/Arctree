@@ -96,12 +96,13 @@ addLayer("mem", {
         if ((hasUpgrade('dark', 23)&&(resettingLayer=="light"||resettingLayer=="dark")) || (hasMilestone('lethe',4)&&(resettingLayer=="kou"||resettingLayer=="lethe"))) player[this.layer].upgrades.push(34);
         if (hasAchievement('a',21)) player[this.layer].upgrades.push(41);
         if (hasAchievement("a", 13)&&player[this.layer].points.eq(0)) player[this.layer].points=new Decimal(5);
+        if (hasAchievement("a", 51)) player[this.layer].points=new Decimal(100);
     },
 
     upgrades:{
         11:{ title: "Thought Collect",
         description: "Speed up collecting your Fragments.",
-        cost: new Decimal(1),
+        cost() { return new Decimal(1).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         effect() {
             let eff=new Decimal(1.5);
             if (hasUpgrade('mem', 21)) eff=eff.pow(upgradeEffect('mem', 21));
@@ -110,7 +111,7 @@ addLayer("mem", {
         },
         12:{ title: "Memory Extraction",
         description: "Memories gain is boosted by Memories.",
-        cost: new Decimal(3),
+        cost() {return new Decimal(3).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 11)||hasMilestone('light',1) },
         effect() {
             let eff=player[this.layer].points.add(1).pow(0.25);
@@ -120,7 +121,7 @@ addLayer("mem", {
         },
         13:{ title: "Algorithm Managing",
         description: "Lower Fragments requirement for further Memories",
-        cost: new Decimal(10),
+        cost() {return new Decimal(10).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 12)||hasMilestone('light',1) },
         effect() {
             let eff=new Decimal(1.25);
@@ -130,7 +131,7 @@ addLayer("mem", {
         },
         14:{ title: "Fragments Duplication",
         description: "Fragments generation is boosted by Fragments",
-        cost: new Decimal(20),
+        cost() {return new Decimal(20).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 13)||hasMilestone('light',1) },
         effect() {
             return player.points.plus(1).log10().pow(0.75).plus(1)
@@ -138,7 +139,7 @@ addLayer("mem", {
         },
         21:{ title: "Thought Combination",
         description: "Thought Collect is much faster",
-        cost: new Decimal(30),
+        cost() {return new Decimal(30).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 14)||hasMilestone('light',1)},
         effect() {
             let eff= new Decimal(2);
@@ -148,7 +149,7 @@ addLayer("mem", {
         },
         22:{ title: "Fragments Prediction",
         description: "Fragments generation is boosted by Memories",
-        cost: new Decimal(50),
+        cost() {return new Decimal(50).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 21)||hasMilestone('light',1) },
         effect() {
             return player[this.layer].points.add(1).pow(0.5)
@@ -156,7 +157,7 @@ addLayer("mem", {
         },
         23:{ title: "Time Boosting",
         description: "Algorithm Managing is effected by Fragments.",
-        cost: new Decimal(100),
+        cost() {return new Decimal(100).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 22)||hasMilestone('light',1) },
         effect() {
             return player.points.plus(1).times(1.5).log10().log10(2).pow(0.01).plus(1)
@@ -164,7 +165,7 @@ addLayer("mem", {
         },
         24:{ title: "Directly Drown",
         description: "Memories gain is boosted by Fragments.",
-        cost: new Decimal(1000),
+        cost() {return new Decimal(1000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 23)||hasMilestone('light',1) },
         effect() {
             return player.points.pow(0.05).plus(1).log10().plus(2).log10(5).plus(1);
@@ -172,7 +173,7 @@ addLayer("mem", {
         },
         31:{ title: "Thought Growth",
         description: "Thought Combination is boosted by Memories",
-        cost: new Decimal(20000),
+        cost() {return new Decimal(20000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 24)||hasMilestone('dark',1) },
         effect() {
             return player[this.layer].points.plus(1).log10().pow(0.5).log10(2);
@@ -180,12 +181,13 @@ addLayer("mem", {
         },
         32:{ title: "Memory Inflation",
         description: "Memory Extraction is much faster.",
-        cost: new Decimal(50000),
+        cost() {return new Decimal(50000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 31)||hasMilestone('dark',1) },
         },
         33:{ title: "Directly Transfer",
-        description: "Memories gain is massively boosted, but with Fragments gain massively decreased and Fragments&Memories set to 1.",
-        cost: new Decimal(1000000),
+        description() {
+            return  "Memories gain is massively boosted, but "+(hasMilestone('kou',2)?"":"with Fragments gain massively decreased and ")+"Fragments&Memories set to 1."},
+        cost(){return new Decimal(1000000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 32)},
         effect() {//Mem, not Frag
             let eff = new Decimal(1.5);
@@ -195,8 +197,12 @@ addLayer("mem", {
         onPurchase(){player.points=new Decimal(1);player[this.layer].points = new Decimal(1);},
         },
         34:{ title: "Conclusion",
-        description: "Unlock two new layers, but with Memories gain decreased and Fragments&Memories set to 1.",
-        cost: new Decimal(10000000),
+        description() {
+            if (hasAchievement('a',23)) return "Push Memory softcap starts later but with Fragments&Memories set to 1.";
+            if (hasAchievement('a',22)) return "Useless and Fragments&Memories set to 1.";
+            return "Unlock two new layers, but with Memories gain decreased and Fragments&Memories set to 1.";
+        },
+        cost() {return new Decimal(10000000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return (hasUpgrade("mem", 33)||hasUpgrade("dark",23))},
         onPurchase(){player.points=new Decimal(1);player[this.layer].points = new Decimal(1);},
         },
@@ -271,6 +277,7 @@ addLayer("light", {
         if (inChallenge('kou',12)) dm=dm.times(10);
         if (hasAchievement('a',43)) dm=dm.times(player.dark.points.div(player.light.points.max(1)).max(1).min(5));
         if (inChallenge("kou",31)&&player.dark.points.lt(player[this.layer].points)) dm = dm.times(0.1);
+        if (inChallenge('kou',42)) dm = dm.times(2);
         return dm;
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
@@ -334,6 +341,8 @@ addLayer("light", {
         if (hasAchievement('a',33)) eff=eff.times(Decimal.log10(player[this.layer].resetTime+1).plus(1));
         if (hasChallenge("kou", 11)) eff=eff.times(player.points.plus(1).log(10).plus(1).sqrt());
         if (inChallenge('kou',22)) eff=eff.times(Math.random());
+        if (hasUpgrade('lethe',13)) eff=eff.times(tmp.kou.effect.pow(1.5));
+        if (hasUpgrade('lethe',31)) eff=eff.times(tmp.lethe.effect);
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(Math.random());
@@ -353,17 +362,17 @@ addLayer("light", {
             return (hasUpgrade('light',21))?new Decimal(0.95):new Decimal(0.9);
         },
         onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(1);},
-        cost: new Decimal(1),
+        cost() {return new Decimal(1).times(tmp["kou"].costMult42l)},
         },
         12:{ title: "Wandering For Beauty",
         description: "Light Tachyons also effects Memories gain at a reduced rate.",
         unlocked() { return hasUpgrade("light", 11) },
-        cost: new Decimal(3),
+        cost() {return new Decimal(3).times(tmp["kou"].costMult42l)},
         },
         13:{ title: "Experiencing Happiness",
         description: "Light Tachyons also effects its own gain at a reduced rate.",
         unlocked() { return hasUpgrade("light", 12) },
-        cost: new Decimal(5),
+        cost() {return new Decimal(5).times(tmp["kou"].costMult42l)},
         },
         14:{ title: "After That Butterfly",
         description: "Light Tachyons itself boosts its own gain.",
@@ -371,38 +380,38 @@ addLayer("light", {
         effect() {
             return player[this.layer].points.plus(1).log10().plus(1).pow(0.5);
         },
-        cost: new Decimal(8),
+        cost() {return new Decimal(8).times(tmp["kou"].costMult42l)},
         },
         21:{ title: "Seeking Delight.",
         description: "Conclusion decreases Memories gain more less, and gain ^0.33 instead of ^0.25 Memories after softcap.",
         unlocked() { return hasUpgrade("light", 14) },
-        cost: new Decimal(10),
+        cost() {return new Decimal(10).times(tmp["kou"].costMult42l)},
         },
         22:{ title: "More Brightness",
         description: "You can buy max Light Tachyons And lower Memories requirement for further Light Tachyons",
         unlocked() { return hasUpgrade("light", 21)||hasMilestone('kou',0) },
-        cost: new Decimal(15),
+        cost() {return new Decimal(15).times(tmp["kou"].costMult42l)},
         },
         23:{ title: "Fragment Sympathy",
         description: "Directly Transfer decreases Fragments gain less.",
         unlocked() { return hasUpgrade("light", 22) },
         onPurchase(){if (hasAchievement('a',32)) player[this.layer].points = player[this.layer].points.plus(25);},
-        cost: new Decimal(25),
+        cost() {return new Decimal(25).times(tmp["kou"].costMult42l)},
         },
         24:{ title: "Sadness Overjoy",
         description: "Light Tachyons also effects Dark Matters gain.",
         unlocked() { return hasUpgrade("light", 23) },
-        cost: new Decimal(30),
+        cost() {return new Decimal(30).times(tmp["kou"].costMult42l)},
         },
         31:{ title: "Hardware BUS",
         description: "Light Tachyons effect formula now much better.",
         unlocked() { return hasUpgrade("light", 24)||hasMilestone('kou',3) },
-        cost: new Decimal(35),
+        cost() {return new Decimal(35).times(tmp["kou"].costMult42l)},
         },
-        32:{ title: "Moments Of Lifes",
+        32:{ title: "Moments of Lifes",
         description: "Gain ^0.40 instead of ^0.33 Memories after softcap.",
         unlocked() { return hasUpgrade("light", 31)||hasMilestone('kou',3) },
-        cost: new Decimal(40),
+        cost() {return new Decimal(40).times(tmp["kou"].costMult42l)},
         },
         33:{ title: "Prepare To Travel",
         description: "Light Tachyons itself now makes Directly Transfer boosts more Memories gain.",
@@ -413,7 +422,7 @@ addLayer("light", {
             if (eff.gt(0.3)) return new Decimal(0.3);
             return eff;
         },
-        cost: new Decimal(44),
+        cost() {return new Decimal(44).times(tmp["kou"].costMult42l)},
         },
         34:{ title: "The Light",
         description: "Lower Memories requirement for further Light Tachyons, and Light Tachyons itself now boosts Dark Matters gain.",
@@ -423,7 +432,7 @@ addLayer("light", {
             if (eff.lt(1.25)) return new Decimal(1.25);
             return eff;
         },
-        cost: new Decimal(48),
+        cost() {return new Decimal(48).times(tmp["kou"].costMult42l)},
         },
     }
 })
@@ -481,6 +490,7 @@ addLayer("dark", {
         if (inChallenge('kou',12)) dm=dm.times(10);
         if (hasAchievement('a',43)) dm=dm.times(player.light.points.div(player.dark.points.max(1)).max(1).min(5));
         if (inChallenge("kou",31)&&player.light.points.lt(player[this.layer].points)) dm = dm.times(0.1);
+        if (inChallenge('kou',42)) dm = dm.times(2);
         return dm;
     },
 
@@ -545,6 +555,8 @@ addLayer("dark", {
         if (hasAchievement('a',33)) eff=eff.times(Decimal.log10(player[this.layer].resetTime+1).plus(1));
         if (hasChallenge("kou", 11)) eff=eff.times(player.points.plus(1).log(10).plus(1).sqrt());
         if (inChallenge('kou',22)) eff=eff.times(Math.random());
+        if (hasUpgrade('lethe',35)) eff = eff.times(tmp.kou.effect.pow(1.5));
+        if (hasUpgrade('lethe',53)) eff=eff.times(tmp.lethe.effect);
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(Math.random());
@@ -559,7 +571,7 @@ addLayer("dark", {
         11:{ title: "Overclock",
         description: "Your Fragments generation is doubled when under 9999",
         unlocked() { return player.dark.unlocked },
-        cost: new Decimal(1),
+        cost() {return new Decimal(1).times(tmp["kou"].costMult42d)},
         effect() {
             let eff = new Decimal(9999);
             if (hasUpgrade('dark',21)) eff=eff.times(upgradeEffect('dark',21));
@@ -569,12 +581,12 @@ addLayer("dark", {
         12:{ title: "Seeking For Other Sides",
         description: "Dark Matters also effects Fragments generation at a reduced rate.",     
         unlocked() { return hasUpgrade("dark", 11) },
-        cost: new Decimal(3),
+        cost() {return new Decimal(3).times(tmp["kou"].costMult42d)},
         },
         13:{ title: "Crack Everything",
         description: "Dark Matters also effects its own gain at a reduced rate.",
         unlocked() { return hasUpgrade("dark", 12) },
-        cost: new Decimal(5),
+        cost() {return new Decimal(5).times(tmp["kou"].costMult42d)},
         },
         14:{ title: "Wrath In Calm",
         description: "Dark Matters itself boosts its own gain.",
@@ -582,7 +594,7 @@ addLayer("dark", {
         effect() {
             return player[this.layer].points.plus(1).log10().plus(1).pow(0.5);
         },
-        cost: new Decimal(8),
+        cost() {return new Decimal(8).times(tmp["kou"].costMult42d)},
         },
         21:{ title: "Power Override",
         description: "Overclock ends at 19,998 and Memories softcap starts 50x later.",
@@ -590,30 +602,30 @@ addLayer("dark", {
         effect() {
             return new Decimal(2);
         },
-        cost: new Decimal(10),
+        cost(){return new Decimal(10).times(tmp["kou"].costMult42d)},
         },
         22:{ title: "More Darkness",
         description: "You can buy max Dark Matters And lower Fragments requirement for further Dark Matters",
         unlocked() { return hasUpgrade("dark", 21)||hasMilestone('lethe',0)},
-        cost: new Decimal(15),
+        cost() {return new Decimal(15).times(tmp["kou"].costMult42d)},
         },
         23:{ title: "Force Operation",
         description: "Keep Conclusion upgrade when L or D reset.",
         unlocked() { return hasUpgrade("dark", 22)&&(hasUpgrade("light", 21)||hasMilestone('lethe',2)) },
         onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(25);player.mem.upgrades.push(34)},
-        cost: new Decimal(25),
+        cost() {return new Decimal(25).times(tmp["kou"].costMult42d)},
         },
         24:{ title: "Calm in Warth",
         description: "Dark Matters also effects Light Tachyons gain.",
         unlocked() { return hasUpgrade("dark", 23) },
-        cost: new Decimal(30),
+        cost() {return new Decimal(30).times(tmp["kou"].costMult42d)},
         },
         31:{ title: "Memory Organizing",
         description: "Dark Matters effect formula now much better.",
         unlocked() { return hasUpgrade("dark", 24)||hasMilestone('lethe',3) },
-        cost: new Decimal(35),
+        cost() {return new Decimal(35).times(tmp["kou"].costMult42d)},
         },
-        32:{ title: "Moments Of Anger",
+        32:{ title: "Moments of Anger",
         description: "Dark Matters itself makes Memories softcap starts later.",
         unlocked() { return hasUpgrade("dark", 31)||hasMilestone('lethe',3) },
         effect() {
@@ -621,7 +633,7 @@ addLayer("dark", {
             if (eff.lt(1.5)) return new Decimal(1.5);
             return eff;
         },
-        cost: new Decimal(40),
+        cost() {return new Decimal(40).times(tmp["kou"].costMult42d)},
         },
         33:{ title: "Prepare To Bleed",
         description: "Achievements now boost Dark Matters gain.",
@@ -631,7 +643,7 @@ addLayer("dark", {
             if (eff<= 1) return new Decimal(1);
             return eff;
         },
-        cost: new Decimal(44),
+        cost() {return new Decimal(44).times(tmp["kou"].costMult42d)},
         },
         34:{ title: "The Dark",
         description: "Lower Fragments requirement for further Dark Matters, and Dark Matters itself now boosts Light Tachyons gain.",
@@ -641,7 +653,7 @@ addLayer("dark", {
             if (eff.lt(1.25)) return new Decimal(1.25);
             return eff;
         },
-        cost: new Decimal(48),
+        cost() {return new Decimal(48).times(tmp["kou"].costMult42d)},
         },
     }
 })
@@ -797,6 +809,30 @@ addLayer("kou", {
     },
     upgrades:{
     },
+
+    //42
+    costMult42(){
+        let mult = new Decimal(1);
+			if (inChallenge("kou", 42)) mult = mult.times(Decimal.pow(10, Decimal.pow(player.mem.upgrades.length, 2)))
+			return mult;
+    },
+    costExp42() {
+        let exp = new Decimal(1);
+        if (inChallenge("kou", 42)) exp = exp.times(Math.pow(player.mem.upgrades.length, 2)*4+1)
+        return exp;
+    },
+    costMult42l() {
+        let mult = new Decimal(1);
+        if (inChallenge("kou", 42)) mult = mult.times(player.light.upgrades.length*3+1)
+        return mult;
+    },
+    costMult42d() {
+        let mult = new Decimal(1);
+        if (inChallenge("kou", 42)) mult = mult.times(player.dark.upgrades.length*3+1)
+        return mult;
+    },
+
+
     challenges:{
         cols:2,
         11:{
@@ -838,7 +874,7 @@ addLayer("kou", {
             goal() { return new Decimal(5e53) },
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
-            rewardDescription: "Red Dolls effect adds a random num(0~0.5).",
+            rewardDescription: "Red Dolls effect adds a random num(0~0.5).This num will not participate in other boosting calculations.",
         },
         31:{
             name: "The Balance of Conflict",
@@ -871,6 +907,25 @@ addLayer("kou", {
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
             rewardDescription: "Guiding Scythes Effect fomula is better and it will effect Forgotten Drops gain.",
+        },
+        42:{
+            name: "The Desert of clay",
+            completionLimit: 1,
+            challengeDescription: "Force L,D,M reset regardless of your milestones, and their upgrade costs rise over upgrades you bought.But you gain x2 Light Tachyons&Dark Matters",
+            unlocked() { return (hasChallenge('kou',41)&&tmp.lethe.nodeSlots==17)||hasChallenge('kou',42)},
+            //goal() { return new Decimal(1e308) },
+            onEnter(){
+                doReset('light',true);
+                doReset('dark',true);
+                doReset('mem',true);
+                player.mem.upgrades = [];
+                if (hasAchievement('a',21)) player.mem.upgrades.push(41);
+                player.dark.upgrades = [];
+                player.light.upgrades = [];
+            },
+            canComplete(){return player.points.gte(5e20)&&(player.light.upgrades.length+player.dark.upgrades.length>=24)},
+            goalDescription: "5e20 Fragments with all L&D's upgrades purchased.",
+            rewardDescription: "You can have more than 17 Guiding Beacons.",
         },
     },
 })
@@ -1082,7 +1137,7 @@ addLayer("lethe", {
         if (inChallenge('kou',22)) eff=eff.times(1+Math.random()*0.5);
         if (hasUpgrade('lethe',51)) eff=eff.times(upgradeEffect('lethe',51));
         if (inChallenge('kou',41)) eff=eff.times(tmp.lethe.buyables[11].effect);
-        if (hasAchievement('kou',45)) eff=eff.times((player[this.layer].buyables[11]/2 <1)?1:(player[this.layer].buyables[11]/2))
+        if (hasAchievement('kou',45)) eff=eff.times((player[this.layer].buyables[11].div(2).lt(1))?1:(player[this.layer].buyables[11]/2))
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.1);
@@ -1095,7 +1150,7 @@ addLayer("lethe", {
         return "which are directly boosting Fragments generation and Memories gain by "+format(tmp.lethe.effect)+"x"
     },
 
-    nodeSlots(){return player.lethe.buyables[11].floor().min(25).toNumber()},
+    nodeSlots(){return player.lethe.buyables[11].floor().min(hasChallenge('kou',42)?25:17).toNumber()},
     upgrades:{
         rows: 5,
 		cols: 5,
@@ -1145,14 +1200,20 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24))?"LR":"Unrevealed"},
             description() {return (hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                let price = 3250;
+                if (inChallenge('kou',12)) price = price * 10;
+                player.light.points = player.light.points.sub(price);
+                player.kou.points = player.kou.points.sub(40);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24))?"<b>LR</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24))?("<b>The Tower of Light</b><br>Red Dolls effects Light Tachyons effect at an increased rate.<br><br>Cost: 40 Red Dolls<br>"+(inChallenge('kou',12)?"32,500 Light Tachyons":"3,250 Light Tachyons")):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let pricenum = 3250;
+                if (inChallenge('kou',12)) pricenum = pricenum * 10;
+                let around = (hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24));
+                let price = player.light.points.gte(pricenum)&&player.kou.points.gte(40);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1295,14 +1356,20 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42))?"FL":"Unrevealed"},
             description() {return (hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                let price = 3250;
+                if (inChallenge('kou',12)) price = price * 10;
+                player.light.points = player.light.points.sub(price);
+                player.lethe.points = player.lethe.points.sub(1e40);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42))?"<b>FL</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42))?("<b>The Flashing Rift</b><br>Forgotten Drops effects Light Tachyons effect.<br><br>Cost: 1e40 Forgotten Drops<br>"+(inChallenge('kou',12)?"32,500 Light Tachyons":"3,250 Light Tachyons")):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let pricenum = 3250;
+                if (inChallenge('kou',12)) pricenum = pricenum * 10;
+                let around = (hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42));
+                let price = player.light.points.gte(pricenum)&&player.lethe.points.gte(1e40);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1377,14 +1444,20 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45))?"DR":"Unrevealed"},
             description() {return (hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                let price = 2950;
+                if (inChallenge('kou',12)) price = price * 10;
+                player.dark.points = player.dark.points.sub(price);
+                player.kou.points = player.kou.points.sub(40);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45))?"<b>DR</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45))?("<b>The Tower of Darkness</b><br>Red Dolls effects Dark Matters effect at an increased rate.<br><br>Cost: 40 Red Dolls<br>"+(inChallenge('kou',12)?"29,500 Dark Matters":"2,950 Dark Matters")):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let pricenum = 2950;
+                if (inChallenge('kou',12)) pricenum = pricenum * 10;
+                let around = (hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45));
+                let price = player.dark.points.gte(pricenum)&&player.kou.points.gte(40);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1496,7 +1569,7 @@ addLayer("lethe", {
                 player[this.layer].points = player[this.layer].points.sub(1e30);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',41)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52)||hasUpgrade('lethe',42))?"<b>Yellow Beacon</b><br>Forgotten Drops effects increases based on its own reset time.<br><br>Cost: 1e30 Forgotten Drops":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',41)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52)||hasUpgrade('lethe',42))?"<b>Yellow Beacon</b><br>Forgotten Drops effect increases based on its own reset time.<br><br>Cost: 1e30 Forgotten Drops":"<b>Unrevealed</b>";
             },
             canAfford() {
                 let around = (hasUpgrade('lethe',41)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52)||hasUpgrade('lethe',42));
@@ -1529,14 +1602,20 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54))?"FD":"Unrevealed"},
             description() {return (hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                let price = 2950;
+                if (inChallenge('kou',12)) price = price * 10;
+                player.dark.points = player.dark.points.sub(price);
+                player.lethe.points = player.lethe.points.sub(1e40);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54))?"<b>FD</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54))?("<b>The Deep Rift</b><br>Forgotten Drops effects Dark Matters effect.<br><br>Cost: 1e40 Forgotten Drops<br>"+(inChallenge('kou',12)?"29,500 Dark Matters":"2,950 Dark Matters")):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let pricenum = 2950;
+                if (inChallenge('kou',12)) pricenum = pricenum * 10;
+                let around = (hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54));
+                let price = player.dark.points.gte(pricenum)&&player.lethe.points.gte(1e40);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1681,7 +1760,7 @@ addLayer("a", {
             tooltip: "Unlock Both Red And Forgotten Layers.<br>Rewards:They behave as they are unlocked first.",
         },
         32: {
-            name: "Finally I Get Rid Of You!",
+            name: "Finally I Get Rid of You!",
             done() { return hasMilestone('kou',2)&&hasMilestone('lethe',2)},
             tooltip: "Reach R&F's 3rd milestone.<br>Rewards:Keep Directly Transfer when L or D reset, and Fragment Sympathy will always give back its cost.",
         },
@@ -1701,9 +1780,9 @@ addLayer("a", {
             tooltip: "Have more than 300 on both Light Tachyons&Dark Matters.<br>Rewards:L's effect boosts R's gain, D's effect boosts F's gain.",
         },
         41: {
-            name: "Scepter Of The Soul Guide",
+            name: "Scepter of The Soul Guide",
             done() { return player.lethe.upgrades.length>=1},
-            tooltip: "Buy your first Guiding Beacons.<br>Rewards: Always gain 20% of Memories gain every second.",
+            tooltip: "Buy your first Guiding Beacon.<br>Rewards: Always gain 20% of Memories gain every second.",
         },
         42: {
             name: "Toyhouse",
@@ -1724,6 +1803,11 @@ addLayer("a", {
             name: "9 isn't a lie!",
             done() { return player.lethe.upgrades.length>=9},
             tooltip: "Have 9 Guiding Beacons.<br>Rewards:Guiding Scythes level boosts Forgotten Drops effect.",
+        },
+        51: {
+            name: "e(An Essence) of the Broken World",
+            done() { return player.mem.points.gte(1e100) },
+            tooltip: "Gain 1e100 Memories.<br>Rewards:Starts at 100 Memories when reset.",
         },
     },
     tabFormat: [
