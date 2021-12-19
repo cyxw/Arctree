@@ -264,6 +264,7 @@ addLayer("light", {
         if (inChallenge("kou",31)) mult = mult.times(player.dark.points.sub(player[this.layer].points).max(1));
         if (hasChallenge("kou",31)) mult = mult.times(player.dark.points.sub(player[this.layer].points).div(2).max(1));
         if (hasUpgrade('lethe',11)) mult = mult.times(upgradeEffect('lethe',11));
+        if (hasUpgrade('lethe',41)) mult = mult.times(upgradeEffect('lethe',41));
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -343,6 +344,7 @@ addLayer("light", {
         if (inChallenge('kou',22)) eff=eff.times(Math.random());
         if (hasUpgrade('lethe',13)) eff=eff.times(tmp.kou.effect.pow(1.5));
         if (hasUpgrade('lethe',31)) eff=eff.times(tmp.lethe.effect);
+        if (hasUpgrade('lethe',14)) eff=eff.times(upgradeEffect('lethe',14));
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(Math.random());
@@ -557,6 +559,8 @@ addLayer("dark", {
         if (inChallenge('kou',22)) eff=eff.times(Math.random());
         if (hasUpgrade('lethe',35)) eff = eff.times(tmp.kou.effect.pow(1.5));
         if (hasUpgrade('lethe',53)) eff=eff.times(tmp.lethe.effect);
+        if (hasUpgrade('lethe',52)) eff=eff.times(upgradeEffect('lethe',52));
+        if (hasUpgrade('lethe',25)) eff=eff.times(upgradeEffect('lethe',25));
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(Math.random());
@@ -701,6 +705,8 @@ addLayer("kou", {
         let eff=new Decimal(player[this.layer].points.times(0.1).plus(1));
         if (inChallenge('kou',22)) eff=eff.times(1+Math.random()*0.5);
         if (hasUpgrade('lethe',15)) eff=eff.times(upgradeEffect('lethe',15));
+        if (hasUpgrade('lethe',12)) eff=eff.times(upgradeEffect('lethe',12));
+        if (hasUpgrade('lethe',45)) eff=eff.times(upgradeEffect('lethe',45));
         
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.1);
@@ -1137,7 +1143,9 @@ addLayer("lethe", {
         if (inChallenge('kou',22)) eff=eff.times(1+Math.random()*0.5);
         if (hasUpgrade('lethe',51)) eff=eff.times(upgradeEffect('lethe',51));
         if (inChallenge('kou',41)) eff=eff.times(tmp.lethe.buyables[11].effect);
-        if (hasAchievement('kou',45)) eff=eff.times((player[this.layer].buyables[11].div(2).lt(1))?1:(player[this.layer].buyables[11]/2))
+        if (hasAchievement('kou',45)) eff=eff.times((player[this.layer].buyables[11].div(2).lt(1))?1:(player[this.layer].buyables[11].div(2)));
+        if (hasUpgrade('lethe',54)) eff=eff.times(upgradeEffect('lethe',54));
+        if (hasUpgrade('lethe',21)) eff=eff.times(upgradeEffect('lethe',21));
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.1);
@@ -1184,14 +1192,22 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23))?"LLR":"Unrevealed"},
             description() {return (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                let price = 5500;
+                if (inChallenge('kou',12)) price = price * 10;
+                player.light.points = player.light.points.sub(price);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23))?"<b>LLR</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23))?("<b>Delightful-Red Synergy</b><br>Light Tachyons itself boosts Red Dolls effect.<br><br>Cost: "+(inChallenge('kou',12)?"55,000 Light Tachyons":"5,500 Light Tachyons")+"<br>Req: 12.50x Red Dolls effect"):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let pricenum = 5500;
+                if (inChallenge('kou',12)) pricenum = pricenum * 10;
+                let around = (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23));
+                let price = player.light.points.gte(pricenum);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&tmp['kou'].effect.gte(12.5);
+            },
+            effect(){
+                return player.light.points.plus(1).log(10).div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1222,14 +1238,18 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25))?"LRR":"Unrevealed"},
             description() {return (hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                player.kou.points = player.kou.points.sub(50);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25))?"<b>LRR</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25))?("<b>Joyful-White Synergy</b><br>Red Dolls itself boosts Light Tachyons effect.<br><br>"+(inChallenge('kou',12)?"<b>Unpurchaseable</b>":"Cost: 50 Red Dolls<br>Req: 2.5e11x Light Tachyons effect")):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let around = (hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25));
+                let price = player.kou.points.gte(50);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp['light'].effect.gte(2.5e11);
+            },
+            effect(){
+                return player.kou.points.div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1258,14 +1278,22 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32))?"FLL":"Unrevealed"},
             description() {return (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                let price = 5500;
+                if (inChallenge('kou',12)) price = price * 10;
+                player.light.points = player.light.points.sub(price);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32))?"<b>FLL</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32))?("<b>Delightful-Yellow Synergy</b><br>Light Tachyons itself boosts Forgotten Drops effect.<br><br>Cost: "+(inChallenge('kou',12)?"55,000 Light Tachyons":"5,500 Light Tachyons")+"<br>Req: 330x Forgotten Drops effect"):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let pricenum = 5500;
+                if (inChallenge('kou',12)) pricenum = pricenum * 10;
+                let around = (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32));
+                let price = player.light.points.gte(pricenum);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&tmp['lethe'].effect.gte(330);
+            },
+            effect(){
+                return player.light.points.plus(1).log(10).div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1288,6 +1316,9 @@ addLayer("lethe", {
                 let around = (hasUpgrade('lethe',11)||hasUpgrade('lethe',12)||hasUpgrade('lethe',13)||hasUpgrade('lethe',21)||hasUpgrade('lethe',22)||hasUpgrade('lethe',23)||hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',33));
                 let price = player.light.points.gte(700)&&player.mem.points.gte(2e65);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
+            },
+            effect(){
+                return player.light.points.plus(1).log(10).div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1340,14 +1371,18 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35))?"DRR":"Unrevealed"},
             description() {return (hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                player.kou.points = player.kou.points.sub(50);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35))?"<b>DRR</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35))?"<b>Joyful-Black Synergy</b><br>Red Dolls itself boosts Dark Matters effect.<br><br>"+(inChallenge('kou',12)?"<b>Unpurchaseable</b>":"Cost: 50 Red Dolls<br>Req: 400,000,000x Dark Matters effect"):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let around = (hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35));
+                let price = player.kou.points.gte(50);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp['dark'].effect.gte(400000000);
+            },
+            effect(){
+                return player.kou.points.div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1466,14 +1501,18 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52))?"FFL":"Unrevealed"},
             description() {return (hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                player[this.layer].points = player[this.layer].points.sub(1e65);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52))?"<b>FFL</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52))?("<b>Forgotten-White Synergy</b><br>Forgotten Drops itself boosts Light Tachyons effect.<br><br>"+(inChallenge('kou',12)?"<b>Unpurchaseable</b>":"Cost: 1e65 Forgotten Drops<br>Req: 2.5e11x Light Tachyons effect")):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let around = (hasUpgrade('lethe',31)||hasUpgrade('lethe',32)||hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52));
+                let price = player[this.layer].points.gte(1e65);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp["light"].effect.gte(2.5e11);
+            },
+            effect(){
+                return player[this.layer].points.plus(1).log(10).div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1550,14 +1589,22 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55))?"DDR"/*Convinced*/:"Unrevealed"},
             description() {return (hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                let price = 5000;
+                if (inChallenge('kou',12)) price = price * 10;
+                player.dark.points = player.dark.points.sub(price);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55))?"<b>DDR</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55))?("<b>Dark-Red Synergy</b><br>Dark Matters itself boosts Red Dolls effect.<br><br>Cost: "+(inChallenge('kou',12)?"5,0000 Dark Matters":"5,000 Dark Matters")+"<br>Req: 12.50x Red Dolls effect"):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let pricenum = 5000;
+                if (inChallenge('kou',12)) pricenum = pricenum * 10;
+                let around = (hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55));
+                let price = player.dark.points.gte(pricenum);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&tmp["kou"].effect.gte(12.5);
+            },
+            effect(){
+                return player.dark.points.plus(1).log(10).div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1586,14 +1633,18 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53))?"FFD":"Unrevealed"},
             description() {return (hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                player[this.layer].points = player[this.layer].points.sub(1e65);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53))?"<b>FFD</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53))?("<b>Forgotten-Black Synergy</b><br>Forgotten Drops itself boosts Dark Matters effect.<br><br>"+(inChallenge('kou',12)?"<b>Unpurchaseable</b>":"Cost: 1e65 Forgotten Drops<br>Req: 400,000,000x Dark Matters Effect")):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let around = (hasUpgrade('lethe',41)||hasUpgrade('lethe',42)||hasUpgrade('lethe',43)||hasUpgrade('lethe',51)||hasUpgrade('lethe',52)||hasUpgrade('lethe',53));
+                let price = player[this.layer].points.gte(1e65);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp['dark'].effect.gte(400000000);
+            },
+            effect(){
+                return player[this.layer].points.plus(1).log(10).div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1624,14 +1675,22 @@ addLayer("lethe", {
             title() {return (hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55))?"FDD":"Unrevealed"},
             description() {return (hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55))?"Currently Nothing here.":""},
             pay(){
-                player[this.layer].points = player[this.layer].points.sub(1e20);
-                player.mem.points = player.mem.points.sub(1e100);
+                let price = 5000;
+                if (inChallenge('kou',12)) price = price * 10;
+                player.dark.points = player.dark.points.sub(price);
             },
             fullDisplay(){
-                return (hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55))?"<b>FDD</b><br>Currently Nothing here.<br><br>Cost: ":"<b>Unrevealed</b>";
+                return (hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55))?("<b>Dark-Yellow Synergy</b><br>Dark Matters itself boosts Forgotten Drops effect.<br><br>Cost: "+(inChallenge('kou',12)?"5,0000 Dark Matters":"5,000 Dark Matters")+"<br>Req: 330x Forgotten Drops effect"):"<b>Unrevealed</b>";
             },
             canAfford() {
-                return false
+                let pricenum = 5000;
+                if (inChallenge('kou',12)) pricenum = pricenum * 10;
+                let around = (hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45)||hasUpgrade('lethe',53)||hasUpgrade('lethe',54)||hasUpgrade('lethe',55));
+                let price = player.dark.points.gte(pricenum);
+                return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&tmp["lethe"].effect.gte(330);
+            },
+            effect(){
+                return player.dark.points.plus(1).log(10).div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1715,7 +1774,7 @@ addLayer("a", {
             tooltip: "Gain 9999 Fragments.",
         },
         13: {
-            name: "Two Stacks For Sure",
+            name: "Two Stacks for Sure",
             done() { return player.points.gte(19998)&&hasUpgrade("mem",33)},
             tooltip: "Gain 19998 Fragments With Directly Transfer.Rewards:You start at 5 Memories when reset.",
         },
@@ -1808,6 +1867,16 @@ addLayer("a", {
             name: "e(An Essence) of the Broken World",
             done() { return player.mem.points.gte(1e100) },
             tooltip: "Gain 1e100 Memories.<br>Rewards:Starts at 100 Memories when reset.",
+        },
+        52: {
+            name: "Stacks e(Stacks)",
+            done() { return player.points.gte(9.99e99) },
+            tooltip: "Gain 9.99e99 Fragments.",
+        },
+        53: {
+            name: "Beacons Beside Lethe",
+            done() { return player.lethe.upgrades.length>=25 },
+            tooltip: "Have 25 Guiding Beacons.",
         },
     },
     tabFormat: [
