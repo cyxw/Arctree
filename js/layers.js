@@ -42,7 +42,7 @@ addLayer("mem", {
         if (hasUpgrade('mem', 33)) mult = mult.pow(upgradeEffect('mem', 33))
         if (hasUpgrade('mem', 34)&&!hasAchievement('a',22)) mult = mult.times(!hasUpgrade('light', 11)?0.85:upgradeEffect('light', 11))
         if (player.dark.unlocked) mult = mult.times(tmp.dark.effect);
-        if (hasUpgrade('light', 12)) mult=mult.times(tmp.light.effect.div(2).gt(1)?tmp.light.effect.div(2):1);
+        if (hasUpgrade('light', 12)) mult=mult.times(tmp["light"].effect.div(2).gt(1)?tmp["light"].effect.div(2):1);
         if (hasUpgrade('lethe', 44)&&player.mem.points.lte( upgradeEffect('lethe',44) )) mult = mult.times(player.dark.points.div(20).max(1));
         if (hasUpgrade('lethe',32)||hasUpgrade('lethe',43)) mult = mult.times(tmp.lethe.effect);
         if (hasUpgrade('lethe',23)) mult = mult.times(upgradeEffect('lethe',23));
