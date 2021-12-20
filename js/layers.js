@@ -2186,7 +2186,6 @@ addLayer("lab", {
                 buy() { 
 					let cost = tmp[this.layer].buyables[this.id].cost;
 					player.light.points = player.light.points.sub(cost.fo);
-                    //player.dark.points = new Decimal(0);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
                 },
@@ -2215,7 +2214,6 @@ addLayer("lab", {
 				},
                 buy() { 
 					let cost = tmp[this.layer].buyables[this.id].cost;
-                    //player.light.points = new Decimal(0);
 					player.dark.points = player.dark.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
