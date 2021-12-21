@@ -70,6 +70,7 @@ function getPointGen() {
 	if (hasChallenge("kou",21)) gain = gain.pow(1.025);
 	if (inChallenge("kou",11)) gain = gain.pow(0.75);
 	if (inChallenge("kou",21)) gain = gain.pow(1.05);
+	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12));
 
 	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
         return gain
