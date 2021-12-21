@@ -94,7 +94,7 @@ addLayer("mem", {
         if (hasMilestone('light',1)) player[this.layer].upgrades = player[this.layer].upgrades.concat([11,12,13,14,21,22,23,24]);
         if (hasMilestone('dark',1)) player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32]);
         if (hasAchievement('a',32)) player[this.layer].upgrades.push(33);
-        if ((hasUpgrade('dark', 23)&&(resettingLayer=="light"||resettingLayer=="dark")) || (hasMilestone('lethe',4)&&(resettingLayer=="kou"||resettingLayer=="lethe"))) player[this.layer].upgrades.push(34);
+        if ((hasUpgrade('dark', 23)) || (hasMilestone('lethe',4))) player[this.layer].upgrades.push(34);
         if (hasAchievement('a',21)) player[this.layer].upgrades.push(41);
         if (hasAchievement('a',55)) player[this.layer].upgrades.push(42);
         if (hasAchievement("a", 13)&&(resettingLayer!='mem')) player[this.layer].points=new Decimal(5);
@@ -339,11 +339,11 @@ addLayer("light", {
         let keep=[];
         if (hasAchievement('a',34)) keep.push("auto");
         if (layers[resettingLayer].row > this.row) layerDataReset('light', keep);
-        if (hasMilestone('kou',0)&&(resettingLayer=='kou'||resettingLayer=='lethe')) {player[this.layer].upgrades.push(22);player[this.layer].milestones = player[this.layer].milestones.concat([0,1])};
-        if (hasMilestone('kou',1)&&(resettingLayer=='kou'||resettingLayer=='lethe'))  player[this.layer].upgrades = player[this.layer].upgrades.concat([11,12,13,14]);
-        if (hasMilestone('kou',3)&&(resettingLayer=='kou'||resettingLayer=='lethe'))  player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32,33,34]);
-        if (hasMilestone('kou',4)&&(resettingLayer=='kou'||resettingLayer=='lethe'))  player[this.layer].upgrades = player[this.layer].upgrades.concat([21,23,24]);
-        if (hasMilestone('kou',5)&&(resettingLayer=='kou'||resettingLayer=='lethe'))  player[this.layer].milestones = player[this.layer].milestones.concat([2,3]);
+        if (hasMilestone('kou',0)) {player[this.layer].upgrades.push(22);player[this.layer].milestones = player[this.layer].milestones.concat([0,1])};
+        if (hasMilestone('kou',1))  player[this.layer].upgrades = player[this.layer].upgrades.concat([11,12,13,14]);
+        if (hasMilestone('kou',3))  player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32,33,34]);
+        if (hasMilestone('kou',4))  player[this.layer].upgrades = player[this.layer].upgrades.concat([21,23,24]);
+        if (hasMilestone('kou',5))  player[this.layer].milestones = player[this.layer].milestones.concat([2,3]);
         if (player.tab=='light'&&(!hasUpgrade('dark', 23)&&!hasMilestone('light',0))) showTab('none');
     },
     canBuyMax() { return hasUpgrade('light', 22) },
@@ -555,11 +555,11 @@ addLayer("dark", {
         let keep=[];
         if (hasAchievement('a',34)) keep.push("auto");
         if (layers[resettingLayer].row > this.row) layerDataReset('dark', keep);
-        if (hasMilestone('lethe',0)&&(resettingLayer=='kou'||resettingLayer=='lethe')) {player[this.layer].upgrades.push(22);player[this.layer].milestones = player[this.layer].milestones.concat([0,1])};
-        if (hasMilestone('lethe',1)&&(resettingLayer=='kou'||resettingLayer=='lethe'))  player[this.layer].upgrades = player[this.layer].upgrades.concat([11,12,13,14]);
-        if (hasMilestone('lethe',3)&&(resettingLayer=='kou'||resettingLayer=='lethe'))  player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32,33,34]);
-        if (hasMilestone('lethe',4)&&(resettingLayer=='kou'||resettingLayer=='lethe'))  player[this.layer].upgrades = player[this.layer].upgrades.concat([21,23,24]);
-        if (hasMilestone('lethe',5)&&(resettingLayer=='kou'||resettingLayer=='lethe'))  player[this.layer].milestones = player[this.layer].milestones.concat([2,3]);
+        if (hasMilestone('lethe',0)) {player[this.layer].upgrades.push(22);player[this.layer].milestones = player[this.layer].milestones.concat([0,1])};
+        if (hasMilestone('lethe',1))  player[this.layer].upgrades = player[this.layer].upgrades.concat([11,12,13,14]);
+        if (hasMilestone('lethe',3))  player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32,33,34]);
+        if (hasMilestone('lethe',4))  player[this.layer].upgrades = player[this.layer].upgrades.concat([21,23,24]);
+        if (hasMilestone('lethe',5))  player[this.layer].milestones = player[this.layer].milestones.concat([2,3]);
         if (player.tab=='dark'&&(!hasUpgrade('dark', 23)&&!hasMilestone('dark',0))) showTab('none');
     },
     canBuyMax() { return hasUpgrade('dark', 22) },
@@ -739,6 +739,7 @@ addLayer("kou", {
     effectDescription() {
         return "which are directly boosting Light Tachyons and Dark Matters gain by "+format(tmp.kou.effect)+"x"
     },
+    canBuyMax() { return hasUpgrade('lab', 61) },
 
     row: 2, // Row the layer is in on the tree (0 is the first row)
     displayRow: 0,
@@ -747,6 +748,15 @@ addLayer("kou", {
     ],
     layerShown(){return hasAchievement('a',21)},
     increaseUnlockOrder: ["lethe"],
+
+    doReset(resettingLayer){
+        let keep=[];
+        if (hasMilestone('rei',1)) keep.push("challenges");
+        if (layers[resettingLayer].row > this.row) layerDataReset("kou", keep);
+        if(hasMilestone('rei',0)) player.kou.milestones = player.kou.milestones.concat([0,1,2,3,4,5,6]);
+        if (hasMilestone('rei',1)) player.kou.milestones.push(7);
+        if (hasAchievement('a',63)) player.kou.challenges[51] = 1;
+    },
 
     milestones: {
         0: {
@@ -805,17 +815,7 @@ addLayer("kou", {
                 "main-display",
                 "blank",
                 "prestige-button",
-                "blank",
-                ["display-text",
-                    function() {return 'You have ' + formatWhole(player.mem.points)+' Memories.'},
-                        {}],
-                "blank",
-                ["display-text",
-                    function() {return 'Your best Red Dolls is ' + formatWhole(player.kou.best)},
-                        {}],
-                ["display-text",
-                    function() {return 'You have made a total of ' + formatWhole(player.kou.total) + ' Red Dolls'},
-                        {}],
+                "resource-display",
                 "blank",
                 "milestones",]
         },
@@ -1019,6 +1019,19 @@ addLayer("lethe", {
     displayRow: 0,
     increaseUnlockOrder: ["kou"],
 
+    passiveGeneration() { 
+        let pg = 0;
+        if (hasUpgrade('lab',62)) pg=pg+0.1;
+        return pg;
+     },
+
+    doReset(resettingLayer){
+        let keep=[];
+        if (layers[resettingLayer].row > this.row) layerDataReset("lethe", keep);
+        if(hasMilestone('yugamu',0)) player.lethe.milestones = player.lethe.milestones.concat([0,1,2,3,4,5,6]);
+        if(hasMilestone('yugamu',1)) player.lethe.milestones.push(7);
+    },
+
     milestones: {
         0: {
             requirementDescription: "1 Forgotten Drop",
@@ -1103,7 +1116,7 @@ addLayer("lethe", {
 					player.lethe.buyables[this.id] = player.lethe.buyables[this.id].plus(1);
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return false },//←currently
+				autoed() { return hasMilestone('yugamu',1)},
 			},
 		},
     clickables: {
@@ -1130,17 +1143,7 @@ addLayer("lethe", {
                 "main-display",
                 "blank",
                 "prestige-button",
-                "blank",
-                ["display-text",
-                    function() {return 'You have ' + formatWhole(player.points)+' Fragments.'},
-                        {}],
-                "blank",
-                ["display-text",
-                    function() {return 'Your best Forgotten Drops is ' + formatWhole(player.lethe.best)},
-                        {}],
-                ["display-text",
-                    function() {return 'You have made a total of ' + formatWhole(player.lethe.total) + ' Forgotten Drops'},
-                        {}],
+                "resource-display",
                 "blank",
                 "milestones",]
         },
@@ -1151,17 +1154,7 @@ addLayer("lethe", {
                 "main-display",
                 "blank",
                 "prestige-button",
-                "blank",
-                ["display-text",
-                    function() {return 'You have ' + formatWhole(player.points)+' Fragments.'},
-                        {}],
-                "blank",
-                ["display-text",
-                    function() {return 'Your best Forgotten Drops is ' + formatWhole(player.lethe.best)},
-                        {}],
-                ["display-text",
-                    function() {return 'You have made a total of ' + formatWhole(player.lethe.total) + ' Forgotten Drops'},
-                        {}],
+                "resource-display",
                 "blank",
                 ["buyable", 11],
                 "blank",
@@ -1787,6 +1780,7 @@ addLayer("lab", {
 
     row: 3, // Row the layer is in on the tree (0 is the first row)
     displayRow: 2,
+    position:2,
     layerShown(){return hasAchievement('a',55)},
 
     doReset(resettingLayer){},
@@ -1798,6 +1792,8 @@ addLayer("lab", {
         if (hasUpgrade('lab',12)) mult = mult.plus(player[this.layer].points.div(2));
         if (hasUpgrade('lab',41)) mult = mult.times(player[this.layer].points.max(1));
         if (hasAchievement('lab',13)) mult = mult.plus(achievementEffect('lab',13));
+        if (hasUpgrade('lab',63)) mult = mult.times(upgradeEffect('lab',63));
+        if (hasUpgrade('lab',64)) mult = mult.times(upgradeEffect('lab',64));
         mult = mult.pow(tmp["lab"].powerexp)
         return mult;
     },
@@ -2095,16 +2091,70 @@ addLayer("lab", {
         },
         51:{ title: "Anonymous Effect",
         description: "Unlock two new layers of phenomenon you think isn't normal.",
-        fullDisplay(){return "<b>Anonymous Effect</b><br>Unlock two new layers of phenomenon you think isn't normal.<br><br>Cost: Currently, nothing here."},
-        unlocked(){return hasUpgrade('lab',44)},
+        fullDisplay(){return "<b>Anonymous Effect</b><br>Unlock two new layers of phenomenon which you think aren't normal.<br><br>Cost: 2,000 Research Points.<br>250,000,000 Research Power"},
+        unlocked(){return (hasUpgrade('lab',44)&&player.lab.points.gte(1500))||hasAchievement('lab',21)},
         canAfford(){
-            return false;
+            return player.lab.points.gte(2000)&&player.lab.power.gte(250000000);
         },
         pay(){
-            player.lab.points = player.lab.points.sub(100);
-            player.lab.power = player.lab.power.sub(350000);
+            player.lab.points = player.lab.points.sub(2000);
+            player.lab.power = player.lab.power.sub(250000000);
             },
             style: {height: '200px', width: '200px'},
+        },
+        61:{ title: "Doll Maxmizer",
+        description: "You can buy max Red Dolls.",
+        fullDisplay(){return "<b>Doll Maxmizer</b><br>You can buy max Red Dolls.<br><br>Cost: 5,000 Research Points<br>80 Red Dolls"},
+        unlocked(){return hasUpgrade('lab',51)},
+        canAfford(){
+            return player.lab.points.gte(5000)&&player.kou.points.gte(80);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(5000);
+            player.kou.points = player.kou.points.sub(80);
+            },
+        },
+        62:{ title: "Drop Generator",
+        description: "Gain 10% of Forgotten Drops gain every second.",
+        fullDisplay(){return "<b>Drop Generator</b><br>Gain 10% of Forgotten Drops gain every second.<br><br>Cost: 5,000 Research Points<br>1e130 Forgotten Drops"},
+        unlocked(){return hasUpgrade('lab',51)},
+        canAfford(){
+            return player.lab.points.gte(5000)&&player.lethe.points.gte(1e130);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(5000);
+            player.lethe.points = player.lethe.points.sub(1e130);
+            },
+        },
+        63:{ title: "Archaeologists",
+        description: "Luminous Church itself boosts Research Power gain.",
+        fullDisplay(){return "<b>Archaeologists</b><br>Luminous Church itself boosts Research Power gain.<br><br>Cost: 7,500 Research Points<br>1 Luminous Church"},
+        unlocked(){return hasUpgrade('lab',61)&&hasUpgrade('lab',62)},
+        canAfford(){
+            return player.lab.points.gte(7500)&&player.rei.points.gte(1);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(7500);
+            player.rei.points = player.rei.points.sub(1);
+            },
+        effect(){
+            return player.rei.points.div(10).plus(1);
+        },
+        },
+        64:{ title: "Cartographers",
+        description: "Flourish Labyrinth itself boosts Research Power gain.",
+        fullDisplay(){return "<b>Cartographers</b><br>Flourish Labyrinth itself boosts Research Power gain.<br><br>Cost: 7,500 Research Points<br>1 Flourish Labyrinth"},
+        unlocked(){return hasUpgrade('lab',61)&&hasUpgrade('lab',62)},
+        canAfford(){
+            return player.lab.points.gte(7500)&&player.yugamu.points.gte(1);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(7500);
+            player.yugamu.points = player.yugamu.points.sub(1);
+            },
+        effect(){
+            return player.yugamu.points.div(10).plus(1);
+        },
         },
     },
     achievements:{//Research Progress
@@ -2145,6 +2195,12 @@ addLayer("lab", {
             name: "Social Friendly",
             done() { return player.lab.buyables[42].gte(1) },
             tooltip: "Gain 1 Tech Transformer.",
+        },
+        21: {
+            name: "∀NoNyM0us",
+            unlocked(){return hasUpgrade('lab',51)||hasAchievement('lab',21)},
+            done() { return hasUpgrade('lab',51) },
+            tooltip: "Start Anonymous Research.",
         },
     },
     buyables:{//Research Transformers
@@ -2422,6 +2478,117 @@ addLayer("lab", {
     }
 })
 
+addLayer("rei", {
+    startData() { return {                  
+        unlocked: false,                     
+        points: new Decimal(0),
+        best: new Decimal(0),
+        total: new Decimal(0),
+        unlockOrder:0,
+        auto: false,         
+    }},
+    name: "Luminous Churches", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "LC",
+    color: "#ffe6f6",
+    nodeStyle() { return {
+        background: (player.rei.unlocked||canReset("rei"))?("radial-gradient(circle, #ededed 0%, #ffc1de 100%)"):"#bf8f8f",
+    }},
+    resource: "Luminous Churches",
+    row: 3,   
+    displayRow: 2,
+    hotkeys: [
+        {key: "L", description: "Shift+L: Reset for Luminous Churches", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    position:0,
+    branches: ["light"],
+
+    baseResource: "Light Tachyons",
+    baseAmount() { return player.light.points }, 
+
+    requires: new Decimal(100000),
+
+    type: "static",
+    exponent: 1.5,
+
+    gainMult() {
+        return new Decimal(1)
+    },
+    gainExp() {  
+        return new Decimal(1)
+    },
+
+    layerShown() { return hasAchievement('lab',21)&&hasChallenge('kou',51)||player[this.layer].unlocked  }, 
+    milestones:{
+        0: {
+            requirementDescription: "1 total Luminous Church",
+            done() { return player.rei.total.gte(1)},
+            unlocked(){return player.rei.unlocked},
+            effectDescription: "Keep all except last milestones of Red Doll Layer when LC or FL reset.",
+        },
+        1: {
+            requirementDescription: "2 total Luminous Churches",
+            done() { return player.rei.total.gte(2)},
+            unlocked(){return player.rei.unlocked},
+            effectDescription: "Keep last milestones of Red Doll Layer when LC or FL reset, and keep all Happiness Challenges finished.",
+        },
+    }
+})
+
+addLayer("yugamu", {
+    startData() { return {                  
+        unlocked: false,                     
+        points: new Decimal(0),
+        best: new Decimal(0),
+        total: new Decimal(0),
+        unlockOrder:0,
+        auto: false,         
+    }},
+    name: "Flourish Labyrinths", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "FL",
+    color: "#716f5e",
+    nodeStyle() { return {
+        background: (player.yugamu.unlocked||canReset("yugamu"))?("radial-gradient(circle, #383838 0%,#383838 50%, #5f5911 100%)"):"#bf8f8f",
+    }},
+    resource: "Flourish Labyrinths",
+    row: 3,   
+    displayRow: 2,
+    hotkeys: [
+        {key: "F", description: "Shift+F: Reset for Flourish Labyrinths", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    position:4,
+    branches: ["dark"],
+
+    baseResource: "Dark Matters",
+    baseAmount() { return player.dark.points }, 
+
+    requires: new Decimal(90000),
+
+    type: "static",
+    exponent: 1.5,
+
+    gainMult() {
+        return new Decimal(1)
+    },
+    gainExp() {  
+        return new Decimal(1)
+    },
+
+    layerShown() { return hasAchievement('lab',21)&&hasChallenge('kou',51)||player[this.layer].unlocked }, 
+    milestones:{
+        0: {
+            requirementDescription: "1 total Flourish Labyrinth",
+            done() { return player.yugamu.total.gte(1)},
+            unlocked(){return player.yugamu.unlocked},
+            effectDescription: "Keep all except last milestones of Forgotten Drop Layer when LC or FL reset.",
+        },
+        1: {
+            requirementDescription: "2 total Flourish Labyrinths",
+            done() { return player.yugamu.total.gte(2)},
+            unlocked(){return player.yugamu.unlocked},
+            effectDescription: "Keep last milestones of Forgotten Drop Layer when LC or FL reset, and now Guiding Scythes are auto bought.",
+        },
+    }
+})
 
 //GHOSTS
 
@@ -2449,6 +2616,24 @@ addNode("ghost3", {
     position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick(){return false},
     row: 0,
+    color: "#000000",
+    layerShown() {return "ghost";}
+})
+addNode("ghost4", {
+    name: "ghost4", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "G4", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    canclick(){return false},
+    row: 2,
+    color: "#000000",
+    layerShown() {return "ghost";}
+})
+addNode("ghost5", {
+    name: "ghost5", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "G5", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    canclick(){return false},
+    row: 2,
     color: "#000000",
     layerShown() {return "ghost";}
 })
@@ -2595,6 +2780,16 @@ addLayer("a", {
             name: "\"A Professional lab in its……field.\"",
             done() { return hasMilestone('lab',7) },
             tooltip: "Build up your reputation among scientists.",
+        },
+        62: {
+            name: "Working Lab",
+            done() { return player.lab.points.gte(1000) },
+            tooltip: "Gain 1000 Research Points.",
+        },
+        63: {
+            name: "Head into Anonymous",
+            done() { return player.rei.unlocked&&player.yugamu.unlocked },
+            tooltip: "Unlock both Anonymous Layers.<br>Rewards:Keep Red Comet Challenge Finished when reset.",
         },
     },
     tabFormat: [
