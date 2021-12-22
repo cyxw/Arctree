@@ -5,6 +5,8 @@ addLayer("mem", {
     startData() { return {
         unlocked: true,
 		points: new Decimal(0),
+        autohold: false,
+        autoholdtimer:new Decimal(0),
     }},
     color: "#c939db",
     requires: new Decimal(15), // Can be a function that takes requirement increases into account
@@ -60,7 +62,8 @@ addLayer("mem", {
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         exp = new Decimal(1)
-        if (hasUpgrade('mem', 13)) exp = exp.times(upgradeEffect('mem', 13))
+        if (hasUpgrade('mem', 13)) exp = exp.times(upgradeEffect('mem', 13));
+        if (hasUpgrade('lab',74)) exp = exp.plus(buyableEffect('lab',13));
         return exp
     },
     row: 0, // Row the layer is in on the tree (0 is the first row)
@@ -86,12 +89,12 @@ addLayer("mem", {
 					{}],
                 "blank",
                 "upgrades",
-                ["clickable", 11],
+                ["row",[["clickable", 11],["clickable", 12]]],
     ],
 
     doReset(resettingLayer){
         let keep=[];
-        if (layers[resettingLayer].row > this.row) layerDataReset("mem", keep);
+        if (layers[resettingLayer].row > this.row) {layerDataReset("mem", keep);
         if (hasMilestone('light',1)) player[this.layer].upgrades = player[this.layer].upgrades.concat([11,12,13,14,21,22,23,24]);
         if (hasMilestone('dark',1)) player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32]);
         if (hasAchievement('a',32)) player[this.layer].upgrades.push(33);
@@ -99,7 +102,13 @@ addLayer("mem", {
         if (hasAchievement('a',21)) player[this.layer].upgrades.push(41);
         if (hasAchievement('a',55)) player[this.layer].upgrades.push(42);
         if (hasAchievement("a", 13)&&(resettingLayer!='mem')) player[this.layer].points=new Decimal(5);
-        if (hasAchievement("a", 51)&&(resettingLayer!='mem')) player[this.layer].points=new Decimal(100);
+        if (hasAchievement("a", 51)&&(resettingLayer!='mem')) player[this.layer].points=new Decimal(100);}
+    },
+
+    update(diff){
+        if (!player.mem.autohold) player.mem.autoholdtimer=new Decimal(0);
+        if (player.mem.autohold) player.mem.autoholdtimer=player.mem.autoholdtimer.plus(diff);
+        if (player.mem.autoholdtimer.gte(1)&&canReset(this.layer)){doReset(this.layer);player.mem.autoholdtimer = new Decimal(0);};
     },
 
     upgrades:{
@@ -261,6 +270,16 @@ addLayer("mem", {
             },
             style: {width: "100px", height: "50px"},
         },
+        12: {
+			title: "Auto hold M",
+			display(){
+				return (player.mem.autohold?"On":"Off")
+			},
+			unlocked() { return true },
+			canClick() { return true },
+			onClick() { player.mem.autohold = !player.mem.autohold },
+			style: {"background-color"() { return player.mem.autohold?"#c939db":"#666666" }},
+		    },
     },
 })
 
@@ -360,13 +379,13 @@ addLayer("light", {
     doReset(resettingLayer){
         let keep=[];
         if (hasAchievement('a',34)) keep.push("auto");
-        if (layers[resettingLayer].row > this.row) layerDataReset('light', keep);
+        if (layers[resettingLayer].row > this.row) {layerDataReset('light', keep);
         if (hasMilestone('kou',0)) {player[this.layer].upgrades.push(22);player[this.layer].milestones = player[this.layer].milestones.concat([0,1])};
         if (hasMilestone('kou',1))  player[this.layer].upgrades = player[this.layer].upgrades.concat([11,12,13,14]);
         if (hasMilestone('kou',3))  player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32,33,34]);
         if (hasMilestone('kou',4))  player[this.layer].upgrades = player[this.layer].upgrades.concat([21,23,24]);
         if (hasMilestone('kou',5))  player[this.layer].milestones = player[this.layer].milestones.concat([2,3]);
-        if (player.tab=='light'&&(!hasUpgrade('dark', 23)&&!hasMilestone('light',0))) showTab('none');
+        if (player.tab=='light'&&(!hasUpgrade('dark', 23)&&!hasMilestone('light',0))) showTab('none');}
     },
     canBuyMax() { return hasUpgrade('light', 22) },
     resetsNothing(){return hasMilestone('kou',6)},
@@ -403,7 +422,7 @@ addLayer("light", {
         effect() {
             return (hasUpgrade('light',21))?new Decimal(0.95):new Decimal(0.9);
         },
-        onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(player[this.layer].upgrades[this.id].cost);},
+        onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost);},
         cost() {return new Decimal(1).times(tmp["kou"].costMult42l)},
         },
         12:{ title: "Wandering For Beauty",
@@ -437,7 +456,7 @@ addLayer("light", {
         23:{ title: "Fragment Sympathy",
         description: "Directly Transfer decreases Fragments gain less.",
         unlocked() { return hasUpgrade("light", 22) },
-        onPurchase(){if (hasAchievement('a',32)) player[this.layer].points = player[this.layer].points.plus(player[this.layer].upgrades[this.id].cost);},
+        onPurchase(){if (hasAchievement('a',32)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost());},
         cost() {return new Decimal(20).times(tmp["kou"].costMult42l)},
         },
         24:{ title: "Sadness Overjoy",
@@ -576,13 +595,13 @@ addLayer("dark", {
     doReset(resettingLayer){
         let keep=[];
         if (hasAchievement('a',34)) keep.push("auto");
-        if (layers[resettingLayer].row > this.row) layerDataReset('dark', keep);
+        if (layers[resettingLayer].row > this.row) {layerDataReset('dark', keep);
         if (hasMilestone('lethe',0)) {player[this.layer].upgrades.push(22);player[this.layer].milestones = player[this.layer].milestones.concat([0,1])};
         if (hasMilestone('lethe',1))  player[this.layer].upgrades = player[this.layer].upgrades.concat([11,12,13,14]);
         if (hasMilestone('lethe',3))  player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32,33,34]);
         if (hasMilestone('lethe',4))  player[this.layer].upgrades = player[this.layer].upgrades.concat([21,23,24]);
         if (hasMilestone('lethe',5))  player[this.layer].milestones = player[this.layer].milestones.concat([2,3]);
-        if (player.tab=='dark'&&(!hasUpgrade('dark', 23)&&!hasMilestone('dark',0))) showTab('none');
+        if (player.tab=='dark'&&(!hasUpgrade('dark', 23)&&!hasMilestone('dark',0))) showTab('none');}
     },
     canBuyMax() { return hasUpgrade('dark', 22) },
     resetsNothing(){return hasMilestone('lethe',6)},
@@ -657,7 +676,7 @@ addLayer("dark", {
         23:{ title: "Force Operation",
         description: "Keep Conclusion upgrade when L or D reset.",
         unlocked() { return hasUpgrade("dark", 22)&&(hasUpgrade("light", 21)||hasMilestone('lethe',2)) },
-        onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(player[this.layer].upgrades[this.id].cost);player.mem.upgrades.push(34)},
+        onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost());player.mem.upgrades.push(34)},
         cost() {return new Decimal(20).times(tmp["kou"].costMult42d)},
         },
         24:{ title: "Calm in Warth",
@@ -776,10 +795,10 @@ addLayer("kou", {
         let keep=[];
         if (hasUpgrade('lab',71)) keep.push("auto");
         if (hasMilestone('rei',1)) keep.push("challenges");
-        if (layers[resettingLayer].row > this.row) layerDataReset("kou", keep);
+        if (layers[resettingLayer].row > this.row) {layerDataReset("kou", keep);
         if(hasMilestone('rei',0)) player.kou.milestones = player.kou.milestones.concat([0,1,2,3,4,5,6]);
         if (hasMilestone('rei',1)) player.kou.milestones.push(7);
-        if (hasAchievement('a',63)) player.kou.challenges[51] = 1;
+        if (hasAchievement('a',63)) player.kou.challenges[51] = 1;}
     },
 
     milestones: {
@@ -1056,7 +1075,7 @@ addLayer("lethe", {
 
     doReset(resettingLayer){
         let keep=[];
-        if (layers[resettingLayer].row > this.row) layerDataReset("lethe", keep);
+        if (layers[resettingLayer].row > this.row) {layerDataReset("lethe", keep);
         if(hasMilestone('yugamu',0)) player.lethe.milestones = player.lethe.milestones.concat([0,1,2,3,4,5,6]);
         if(hasMilestone('yugamu',1)) player.lethe.milestones.push(7);
         //keep upgrades
@@ -1066,7 +1085,7 @@ addLayer("lethe", {
             {
                 if (!hasUpgrade('lethe',auto[i])) player.lethe.upgrades.push(auto[i]);
             }
-        };
+        };}
     },
 
     milestones: {
@@ -1892,7 +1911,7 @@ addLayer("lab", {
                 "upgrades",
             ]
         },
-        "Research Progress": {
+        "Research Progresses": {
             unlocked(){return hasUpgrade('lab',13)},
             content: [
                 "main-display",
@@ -2235,14 +2254,26 @@ addLayer("lab", {
         },
         73:{ title: "Fragment Improvement",
         description: "Fragment Transformer now boosts Fragment generation.",
-        fullDisplay(){return "<b>Fragment Improvement</b><br>Fragment Transformer now boosts Fragment generation.<br><br>Cost: 15,000 Research Points<br>1e165 Fragments"},
+        fullDisplay(){return "<b>Fragment Improvement</b><br>Fragment Transformer now boosts Fragment generation.<br><br>Cost: 10,000 Research Points<br>1e165 Fragments"},
         unlocked(){return hasUpgrade('lab',71)&&hasUpgrade('lab',72)},
         canAfford(){
-            return player.lab.points.gte(15000)&&player.points.gte(1e165);
+            return player.lab.points.gte(10000)&&player.points.gte(1e165);
         },
         pay(){
-            player.lab.points = player.lab.points.sub(15000);
+            player.lab.points = player.lab.points.sub(10000);
             player.points = player.points.sub(1e165);
+            },
+        },
+        74:{ title: "Memory Improvement",
+        description: "Memory Transformer now boosts Fragment generation.",
+        fullDisplay(){return "<b>Memory Improvement</b><br>Memory Transformer now boosts Memories gain.<br><br>Cost: 10,000 Research Points<br>1e230 Memories"},
+        unlocked(){return hasUpgrade('lab',71)&&hasUpgrade('lab',72)},
+        canAfford(){
+            return player.lab.points.gte(10000)&&player.mem.points.gte(1e130);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(10000);
+            player.mem.points = player.mem.points.sub(1e130);
             },
         },
     },
@@ -2290,6 +2321,12 @@ addLayer("lab", {
             unlocked(){return hasUpgrade('lab',51)||hasAchievement('lab',21)},
             done() { return hasUpgrade('lab',51) },
             tooltip: "Start Anonymous Research.",
+        },
+        22: {
+            name: "Something More Useful",
+            unlocked(){return hasAchievement('lab',21)},
+            done() { return hasUpgrade('lab',73)||hasUpgrade('lab',74) },
+            tooltip: "Begin to turn your Research Transformers into more useful things.<br>Rewards:Tech Transformer's formula now better.",
         },
     },
     buyables:{//Research Transformers
@@ -2369,7 +2406,7 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.mem.points)+" / "+formatWhole(cost.fo)+" Memories"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points.";
+                    let display = formatWhole(player.mem.points)+" / "+formatWhole(cost.fo)+" Memories"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',74)?("<br>Also boosts Memories gain by ^+"+format(buyableEffect('lab',13))):"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',23); }, 
@@ -2383,6 +2420,11 @@ addLayer("lab", {
 					player.mem.points = player.mem.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
+                },
+                effect(){
+                    let eff = new Decimal(0);
+                    if (hasUpgrade('lab',73)) eff = eff.plus(player[this.layer].buyables[this.id].div(1000));
+                    return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44)  },
@@ -2563,6 +2605,7 @@ addLayer("lab", {
                 },
                 effect(){
                     let eff = player.lab.power.plus(1).log10().div(10).times(player.lab.buyables[this.id]);
+                    if (hasAchievement('lab',22)) eff = player.lab.power.plus(1).ln().div(10).times(player.lab.buyables[this.id])
                     if (eff.lt(0)) eff = new Decimal(0);
                     return eff;
                 },
@@ -2625,6 +2668,12 @@ addLayer("rei", {
             unlocked(){return player.rei.unlocked},
             effectDescription: "Keep last milestones of Red Doll Layer when LC or FL reset, and keep all Happiness Challenges finished.",
         },
+        2: {
+            requirementDescription: "5 total Luminous Churches",
+            done() { return player.rei.total.gte(5)},
+            unlocked(){return player.rei.unlocked},
+            effectDescription: "Currently, nothing here.",
+        },
     }
 })
 
@@ -2681,6 +2730,12 @@ addLayer("yugamu", {
             unlocked(){return player.yugamu.unlocked},
             effectDescription: "Keep last milestones of Forgotten Drop Layer when LC or FL reset, and now Guiding Scythes are auto bought.",
         },
+        2: {
+            requirementDescription: "5 total Flourish Labyrinths",
+            done() { return player.yugamu.total.gte(5)},
+            unlocked(){return player.yugamu.unlocked},
+            effectDescription: "Currently, nothing here.",
+        },
     }
 })
 
@@ -2730,6 +2785,33 @@ addNode("ghost5", {
     row: 2,
     color: "#000000",
     layerShown() {return "ghost";}
+})
+addNode("ghostLC", {
+    name: "ghostLC", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "GLC", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    canclick(){return false},
+    row: 2,
+    color: "#000000",
+    layerShown() {return (tmp["rei"].layerShown)?false:"ghost";}
+})
+addNode("ghostFL", {
+    name: "ghostFL", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "GFL", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    canclick(){return false},
+    row: 2,
+    color: "#000000",
+    layerShown() {return (tmp["yugamu"].layerShown)?false:"ghost";}
+})
+addNode("ghostF", {
+    name: "ghostF", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "GF", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    canclick(){return false},
+    row: 0,
+    color: "#000000",
+    layerShown() {return (tmp["lethe"].layerShown)?false:"ghost";}
 })
 
 
