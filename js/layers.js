@@ -2395,14 +2395,14 @@ addLayer("lab", {
         },
         93:{ title: "Doll Improvement",
         description: "Doll Transformer now boosts Red Dolls gain.",
-        fullDisplay(){return "<b>Doll Improvement</b><br>Doll Transformer now boosts Red Dolls gain.<br><br>Cost: 20,000 Research Points<br>95 Red Dolls"},
+        fullDisplay(){return "<b>Doll Improvement</b><br>Doll Transformer now boosts Red Dolls gain.<br><br>Cost: 20,000 Research Points<br>90 Red Dolls"},
         unlocked(){return hasUpgrade('lab',91)&&hasUpgrade('lab',92)},
         canAfford(){
-            return player.lab.points.gte(20000)&&player.kou.points.gte(95);
+            return player.lab.points.gte(20000)&&player.kou.points.gte(90);
         },
         pay(){
             player.lab.points = player.lab.points.sub(20000);
-            player.kou.points = player.kou.points.sub(95);
+            player.kou.points = player.kou.points.sub(90);
             },
         },
         94:{ title: "Drop Improvement",
