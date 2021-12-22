@@ -386,7 +386,8 @@ addLayer("light", {
         if (hasMilestone('kou',3))  player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32,33,34]);
         if (hasMilestone('kou',4))  player[this.layer].upgrades = player[this.layer].upgrades.concat([21,23,24]);
         if (hasMilestone('kou',5))  player[this.layer].milestones = player[this.layer].milestones.concat([2,3]);
-        if (player.tab=='light'&&(!hasUpgrade('dark', 23)&&!hasMilestone('light',0))) showTab('none');}
+        }
+        if (player.tab=='light'&&(!hasUpgrade('dark', 23)&&!hasMilestone('light',0))) showTab('none');
     },
     canBuyMax() { return hasUpgrade('light', 22) },
     resetsNothing(){return hasMilestone('kou',6)},
@@ -603,7 +604,8 @@ addLayer("dark", {
         if (hasMilestone('lethe',3))  player[this.layer].upgrades = player[this.layer].upgrades.concat([31,32,33,34]);
         if (hasMilestone('lethe',4))  player[this.layer].upgrades = player[this.layer].upgrades.concat([21,23,24]);
         if (hasMilestone('lethe',5))  player[this.layer].milestones = player[this.layer].milestones.concat([2,3]);
-        if (player.tab=='dark'&&(!hasUpgrade('dark', 23)&&!hasMilestone('dark',0))) showTab('none');}
+        };
+        if (player.tab=='dark'&&(!hasUpgrade('dark', 23)&&!hasMilestone('dark',0))) showTab('none');
     },
     canBuyMax() { return hasUpgrade('dark', 22) },
     resetsNothing(){return hasMilestone('lethe',6)},
@@ -774,10 +776,10 @@ addLayer("kou", {
         
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.1);
-        if (hasChallenge('kou',32)) eff=eff.pow(1+(hasMilestone('rei',2))?(Math.random()*0.05):0.05);
+        if (hasChallenge('kou',32)) eff=eff.pow(1+((!hasMilestone('rei',2))?(Math.random()*0.05):0.05));
 
         //↓这个永远放在最后
-        if (hasChallenge('kou',22)) eff=eff.plus((hasMilestone('rei',2))?(Math.random()*0.5):0.5);
+        if (hasChallenge('kou',22)) eff=eff.plus((!hasMilestone('rei',2))?(Math.random()*0.5):0.5);
         return eff;
     },
     effectDescription() {
@@ -1253,7 +1255,7 @@ addLayer("lethe", {
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.1);
-        if (hasChallenge('kou',32)) eff=eff.pow(1+(hasMilestone('rei',2))?(Math.random()*0.05):0.05);
+        if (hasChallenge('kou',32)) eff=eff.pow(1+((!hasMilestone('rei',2))?(Math.random()*0.05):0.05));
 
         return eff;
     },
@@ -2419,7 +2421,7 @@ addLayer("lab", {
         },
         101:{ title: "The World",
         description: "With so many works done, now it is time to take a glance to that mysterious World.",
-        fullDisplay(){return "<b>The World</b><br>With so many works done. Now it is time to take a glance to that mysterious World.<br>But Currently,still nothing there.<br><br>Cost: 3 Luminous Churches<br>3 Flourish Labyrinths"},
+        fullDisplay(){return "<b>The World</b><br>With so many works done. Now it is time to take a glance to that mysterious World.<br><br>Cost: 3 Luminous Churches<br>3 Flourish Labyrinths"},
         unlocked(){return (hasUpgrade('lab',93)&&hasUpgrade('lab',94)&&player.lab.points.gte(25000))||hasAchievement('a',64)},
         canAfford(){
             return player.rei.points.gte(3)&&player.yugamu.points.gte(3);
@@ -2996,6 +2998,9 @@ addLayer("world", {
         "blank",
         ["bar","WorldProgressBar"],
         ["display-text",function() {return formatWhole(player.world.Worldtimer)+" / "+formatWhole(tmp["world"].WorldstepHeight)+" Step Height"},{}],
+        "blank",
+        ["display-text",function() {return "Currently, nothing here"},{}],
+        ["display-text",function() {return "If you have any idea on The World should be like, please tell the mod creator!"},{}],
     ],
 
 })
