@@ -57,7 +57,7 @@ addLayer("mem", {
         let eff=new Decimal(1);
         if (hasAchievement('a',15)) eff=eff.times(1.5);
         if (player.lethe.unlocked) eff=eff.times(tmp.lethe.effect);
-        if (inChallenge('kou',12)) eff=eff.times(10);
+        if (inChallenge('kou',12)||hasUpgrade('lab',91)) eff=eff.times(10);
         return eff;
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -324,7 +324,8 @@ addLayer("light", {
         if (hasUpgrade('lethe',11)) mult = mult.div(upgradeEffect('lethe',11));
         if (hasUpgrade('lethe',41)) mult = mult.div(upgradeEffect('lethe',41));
         if (hasMilestone('lab',3)) mult = mult.div(player.lab.power.div(10).max(1));
-        return mult
+        if (hasUpgrade('lab',83)) mult = mult.div(buyableEffect('lab',21));
+        return mult;
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         exp = new Decimal(1);
@@ -334,7 +335,7 @@ addLayer("light", {
         let dm=new Decimal(1);
         if (player.kou.unlocked) dm=dm.times(tmp.kou.effect);
         if (inChallenge("kou",11)) dm = dm.times(1.5);
-        if (inChallenge('kou',12)) dm=dm.times(10);
+        if (inChallenge('kou',12)||hasUpgrade('lab',91)) dm=dm.times(10);
         if (hasAchievement('a',43)) dm=dm.times(player.dark.points.div(player.light.points.max(1)).max(1).min(5));
         if (inChallenge("kou",31)&&player.dark.points.lt(player[this.layer].points)) dm = dm.times(0.1);
         if (inChallenge('kou',42)) dm = dm.times(2);
@@ -538,7 +539,8 @@ addLayer("dark", {
         if (inChallenge("kou",31)) mult = mult.div(player.light.points.sub(player[this.layer].points).max(1));
         if (hasChallenge("kou",31)) mult = mult.div(player.light.points.sub(player[this.layer].points).div(2).max(1));
         if (hasMilestone('lab',4)) mult = mult.div(player.lab.power.div(10).max(1));
-        return mult
+        if (hasUpgrade('lab',84)) mult = mult.div(buyableEffect('lab',22));
+        return mult;
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         exp = new Decimal(1); 
@@ -549,7 +551,7 @@ addLayer("dark", {
         let dm=new Decimal(1);
         if (player.kou.unlocked) dm=dm.times(tmp.kou.effect);
         if (inChallenge("kou",11)) dm = dm.times(1.5);
-        if (inChallenge('kou',12)) dm=dm.times(10);
+        if (inChallenge('kou',12)||hasUpgrade('lab',91)) dm=dm.times(10);
         if (hasAchievement('a',43)) dm=dm.times(player.light.points.div(player.dark.points.max(1)).max(1).min(5));
         if (inChallenge("kou",31)&&player.light.points.lt(player[this.layer].points)) dm = dm.times(0.1);
         if (inChallenge('kou',42)) dm = dm.times(2);
@@ -752,6 +754,7 @@ addLayer("kou", {
         if (hasUpgrade('lethe',24)) mult = mult.div(player.points.log10().max(1).div(100).plus(1));
         if (hasUpgrade('lethe',23)) mult = mult.div(upgradeEffect('lethe',23));
         if (hasMilestone('lab',5)) mult = mult.div(player.lab.power.div(10).max(1));
+        if (hasUpgrade('lab',93)) mult = mult.div(buyableEffect('lab',31));
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -771,10 +774,10 @@ addLayer("kou", {
         
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.1);
-        if (hasChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.05);
+        if (hasChallenge('kou',32)) eff=eff.pow(1+(hasMilestone('rei',2))?(Math.random()*0.05):0.05);
 
         //↓这个永远放在最后
-        if (hasChallenge('kou',22)) eff=eff.plus(Math.random()*0.5);
+        if (hasChallenge('kou',22)) eff=eff.plus((hasMilestone('rei',2))?(Math.random()*0.5):0.5);
         return eff;
     },
     effectDescription() {
@@ -782,6 +785,7 @@ addLayer("kou", {
     },
     canBuyMax() { return hasUpgrade('lab', 61) },
     autoPrestige(){return (hasUpgrade('lab',71)&&player.kou.auto)},
+    resetsNothing(){return hasUpgrade('lab',81)},
 
     row: 2, // Row the layer is in on the tree (0 is the first row)
     displayRow: 0,
@@ -920,6 +924,9 @@ addLayer("kou", {
             challengeDescription: "Nothing can make your Memory softcap starts later, but Directgains in L,D and M which are not affected by softcap now x10.",
             unlocked() { return hasChallenge('kou',11)},
             goal() { return new Decimal(1e63) },
+            onExit(){
+                if (tmp["kou"].resetsNothing) {player.light.points = new Decimal(0);player.dark.points = new Decimal(0)};
+            },
             currencyDisplayName: "Memories",
             currencyInternalName: "points",
             currencyLayer: "mem",
@@ -1052,6 +1059,7 @@ addLayer("lethe", {
         if (hasUpgrade('lethe',42)) mult = mult.times(player.mem.points.log10().max(1));
         if (hasChallenge('kou',41)) mult = mult.times(tmp.lethe.buyables[11].effect);
         if (hasMilestone('lab',5)) mult = mult.times(player.lab.power.div(10).max(1));
+        if (hasUpgrade('lab',94)) mult = mult.times(buyableEffect('lab',32));
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -1081,6 +1089,9 @@ addLayer("lethe", {
         //keep upgrades
         if(hasUpgrade('lab',72)) {
             let auto = [11,15,51,55];
+            if (hasUpgrade('lab',82)) auto = auto.concat([13,31,35,53]);
+            if (hasUpgrade('lab',92)) auto = auto.concat([12,14,21,25,41,45,52,54]);
+            if (hasMilestone('yugamu',2)) auto = auto.concat([22,23,24,32,33,34,42,43,44]);
             for(var i = 0; i < auto.length; i++)
             {
                 if (!hasUpgrade('lethe',auto[i])) player.lethe.upgrades.push(auto[i]);
@@ -1242,7 +1253,7 @@ addLayer("lethe", {
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.1);
-        if (hasChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.05);
+        if (hasChallenge('kou',32)) eff=eff.pow(1+(hasMilestone('rei',2))?(Math.random()*0.05):0.05);
 
         return eff;
     },
@@ -1815,7 +1826,7 @@ addLayer("lethe", {
 addLayer("lab", {
     name: "Lab", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "LA", // This appears on the layer's node. Default is the id with the first letter capitalized
-    position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    position: 2, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
@@ -1861,8 +1872,14 @@ addLayer("lab", {
     //gain research points
     pointgain(){
         let gain = new Decimal(0);
+        //add
         if (hasMilestone('lab',7)) gain = gain.plus(buyableEffect('lab', 41));
         if (hasMilestone('lab',8)) gain = gain.plus(buyableEffect('lab', 42));
+
+        //mult
+        if (hasMilestone('rei',2)) gain = gain.times(player.rei.points.div(100).plus(1));
+        if (hasMilestone('yugamu',2)) gain = gain.times(player.yugamu.points.div(100).plus(1));
+
         return gain;
     },
     pointsoftcap(){
@@ -1874,7 +1891,7 @@ addLayer("lab", {
 
         let auto=[11,12,13,21,22,31,32];
         for(var i = 0; i < auto.length; i++){
-            if (layers.lab.buyables[auto[i]].canAfford()&&hasUpgrade('lab',44)){
+            if (layers.lab.buyables[auto[i]].canAfford()&&layers.lab.buyables[auto[i]].autoed()){
                 layers.lab.buyables[auto[i]].buy()
             };
         }
@@ -1888,6 +1905,34 @@ addLayer("lab", {
         player.lab.power = player.lab.power.sub(player.lab.power.times(0.01).times(diff));
         if (player.lab.power.lt(0)) player.lab.power = new Decimal(1e-10);
         if (player.lab.points.lt(0)) player.lab.points = new Decimal(1e-10);
+    },
+
+    microtabs:{
+        /*style: {'border-width':'0px'},*/
+        Researchstuff:{
+            "Setup":{
+                content:[
+                "blank",
+                ["row",[["upgrade","11"], ["upgrade","12"], ["upgrade","13"], ["upgrade","14"]]],
+                ["row",[["upgrade","21"], ["upgrade","22"], ["upgrade","23"], ["upgrade","24"]]],
+                ["row",[["upgrade","31"], ["upgrade","32"], ["upgrade","33"], ["upgrade","34"]]],
+                ["row",[["upgrade","41"], ["upgrade","42"], ["upgrade","43"], ["upgrade","44"]]],
+                ["row",[["upgrade","51"] ]]
+            ]
+        },
+        "Anonymous Researches":{
+                unlocked(){return hasUpgrade('lab',51)},
+                content:[
+                "blank",
+                ["row",[["upgrade","61"] ,["upgrade","62"] ,["upgrade","63"] ,["upgrade","64"]]],
+                ["row",[["upgrade","71"] ,["upgrade","72"] ,["upgrade","73"] ,["upgrade","74"]]],
+                ["row",[["upgrade","81"] ,["upgrade","82"] ,["upgrade","83"] ,["upgrade","84"]]],
+                ["row",[["upgrade","91"] ,["upgrade","92"] ,["upgrade","93"] ,["upgrade","94"]]],
+                ["row",[["upgrade","101"] ]]
+            ]
+        },
+        }
+
     },
 
     tabFormat: {
@@ -1908,7 +1953,7 @@ addLayer("lab", {
                 function() {return "You lose 1% Research Power every second."},
                     {}],
                 "blank",
-                "upgrades",
+                ["microtabs","Researchstuff",{'border-width':'0px'}],
             ]
         },
         "Research Progresses": {
@@ -2276,6 +2321,118 @@ addLayer("lab", {
             player.mem.points = player.mem.points.sub(1e130);
             },
         },
+        81:{ title: "Doll Adjustment",
+        description: "Red Dolls Resets Nothing.",
+        fullDisplay(){return "<b>Doll Adjustment</b><br>Red Dolls Resets Nothing.<br><br>Cost: 5e9 Research Power<br>85 Red Dolls"},
+        unlocked(){return hasUpgrade('lab',73)&&hasUpgrade('lab',74)},
+        canAfford(){
+            return player.lab.power.gte(5e9)&&player.kou.points.gte(85);
+        },
+        pay(){
+            player.lab.power = player.lab.power.sub(5e9);
+            player.kou.points = player.kou.points.sub(85);
+            },
+        },
+        82:{ title: "Landmarks",
+        description: "Keep 4 landmark (middle of edge) Beacons among Guiding Beacons when reset.",
+        fullDisplay(){return "<b>Landmarks</b><br>Keep 4 landmark (middle of edge) Beacons among Guiding Beacons when reset.<br><br>Cost: 5e9 Research Power<br>1e148 Forgotten Drops"},
+        unlocked(){return hasUpgrade('lab',73)&&hasUpgrade('lab',74)},
+        canAfford(){
+            return player.lab.power.gte(5e9)&&player.lethe.points.gte(1e148);
+        },
+        pay(){
+            player.lab.power = player.lab.power.sub(5e9);
+            player.lethe.points = player.lethe.points.sub(1e148);
+            },
+        },
+        83:{ title: "Light Improvement",
+        description: "Light Transformer now boosts Light Tachyons gain.",
+        fullDisplay(){return "<b>Light Improvement</b><br>Light Transformer now boosts Light Tachyons gain.<br><br>Cost: 15,000 Research Points<br>100,000 Light Tachyons"},
+        unlocked(){return hasUpgrade('lab',81)&&hasUpgrade('lab',82)},
+        canAfford(){
+            return player.lab.points.gte(15000)&&player.light.points.gte(100000);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(15000);
+            player.light.points = player.light.points.sub(100000);
+            },
+        },
+        84:{ title: "Dark Improvement",
+        description: "Dark Transformer now boosts Dark Matters gain.",
+        fullDisplay(){return "<b>Dark Improvement</b><br>Dark Transformer now boosts Dark Matters gain.<br><br>Cost: 15,000 Research Points<br>97,000 Dark Matters"},
+        unlocked(){return hasUpgrade('lab',81)&&hasUpgrade('lab',82)},
+        canAfford(){
+            return player.lab.points.gte(15000)&&player.dark.points.gte(97000);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(15000);
+            player.dark.points = player.dark.points.sub(97000);
+            },
+        },
+        91:{ title: "Happiness Extract",
+        description: "Challenge Cracking Softcap's positive buff will act as if you are in it, but this challenge no longer experience that buff for more.",
+        fullDisplay(){return "<b>Happiness Extract</b><br>Challenge Cracking Softcap's positive buff will act as if you are in it, but this challenge no longer experience that buff for more.<br><br>Cost: 1.5e10 Research Power<br>90 Red Dolls"},
+        unlocked(){return hasUpgrade('lab',83)&&hasUpgrade('lab',84)},
+        canAfford(){
+            return player.lab.power.gte(1.5e10)&&player.kou.points.gte(90);
+        }, 
+        pay(){
+            player.lab.power = player.lab.power.sub(1.5e10);
+            player.kou.points = player.kou.points.sub(90);
+            },
+        },
+        92:{ title: "Synergy Connection",
+        description: "Keep 8 Synergy Beacons among Guiding Beacons when reset.",
+        fullDisplay(){return "<b>Synergy Connection</b><br>Keep 8 Synergy Beacons among Guiding Beacons when reset.<br><br>Cost: 1.5e10 Research Power<br>1e160 Forgotten Drops"},
+        unlocked(){return hasUpgrade('lab',83)&&hasUpgrade('lab',84)},
+        canAfford(){
+            return player.lab.power.gte(1.5e10)&&player.lethe.points.gte(1e160);
+        },
+        pay(){
+            player.lab.power = player.lab.power.sub(1.5e10);
+            player.lethe.points = player.lethe.points.sub(1e160);
+            },
+        },
+        93:{ title: "Doll Improvement",
+        description: "Doll Transformer now boosts Red Dolls gain.",
+        fullDisplay(){return "<b>Doll Improvement</b><br>Doll Transformer now boosts Red Dolls gain.<br><br>Cost: 20,000 Research Points<br>95 Red Dolls"},
+        unlocked(){return hasUpgrade('lab',91)&&hasUpgrade('lab',92)},
+        canAfford(){
+            return player.lab.points.gte(20000)&&player.kou.points.gte(95);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(20000);
+            player.kou.points = player.kou.points.sub(95);
+            },
+        },
+        94:{ title: "Drop Improvement",
+        description: "Forgotten Transformer now boosts Red Dolls gain.",
+        fullDisplay(){return "<b>Drop Improvement</b><br>Forgotten Transformer now boosts Forgotten Drops gain.<br><br>Cost: 20,000 Research Points<br>1e170 Forgotten Drops"},
+        unlocked(){return hasUpgrade('lab',91)&&hasUpgrade('lab',92)},
+        canAfford(){
+            return player.lab.points.gte(20000)&&player.lethe.points.gte(1e170);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(20000);
+            player.lethe.points = player.lethe.points.sub(1e170);
+            },
+        },
+        101:{ title: "The World",
+        description: "With so many works done, now it is time to take a glance to that mysterious World.",
+        fullDisplay(){return "<b>The World</b><br>With so many works done. Now it is time to take a glance to that mysterious World.<br>But Currently,still nothing there.<br><br>Cost: 3 Luminous Churches<br>3 Flourish Labyrinths"},
+        unlocked(){return (hasUpgrade('lab',93)&&hasUpgrade('lab',94)&&player.lab.points.gte(25000))||hasAchievement('a',64)},
+        canAfford(){
+            return player.rei.points.gte(3)&&player.yugamu.points.gte(3);
+        },
+        pay(){
+            player.rei.points = player.rei.points.sub(3);
+            player.yugamu.points = player.yugamu.points.sub(3);
+            },
+        onPurchase(){
+            player.world.unlocked = true;showTab('none');
+        },
+            style: {height: '200px', width: '200px'},
+        },
     },
     achievements:{//Research Progress
         11: {
@@ -2440,7 +2597,7 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.light.points)+" / "+formatWhole(cost.fo)+" Light Tachyons"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+((inChallenge('kou',12)||inChallenge('kou',42))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
+                    let display = formatWhole(player.light.points)+" / "+formatWhole(cost.fo)+" Light Tachyons"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',83)?("<br>Also boosts Light Tachyons gain by x"+format(buyableEffect('lab',21))):"")+((inChallenge('kou',12)||inChallenge('kou',42))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',31); }, 
@@ -2454,6 +2611,12 @@ addLayer("lab", {
 					//player.light.points = player.light.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
+                },
+                effect(){
+                    let eff = new Decimal(1);
+                    if (hasUpgrade('lab',83)) eff = player[this.layer].buyables[this.id].div(50);
+                    if (eff.lt(1)) eff = new Decimal(1);
+                    return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44)  },
@@ -2469,7 +2632,7 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.dark.points)+" / "+formatWhole(cost.fo)+" Dark Matters"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+((inChallenge('kou',12)||inChallenge('kou',42))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
+                    let display = formatWhole(player.dark.points)+" / "+formatWhole(cost.fo)+" Dark Matters"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',84)?("<br>Also boosts Dark Matters gain by x"+format(buyableEffect('lab',22))):"")+((inChallenge('kou',12)||inChallenge('kou',42))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',31); }, 
@@ -2483,6 +2646,12 @@ addLayer("lab", {
 					//player.dark.points = player.dark.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
+                },
+                effect(){
+                    let eff = new Decimal(1);
+                    if (hasUpgrade('lab',84)) eff = player[this.layer].buyables[this.id].div(50);
+                    if (eff.lt(1)) eff = new Decimal(1);
+                    return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44)  },
@@ -2498,7 +2667,7 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.kou.points)+" / "+formatWhole(cost.fo)+" Red Dolls"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points.";
+                    let display = formatWhole(player.kou.points)+" / "+formatWhole(cost.fo)+" Red Dolls"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',93)?("<br>Also boosts Red Dolls gain by x"+format(buyableEffect('lab',31))):"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',32); }, 
@@ -2512,6 +2681,12 @@ addLayer("lab", {
 					//player.kou.points = player.kou.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
+                },
+                effect(){
+                    let eff= new Decimal(1);
+                    if (hasUpgrade('lab',93)) eff = player.lab.buyables[this.id].div(5);
+                    if (eff.lt(1)) eff = new Decimal(1);
+                    return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44)  },
@@ -2527,7 +2702,7 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.lethe.points)+" / "+formatWhole(cost.fo)+" Forgotten Drops"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points.";
+                    let display = formatWhole(player.lethe.points)+" / "+formatWhole(cost.fo)+" Forgotten Drops"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',94)?("<br>Also boosts Forgotten Drops gain by x"+format(buyableEffect('lab',32))):"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',33); }, 
@@ -2541,6 +2716,12 @@ addLayer("lab", {
 					player.lethe.points = player.lethe.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
+                },
+                effect(){
+                    let eff= new Decimal(1);
+                    if (hasUpgrade('lab',94)) eff = player.lab.buyables[this.id].div(2.5);
+                    if (eff.lt(1)) eff = new Decimal(1);
+                    return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44)  },
@@ -2672,7 +2853,7 @@ addLayer("rei", {
             requirementDescription: "5 total Luminous Churches",
             done() { return player.rei.total.gte(5)},
             unlocked(){return player.rei.unlocked},
-            effectDescription: "Currently, nothing here.",
+            effectDescription: "Luminous Churches boosts Research Points gain & All random num set to it's maxnum.",
         },
     }
 })
@@ -2734,9 +2915,89 @@ addLayer("yugamu", {
             requirementDescription: "5 total Flourish Labyrinths",
             done() { return player.yugamu.total.gte(5)},
             unlocked(){return player.yugamu.unlocked},
-            effectDescription: "Currently, nothing here.",
+            effectDescription: "Flourish Labyrinth boosts Research Points gain & Keep central 9 Guiding Beacons when reset.",
         },
     }
+})
+
+addLayer("world", {
+    name: "World", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "W", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 2, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    startData() { return {
+        unlocked: false,
+		points: new Decimal(0),
+        best:new Decimal(0),
+        unlockOrder:0,
+        WorldstepHeight: new Decimal(10),//Do not use plaer.world.WorldstepHeight
+        Worldtimer: new Decimal(0),
+        StepgrowthSpeed: new Decimal(1),//per second
+        }},
+    resource: "World Steps",
+    color: "#ddeee3",
+    nodeStyle() { return {
+        background: (player.world.unlocked||canReset("world"))?("linear-gradient(#ededed, #383838)"):"#bf8f8f",
+        //"background-size":"120px 120px",
+        height: "95px",
+        width: "95px",
+        "border" : "0px",
+        "outline":"rgb(100,100,100) solid 5px",
+    }},
+    type: "none", // 怹也不通过重置获得点数,但是怹应该会被重置
+    branches: ["mem"],
+
+    row: 3, // Row the layer is in on the tree (0 is the first row)
+    displayRow: 0,
+    position:2,
+    layerShown(){return hasAchievement('a',64)},
+    unlocked(){return hasUpgrade('lab',101)},
+    doReset(resettingLayer){
+        let keep=[];
+        if (layers[resettingLayer].row > this.row) {layerDataReset('world', keep);}
+    },
+
+    bars: {
+        WorldProgressBar: {
+            direction: RIGHT,
+            width: 500,
+            height: 25,
+            progress() { return player.world.Worldtimer.div(tmp["world"].WorldstepHeight) },
+            fillStyle:{'background-color':'#ddeee3'},
+        },
+    },
+
+    WorldstepHeight(){
+        let base = new Decimal(10);
+        let step = base.times(player.world.points.plus(1));
+        return step;
+    },
+
+    StepgrowthSpeed(){
+        let speed = new Decimal(1);
+        return speed;
+    },
+
+    update(diff){//重头戏
+        if (!player.world.unlocked) player.world.Worldtimer = new Decimal(0);
+        player.world.Worldtimer = player.world.Worldtimer.plus(player.world.StepgrowthSpeed.times(diff));
+        if (player.world.Worldtimer.gte(tmp["world"].WorldstepHeight)) {
+            player[this.layer].points = player[this.layer].points.plus(1);
+            player.world.Worldtimer = new Decimal(0);
+        };
+
+        if (player[this.layer].points.gt(player[this.layer].best)) player[this.layer].best = player[this.layer].points;
+    },
+    
+    tabFormat: [
+        "blank", 
+        "main-display", 
+        "blank", 
+        "resource-display",
+        "blank",
+        ["bar","WorldProgressBar"],
+        ["display-text",function() {return formatWhole(player.world.Worldtimer)+" / "+formatWhole(tmp["world"].WorldstepHeight)+" Step Height"},{}],
+    ],
+
 })
 
 //GHOSTS
@@ -2757,7 +3018,7 @@ addNode("ghost2", {
     canclick(){return false},
     row: 0,
     color: "#000000",
-    layerShown() {return "ghost";}
+    layerShown() {return (tmp["world"].layerShown)?false:"ghost";}
 })
 addNode("ghost3", {
     name: "ghost3", // This is optional, only used in a few places, If absent it just uses the layer id.
@@ -2966,6 +3227,14 @@ addLayer("a", {
             name: "Head into Anonymous",
             done() { return player.rei.unlocked&&player.yugamu.unlocked },
             tooltip: "Unlock both Anonymous Layers.<br>Rewards:Keep Red Comet Challenge Finished when reset.",
+            onComplete(){
+                if (!hasChallenge('kou',51)) player.kou.challenges[51] = 1;
+            },
+        },
+        64: {
+            name: "Glance into The World",
+            done() { return player.world.unlocked},
+            tooltip: "Unlock World Layer.<br>Rewards:No Idea.",
         },
     },
     tabFormat: [

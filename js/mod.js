@@ -1,7 +1,7 @@
 let modInfo = {
 	name: "ArcTree",
 	id: "arctree",
-	author: "cyxw",
+	author: "cyxw & sxy62146214",
 	pointsName: "Fragments",
 	modFiles: ["layers.js", "tree.js"],
 
