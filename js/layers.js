@@ -230,7 +230,7 @@ addLayer("mem", {
             player.dark.points = player.dark.points.sub(65);
             player.light.points = player.light.points.sub(65);
         },
-        unlocked() { return ( (hasUpgrade("dark", 34)&&hasUpgrade("light",34)&&player.dark.points.gte(60)&&player.light.points.gte(60)) || hasAchievement('a',21))},
+        unlocked() { return ( (hasUpgrade("dark", 34)&&hasUpgrade("light",34))|| hasAchievement('a',21))},
         style(){return {'height':'200px', 'width':'200px'}},
         onPurchase(){doReset('kou',true);showTab('none');player[this.layer].upgrades=[41];},
         },
@@ -245,7 +245,7 @@ addLayer("mem", {
             player.kou.points = player.kou.points.sub(75);
             player.lethe.points = player.lethe.points.sub(1e107);
         },
-        unlocked() { return (player.points.gte(1e125)&&player.kou.points.gte(70)&&player.lethe.points.gte(1e100)&&hasChallenge('kou',51))||hasAchievement('a',55)},
+        unlocked() { return (hasChallenge('kou',51))||hasAchievement('a',55)},
         style(){return {'height':'200px', 'width':'200px'}},
         onPurchase(){showTab('none');player.lab.unlocked = true;player.lab.points= new Decimal(1);},
         },
@@ -1010,7 +1010,7 @@ addLayer("kou", {
             name: "Red Comet",
             completionLimit: 1,
             challengeDescription: "Enduring all Happiness Challenges above.",
-            unlocked() { return (player.kou.points.gte(70)&&player.lethe.points.gte(1e100)&&hasChallenge('kou',42))||hasChallenge('kou',51)},
+            unlocked() { return (player.kou.points.gte(65)&&player.lethe.points.gte(1e95)&&hasChallenge('kou',42))||hasChallenge('kou',51)},
             countsAs : [11,12,21,22,31,32,41,42],
             onEnter(){
                 doReset('light',true);
@@ -1863,6 +1863,7 @@ addLayer("lab", {
         if (hasAchievement('lab',13)) mult = mult.plus(achievementEffect('lab',13));
         if (hasUpgrade('lab',63)) mult = mult.times(upgradeEffect('lab',63));
         if (hasUpgrade('lab',64)) mult = mult.times(upgradeEffect('lab',64));
+        if (hasUpgrade('world',11)) mult = mult.times(upgradeEffect('world',11));
         mult = mult.pow(tmp["lab"].powerexp)
         return mult;
     },
@@ -2213,7 +2214,7 @@ addLayer("lab", {
         51:{ title: "Anonymous Effect",
         description: "Unlock two new layers of phenomenon you think isn't normal.",
         fullDisplay(){return "<b>Anonymous Effect</b><br>Unlock two new layers of phenomenon which you think aren't normal.<br><br>Cost: 2,000 Research Points.<br>250,000,000 Research Power"},
-        unlocked(){return (hasUpgrade('lab',44)&&player.lab.points.gte(1500))||hasAchievement('lab',21)},
+        unlocked(){return (hasUpgrade('lab',44))||hasAchievement('lab',21)},
         canAfford(){
             return player.lab.points.gte(2000)&&player.lab.power.gte(250000000);
         },
@@ -2422,7 +2423,7 @@ addLayer("lab", {
         101:{ title: "The World",
         description: "With so many works done, now it is time to take a glance to that mysterious World.",
         fullDisplay(){return "<b>The World</b><br>With so many works done. Now it is time to take a glance to that mysterious World.<br><br>Cost: 3 Luminous Churches<br>3 Flourish Labyrinths"},
-        unlocked(){return (hasUpgrade('lab',93)&&hasUpgrade('lab',94)&&player.lab.points.gte(25000))||hasAchievement('a',64)},
+        unlocked(){return (hasUpgrade('lab',93)&&hasUpgrade('lab',94))||hasAchievement('a',64)},
         canAfford(){
             return player.rei.points.gte(3)&&player.yugamu.points.gte(3);
         },
@@ -3001,7 +3002,23 @@ addLayer("world", {
         "blank",
         ["display-text",function() {return "Currently, nothing here"},{}],
         ["display-text",function() {return "If you have any idea on The World should be like, please tell the mod creator!"},{}],
+        "upgrades",
     ],
+
+    upgrades:{
+        11:{ title: "World Research",
+        description: "World steps boosts Research Power gain",
+        unlocked() { return player.world.unlocked },
+        cost(){return new Decimal(5)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            let eff = player.world.points.div(10).plus(1);
+            return eff;
+        }
+        },
+    },
 
 })
 

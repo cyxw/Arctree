@@ -17,3 +17,4 @@ LA.power:Research Power
 LA.buyables:Research Transformers
 LC:Luminous Churches
 FL:Flourish Labyrinths
+W:World steps
