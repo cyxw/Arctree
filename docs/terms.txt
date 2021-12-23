@@ -15,3 +15,5 @@ F:Forgotten Drops
 LA:Research Points
 LA.power:Research Power
 LA.buyables:Research Transformers
+LC:Luminous Churches
+FL:Flourish Labyrinths
