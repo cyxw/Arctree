@@ -355,11 +355,11 @@ addLayer("light", {
             requirementDescription: "1 Light Tachyon",
             done() { return player.light.best.gte(1)&&hasAchievement('a',21)},
             unlocked(){return hasAchievement('a',21)},
-            effectDescription: "This Layer no longer hidden.",
+            effectDescription: "This Layer no longer hidden & Light Upgrades give back its cost by Achievements.",
         },
         1: {
-            requirementDescription: "8 Light Tachyons",
-            done() { return player.light.best.gte(8)&&hasAchievement('a',21)},
+            requirementDescription: "5 Light Tachyons",
+            done() { return player.light.best.gte(5)&&hasAchievement('a',21)},
             unlocked(){return hasAchievement('a',21)},
             effectDescription: "Keep all your row1&row2 Memory upgrades when L or D reset.",
         },
@@ -424,17 +424,26 @@ addLayer("light", {
         effect() {
             return (hasUpgrade('light',21))?new Decimal(0.95):new Decimal(0.9);
         },
-        onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost);},
+        onPurchase(){
+            if (hasMilestone('light',0)&&!hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+            if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost);
+        },
         cost() {return new Decimal(1).times(tmp["kou"].costMult42l)},
         },
         12:{ title: "Wandering For Beauty",
         description: "Light Tachyons also effects Memories gain at a reduced rate.",
         unlocked() { return hasUpgrade("light", 11) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(3).times(tmp["kou"].costMult42l)},
         },
         13:{ title: "Experiencing Happiness",
         description: "Light Tachyons also effects its own gain at a reduced rate.",
         unlocked() { return hasUpgrade("light", 12) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(5).times(tmp["kou"].costMult42l)},
         },
         14:{ title: "After That Butterfly",
@@ -443,42 +452,66 @@ addLayer("light", {
         effect() {
             return player[this.layer].points.plus(1).log10().plus(1).pow(0.5);
         },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(8).times(tmp["kou"].costMult42l)},
         },
         21:{ title: "Seeking Delight.",
         description: "Conclusion decreases Memories gain more less, and gain ^0.33 instead of ^0.25 Memories after softcap.",
         unlocked() { return hasUpgrade("light", 14) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(10).times(tmp["kou"].costMult42l)},
         },
         22:{ title: "More Brightness",
         description: "You can buy max Light Tachyons And lower Memories requirement for further Light Tachyons",
         unlocked() { return hasUpgrade("light", 21)||hasMilestone('kou',0) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(15).times(tmp["kou"].costMult42l)},
         },
         23:{ title: "Fragment Sympathy",
         description: "Directly Transfer decreases Fragments gain less.",
         unlocked() { return hasUpgrade("light", 22) },
-        onPurchase(){if (hasAchievement('a',32)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost());},
+        onPurchase(){
+            if (hasMilestone('light',0)&&!hasAchievement('a',32)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+            if (hasAchievement('a',32)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost);
+        },
         cost() {return new Decimal(20).times(tmp["kou"].costMult42l)},
         },
         24:{ title: "Sadness Overjoy",
         description: "Light Tachyons also effects Dark Matters gain.",
         unlocked() { return hasUpgrade("light", 23) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(30).times(tmp["kou"].costMult42l)},
         },
         31:{ title: "Hardware BUS",
         description: "Light Tachyons effect formula now much better.",
         unlocked() { return hasUpgrade("light", 24)||hasMilestone('kou',3) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(35).times(tmp["kou"].costMult42l)},
         },
         32:{ title: "Moments of Lifes",
         description: "Gain ^0.40 instead of ^0.33 Memories after softcap.",
         unlocked() { return hasUpgrade("light", 31)||hasMilestone('kou',3) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(40).times(tmp["kou"].costMult42l)},
         },
         33:{ title: "Prepare To Travel",
         description: "Light Tachyons itself now makes Directly Transfer boosts more Memories gain.",
         unlocked() { return hasUpgrade("light", 32)||hasMilestone('kou',3) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player[this.layer].points.div(500);
             if (eff.lte(0.1)) return new Decimal(0.1);
@@ -490,6 +523,9 @@ addLayer("light", {
         34:{ title: "The Light",
         description: "Lower Memories requirement for further Light Tachyons, and Light Tachyons itself now boosts Dark Matters gain.",
         unlocked() { return hasUpgrade("light", 33)||hasMilestone('kou',3) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player[this.layer].points.div(3);
             if (eff.lt(1.25)) return new Decimal(1.25);
@@ -573,11 +609,12 @@ addLayer("dark", {
             requirementDescription: "1 Dark Matter",
             done() { return player.dark.best.gte(1)&&hasAchievement('a',21)},
             unlocked(){return hasAchievement('a',21)},
-            effectDescription: "This Layer no longer hidden.",
+            effectDescription: "This Layer no longer hidden & Dark Upgrades give back its cost by Achievements.",
         },
         1: {
-            requirementDescription: "8 Dark Matters",
-            done() { return player.dark.best.gte(8)&&hasAchievement('a',21)},
+            requirementDescription: "5 Dark Matters",
+            done() { return player.dark.best.gte(5)&&hasAchievement('a',21)},
+            
             unlocked(){return hasAchievement('a',21)},
             effectDescription: "Keep your first two Memory upgrades on row 3 when L or D reset.",
         },
@@ -639,6 +676,9 @@ addLayer("dark", {
         11:{ title: "Overclock",
         description: "Your Fragments generation is doubled when under 9999",
         unlocked() { return player.dark.unlocked },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(1).times(tmp["kou"].costMult42d)},
         effect() {
             let eff = new Decimal(9999);
@@ -649,16 +689,25 @@ addLayer("dark", {
         12:{ title: "Seeking For Other Sides",
         description: "Dark Matters also effects Fragments generation at a reduced rate.",     
         unlocked() { return hasUpgrade("dark", 11) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(3).times(tmp["kou"].costMult42d)},
         },
         13:{ title: "Crack Everything",
         description: "Dark Matters also effects its own gain at a reduced rate.",
         unlocked() { return hasUpgrade("dark", 12) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(5).times(tmp["kou"].costMult42d)},
         },
         14:{ title: "Wrath In Calm",
         description: "Dark Matters itself boosts its own gain.",
         unlocked() { return hasUpgrade("dark", 13) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             return player[this.layer].points.plus(1).log10().plus(1).pow(0.5);
         },
@@ -667,6 +716,9 @@ addLayer("dark", {
         21:{ title: "Power Override",
         description: "Overclock ends at 19,998 and Memories softcap starts 50x later.",
         unlocked() { return hasUpgrade("dark", 14) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             return new Decimal(2);
         },
@@ -675,27 +727,42 @@ addLayer("dark", {
         22:{ title: "More Darkness",
         description: "You can buy max Dark Matters And lower Fragments requirement for further Dark Matters",
         unlocked() { return hasUpgrade("dark", 21)||hasMilestone('lethe',0)},
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(15).times(tmp["kou"].costMult42d)},
         },
         23:{ title: "Force Operation",
         description: "Keep Conclusion upgrade when L or D reset.",
         unlocked() { return hasUpgrade("dark", 22)&&(hasUpgrade("light", 21)||hasMilestone('lethe',2)) },
-        onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost());player.mem.upgrades.push(34)},
+        onPurchase(){
+            if (hasMilestone('dark',0)&&!hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+            if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost);player.mem.upgrades.push(34)
+        },
         cost() {return new Decimal(20).times(tmp["kou"].costMult42d)},
         },
         24:{ title: "Calm in Warth",
         description: "Dark Matters also effects Light Tachyons gain.",
         unlocked() { return hasUpgrade("dark", 23) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(30).times(tmp["kou"].costMult42d)},
         },
         31:{ title: "Memory Organizing",
         description: "Dark Matters effect formula now much better.",
         unlocked() { return hasUpgrade("dark", 24)||hasMilestone('lethe',3) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(35).times(tmp["kou"].costMult42d)},
         },
         32:{ title: "Moments of Anger",
         description: "Dark Matters itself makes Memories softcap starts later.",
         unlocked() { return hasUpgrade("dark", 31)||hasMilestone('lethe',3) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player[this.layer].points.div(2);
             if (eff.lt(1.5)) return new Decimal(1.5);
@@ -706,6 +773,9 @@ addLayer("dark", {
         33:{ title: "Prepare To Bleed",
         description: "Achievements now boost Dark Matters gain.",
         unlocked() { return hasUpgrade("dark", 32)||hasMilestone('lethe',3) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player.a.achievements.length;
             if (eff<= 1) return new Decimal(1);
@@ -716,6 +786,9 @@ addLayer("dark", {
         34:{ title: "The Dark",
         description: "Lower Fragments requirement for further Dark Matters, and Dark Matters itself now boosts Light Tachyons gain.",
         unlocked() { return hasUpgrade("dark", 33)||hasMilestone('lethe',3) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player[this.layer].points.div(3);
             if (eff.lt(1.25)) return new Decimal(1.25);
@@ -1010,7 +1083,7 @@ addLayer("kou", {
             name: "Red Comet",
             completionLimit: 1,
             challengeDescription: "Enduring all Happiness Challenges above.",
-            unlocked() { return (player.kou.points.gte(65)&&player.lethe.points.gte(1e95)&&hasChallenge('kou',42))||hasChallenge('kou',51)},
+            unlocked() { return hasChallenge('kou',42)},
             countsAs : [11,12,21,22,31,32,41,42],
             onEnter(){
                 doReset('light',true);
@@ -1337,6 +1410,9 @@ addLayer("lethe", {
                 let price = player.light.points.gte(pricenum)&&player.kou.points.gte(40);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(40).times(achievementEffect('a',42))).floor();
+            },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
         },
@@ -1353,6 +1429,9 @@ addLayer("lethe", {
                 let around = (hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25));
                 let price = player.kou.points.gte(50);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp['light'].effect.gte(2.5e11);
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(50).times(achievementEffect('a',42))).floor();
             },
             effect(){
                 return player.kou.points.div(2).max(1);
@@ -1376,6 +1455,9 @@ addLayer("lethe", {
             },
             effect(){
                 return Decimal.log10(player.kou.resetTime+1).plus(1).sqrt();
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(35).times(achievementEffect('a',42))).floor();
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1449,6 +1531,9 @@ addLayer("lethe", {
                 let price = player.kou.points.gte(30)&&player.mem.points.gte(5e65)&&player.light.points.gte(pricenum);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(30).times(achievementEffect('a',42))).floor();
+            },
             effect(){
                 return player.kou.points.div(1.5).max(1);
             },
@@ -1470,6 +1555,9 @@ addLayer("lethe", {
                 let price = player.kou.points.gte(25)&&player.mem.points.gte(2e65);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(25).times(achievementEffect('a',42))).floor();
+            },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
         },
@@ -1486,6 +1574,9 @@ addLayer("lethe", {
                 let around = (hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35));
                 let price = player.kou.points.gte(50);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp['dark'].effect.gte(400000000);
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(50).times(achievementEffect('a',42))).floor();
             },
             effect(){
                 return player.kou.points.div(2).max(1);
@@ -1551,6 +1642,7 @@ addLayer("lethe", {
                 let a = player.mem.points.gte(5e43);
 				return a && (player.lethe.upgrades.length<tmp.lethe.nodeSlots)
             },
+            
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
         },
@@ -1573,6 +1665,9 @@ addLayer("lethe", {
                 let around = (hasUpgrade('lethe',23)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',33)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45));
                 let price = player.kou.points.gte(30)&&player.mem.points.gte(5e65)&&player.dark.points.gte(pricenum);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(30).times(achievementEffect('a',42))).floor();
             },
             effect(){
                 if (player.light.points.lte(player.dark.points)) return 1;
@@ -1599,6 +1694,9 @@ addLayer("lethe", {
                 let around = (hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45));
                 let price = player.dark.points.gte(pricenum)&&player.kou.points.gte(40);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(40).times(achievementEffect('a',42))).floor();
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -2805,6 +2903,7 @@ addLayer("rei", {
         points: new Decimal(0),
         best: new Decimal(0),
         total: new Decimal(0),
+        roses:new Decimal(0),
         unlockOrder:0,
         auto: false,         
     }},
@@ -2858,7 +2957,35 @@ addLayer("rei", {
             unlocked(){return player.rei.unlocked},
             effectDescription: "Luminous Churches boosts Research Points gain & All random num set to it's maxnum.",
         },
-    }
+        3: {
+            requirementDescription: "10 total Luminous Churches",
+            done() { return player.rei.total.gte(10)},
+            unlocked(){return player.rei.unlocked},
+            effectDescription: "Unlock (Currently nothing here)",
+        },
+    },
+
+    challenges:{
+        11:{
+            name: "Zero sky",
+            challengeDescription: "Losing 1% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>",
+            unlocked() { return hasMilestone('rei',3) },
+            goal() { return new Decimal(1/0) },
+            currencyDisplayName: "",
+            currencyInternalName: "points",
+            gainMult(){
+                let mult = new Decimal(1);
+                return mult;
+            },
+            amt(){//gain per sec
+                let gain = player.points.log10().max(0);
+                return gain;
+            },
+            rewardDescription(){
+                return "<br>Glowing roses:"
+            },
+        }
+    },
 })
 
 addLayer("yugamu", {
@@ -2920,6 +3047,12 @@ addLayer("yugamu", {
             unlocked(){return player.yugamu.unlocked},
             effectDescription: "Flourish Labyrinth boosts Research Points gain & Keep central 9 Guiding Beacons when reset.",
         },
+        3: {
+            requirementDescription: "10 total Flourish Labyrinths",
+            done() { return player.yugamu.total.gte(10)},
+            unlocked(){return player.yugamu.unlocked},
+            effectDescription: "Unlock (Currently nothing here)",
+        },
     }
 })
 
@@ -2941,10 +3074,10 @@ addLayer("world", {
     nodeStyle() { return {
         background: (player.world.unlocked||canReset("world"))?("linear-gradient(#ededed, #383838)"):"#bf8f8f",
         //"background-size":"120px 120px",
-        height: "95px",
-        width: "95px",
+        height: "96px",
+        width: "96px",
         "border" : "0px",
-        "outline":"rgb(100,100,100) solid 5px",
+        "outline":"rgb(100,100,100) solid 4px",
     }},
     type: "none", // 怹也不通过重置获得点数,但是怹应该会被重置
     branches: ["mem"],
@@ -2977,12 +3110,15 @@ addLayer("world", {
 
     StepgrowthSpeed(){
         let speed = new Decimal(1);
+        if (hasUpgrade('world',12)) speed = speed.times(2);
+        if (hasUpgrade('world',13)) speed = speed.times(upgradeEffect('world',13));
+        if (hasUpgrade('world',14)) speed = speed.times(upgradeEffect('world',14));
         return speed;
     },
 
     update(diff){//重头戏
         if (!player.world.unlocked) player.world.Worldtimer = new Decimal(0);
-        player.world.Worldtimer = player.world.Worldtimer.plus(player.world.StepgrowthSpeed.times(diff));
+        player.world.Worldtimer = player.world.Worldtimer.plus(tmp["world"].StepgrowthSpeed.times(diff));
         if (player.world.Worldtimer.gte(tmp["world"].WorldstepHeight)) {
             player[this.layer].points = player[this.layer].points.plus(1);
             player.world.Worldtimer = new Decimal(0);
@@ -3000,13 +3136,13 @@ addLayer("world", {
         ["bar","WorldProgressBar"],
         ["display-text",function() {return formatWhole(player.world.Worldtimer)+" / "+formatWhole(tmp["world"].WorldstepHeight)+" Step Height"},{}],
         "blank",
-        ["display-text",function() {return "Currently, nothing here"},{}],
+        ["display-text",function() {return "Currently, no many things here"},{}],
         ["display-text",function() {return "If you have any idea on The World should be like, please tell the mod creator!"},{}],
         "upgrades",
     ],
 
     upgrades:{
-        11:{ title: "World Research",
+        11:{ title: "Researching World",
         description: "World steps boosts Research Power gain",
         unlocked() { return player.world.unlocked },
         cost(){return new Decimal(5)},
@@ -3015,6 +3151,52 @@ addLayer("world", {
         },
         effect(){
             let eff = player.world.points.div(10).plus(1);
+            return eff;
+        }
+        },
+        12:{ title: "Draft Map",
+        description: "the speed of World steps gain x2",
+        unlocked() { return hasUpgrade('world',11) },
+        cost(){return new Decimal(8)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        },
+        13:{ title: "Visiting Churches",
+        description: "Luminous Churches boosts the speed of World steps gain.",
+        fullDisplay: "<b>Visiting Churches</b><br>Luminous Churches boosts the speed of World steps gain.<br>Cost: 10 World steps<br>3 Luminous Churches",
+        unlocked() { return hasUpgrade('world',12) },
+        canAfford(){
+            return player[this.layer].points.gte(10)&&player.rei.points.gte(3);
+        },
+        pay(){
+            player[this.layer].points = player[this.layer].points.sub(10);
+            player.rei.points = player.rei.points.sub(3)
+        },
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            let eff = player.rei.points.div(10).plus(1);
+            return eff;
+        }
+        },
+        14:{ title: "Exploring Labyrinths",
+        description: "Flourish Labyrinths boosts the speed of World steps gain.",
+        fullDisplay: "<b>Exploring Labyrinths</b><br>Flourish Labyrinths boosts the speed of World steps gain.<br>Cost: 10 World steps<br>3 Flourish Labyrinths",
+        unlocked() { return hasUpgrade('world',12) },
+        canAfford(){
+            return player[this.layer].points.gte(10)&&player.yugamu.points.gte(3);
+        },
+        pay(){
+            player[this.layer].points = player[this.layer].points.sub(10);
+            player.yugamu.points = player.yugamu.points.sub(3)
+        },
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            let eff = player.yugamu.points.div(10).plus(1);
             return eff;
         }
         },
@@ -3193,7 +3375,15 @@ addLayer("a", {
         42: {
             name: "Toyhouse",
             done() { return hasChallenge('kou',11)},
-            tooltip: "Finish Broken Toyhouse challenge.",
+            tooltip() {
+                return "Finish Broken Toyhouse challenge.<br>Rewards:Guiding Beacons costing Red Dolls will give back Red Dolls cost by Achievement."+( (hasAchievement('a',42))?("<br>Currently:"+format(achievementEffect('a',42))+"x"):"" )
+            },
+            effect(){
+                let eff = new Decimal(0.5);
+                eff = eff.plus((player.a.achievements.length-17)/10);
+                if (eff.gt(1)) eff = new Decimal(1);
+                return eff;
+            }
         },
         43: {
             name: "Force Balance",
