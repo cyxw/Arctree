@@ -2944,7 +2944,7 @@ addLayer("world", {
         height: "95px",
         width: "95px",
         "border" : "0px",
-        "outline":"rgb(100,100,100) solid 3px",
+        "outline":"rgb(100,100,100) solid 4px",
     }},
     type: "none", // 怹也不通过重置获得点数,但是怹应该会被重置
     branches: ["mem"],
