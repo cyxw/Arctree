@@ -2969,7 +2969,7 @@ addLayer("rei", {
         11:{
             name: "Zero sky",
             challengeDescription: "Losing 1% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>",
-            unlocked() { return hasMilestone('rei',3) },
+            unlocked() { return false },
             goal() { return new Decimal(1/0) },
             currencyDisplayName: "",
             currencyInternalName: "points",
