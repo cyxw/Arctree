@@ -1,0 +1,37 @@
+canclickingclickables = [] //←全局变量
+
+{传入 int n
+clickablenum = ['11','21','22','31']//TMT原来的clickable返回的不是数组，得单独保存其编号。
+shouldcanclick = []
+
+for (int i = 1;i<=n;i++)
+{
+	randindex = Math.floor(Math.random()*(button.length - 1));//0~数组长-1
+	shouldafford.push(button[randindex])
+	button.splice(randindex,1)
+}
+
+return shouldcanclick}
+
+//↑一个单独的函数，如果这个函数在每次按按钮之后被调用，那么每按一次按钮就会刷新一次
+//显然，不能拿FL本身作为按按钮次数的代币
+//可以通过best来定义movetimes
+//所以需要在外引入一个行动点的变量actionpoint，待到actionpoint置零之后在update(diff)里调用上述函数
+//actionpoint置零之后 timesmoved++ 当movetimes==timesmoved时就不能再点了
+
+//↓然后在每个clickable的canclick()里这样做
+
+{if (movetimes==timesmoved) return false;
+for(var i = 0; i < canclickingclickables.length; i++)
+            {
+               if (this.id == canclickingclickables[i]) return true;
+            }
+return false;}
+
+综上所述，需要定义的变量:
+canclickingclickables = []
+movetimes
+actionpoint
+timesmoved
+
+以上变量均应当被重置，但是下面3个估计得用tmp
