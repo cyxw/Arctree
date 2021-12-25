@@ -834,6 +834,7 @@ addLayer("kou", {
         if (hasUpgrade('lethe',23)) mult = mult.div(upgradeEffect('lethe',23));
         if (hasMilestone('lab',5)) mult = mult.div(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',93)) mult = mult.div(buyableEffect('lab',31));
+        if (hasMilestone('rei',4)) mult = mult.div(player.rei.roses.plus(1).log10().times(2).max(1));
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -1139,6 +1140,7 @@ addLayer("lethe", {
         if (hasChallenge('kou',41)) mult = mult.times(tmp.lethe.buyables[11].effect);
         if (hasMilestone('lab',6)) mult = mult.times(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',94)) mult = mult.times(buyableEffect('lab',32));
+        if (hasMilestone('rei',4)) mult = mult.times(player.rei.roses.plus(1).log10().times(2).max(1));
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -2041,7 +2043,7 @@ addLayer("lab", {
             unlocked(){return hasUpgrade('world',21)},
             content:[
             "blank",
-            ["row",[["upgrade","111"]]],
+            ["row",[["upgrade","111"],["upgrade","112"],["upgrade","113"],["upgrade","114"]]],
         ]
     },
         }
@@ -2551,6 +2553,50 @@ addLayer("lab", {
         unlocked(){return hasUpgrade('world',21)},
         cost:new Decimal(25000),
         },
+        112:{ title: "Priests",
+        description: "Luminous Churches boosts Glowing Roses gain.",
+        fullDisplay(){return "<b>Priests</b><br>Luminous Churches boosts Glowing Roses gain.<br><br>Cost: 30,000 Research Points<br>4 Luminous Churches"},
+        unlocked(){return hasUpgrade('lab',111)},
+        canAfford(){
+            return player.lab.points.gte(30000)&&player.rei.points.gte(4);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(30000);
+            player.rei.points = player.rei.points.sub(4);
+            },
+        effect(){
+            return player.rei.points.div(20).plus(1);
+        },
+        },
+        113:{ title: "Tissue Decomposition",
+        description: "Research Power boosts Glowing Roses gain.",
+        fullDisplay(){return "<b>Tissue Decomposition</b><br>Research Power boosts Glowing Roses gain.<br><br>Cost: 40,000 Research Points<br>150 Glowing Roses"},
+        unlocked(){return hasUpgrade('lab',112)},
+        canAfford(){
+            return player.lab.points.gte(40000)&&player.rei.roses.gte(150);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(40000);
+            player.rei.roses = player.rei.roses.sub(150);
+            },
+        effect(){
+            return player.lab.power.plus(1).log(10).div(10).max(1);
+        },
+        },
+        114:{ title: "Gyroscope",
+        description: "Research Power gives you more move times in the Maze.",
+        fullDisplay(){return "<b>Gyroscope</b><br>Research Power gives you more move times in the Maze.<br><br>Cost: 40,000 Research Points<br>Req: 30 moved times in the Maze"},
+        unlocked(){return hasUpgrade('lab',112)},
+        canAfford(){
+            return player.lab.points.gte(40000)&&player.yugamu.timesmoved.gte(30);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(40000);
+            },
+        effect(){
+            return player.lab.power.plus(1).log(10).sqrt().max(0);
+        },
+        },
     },
     achievements:{//Research Progress
         11: {
@@ -2608,6 +2654,12 @@ addLayer("lab", {
             unlocked(){return hasAchievement('lab',21)},
             done() { return hasUpgrade('world',21) },
             tooltip: "Unlock World Researches.",
+        },
+        24: {
+            name: "\"I thought it was a lab about science……\"",
+            unlocked(){return hasAchievement('lab',21)},
+            done() { return hasUpgrade('lab',112) },
+            tooltip: "Hire some priests to your lab.",
         },
     },
     buyables:{//Research Transformers
@@ -2973,6 +3025,7 @@ addLayer("rei", {
     gainMult() {
         let mult = new Decimal(1);
         if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
+        if (hasUpgrade('world',23)) mult = mult.div(upgradeEffect('world',23));
         return mult;
     },
     gainExp() {  
@@ -2997,13 +3050,19 @@ addLayer("rei", {
             requirementDescription: "5 total Luminous Churches",
             done() { return player.rei.total.gte(5)},
             unlocked(){return player.rei.unlocked},
-            effectDescription: "Luminous Churches boosts Research Points gain & All random num set to it's maxnum.",
+            effectDescription: "Luminous Churches boosts Research Points gain & All random num set to their maxnum.",
         },
         3: {
             requirementDescription: "10 total Luminous Churches",
             done() { return player.rei.total.gte(10)},
             unlocked(){return player.rei.unlocked},
             effectDescription: "Unlock Zero Sky.",
+        },
+        4: {
+            requirementDescription: "5 best Luminous Churches",
+            done() { return player.rei.best.gte(5)},
+            unlocked(){return hasMilestone('rei',3)},
+            effectDescription: "Glowing Roses also boosts Red Dolls and Forgotten Drops gain.",
         },
     },
 
@@ -3015,6 +3074,7 @@ addLayer("rei", {
             gainMult(){
                 let mult = new Decimal(1);
                 if (hasMilestone('yugamu',3)) mult = mult.times(buyableEffect('yugamu',21));
+                if (hasUpgrade('lab',113)) mult = mult.times(upgradeEffect('lab',113));
                 return mult;
             },
             amt(){//gain per sec
@@ -3031,7 +3091,9 @@ addLayer("rei", {
                 doReset("lethe",true);
             },
             fullDisplay(){
-                return "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing roses</h3>: "+format(player.rei.roses) +" (" +(inChallenge('rei',11)?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
+                let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +(inChallenge('rei',11)?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
+                if (hasMilestone('rei',4)) show = show + "<br>Red Dolls & Forgotten Drops gain by "+format(player.rei.roses.plus(1).log10().times(2).max(1)) +"x";
+                return show;
             },
             style(){
                 return {'background-color': "#ffe6f6",color: "#383838", 'border-radius': "25px", height: "400px", width: "400px"}
@@ -3123,6 +3185,7 @@ addLayer("yugamu", {
     gainMult() {
         let mult = new Decimal(1);
         if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
+        if (hasUpgrade('world',24)) mult = mult.div(upgradeEffect('world',24));
         return mult;
     },
     gainExp() {  
@@ -3158,6 +3221,12 @@ addLayer("yugamu", {
             },
             effectDescription: "Unlock Maze.",
         },
+        4: {
+            requirementDescription: "5 best Flourish Labyrinths",
+            done() { return player.yugamu.best.gte(5)},
+            unlocked(){return hasMilestone('yugamu',3)},
+            effectDescription: "Your movetime limit now calculated based on total Flourish Labyrinths you gain instead of best Flourish Labyrinths you have.",
+        },
     },
 
     update(diff){
@@ -3186,6 +3255,11 @@ addLayer("yugamu", {
 
     movetimes(){//use tmp
         let mt = player[this.layer].best.times(2);
+        if (hasMilestone('yugamu',4)) mt = player[this.layer].total.times(2);
+        if (hasUpgrade('world',22)) mt = mt.plus(upgradeEffect('world',22));
+        if (hasAchievement('a',71)) mt = mt.plus(5);
+        if (hasUpgrade('lab',114)) mt = mt.plus(upgradeEffect('lab',114));
+        mt = mt.round();
         return mt;
     },
 
@@ -3310,7 +3384,7 @@ addLayer("yugamu", {
             unlocked() { return hasMilestone('yugamu',3) },
             canClick() { return player.yugamu.timesmoved.gt(0) },
             onClick() { 
-                if (!confirm("It's okay to be mad when you get lost in Maze……But are you sure there is no other way out?")) return;
+                if (!confirm("It's okay to be mad when you get lost in the Maze……But are you sure there is no other way out?")) return;
                 player.yugamu.timesmoved = new Decimal(0);
                 player.yugamu.actionpoint = layers.yugamu.actionpoint();
                 player.yugamu.buyables[11] = new Decimal(0);
@@ -3382,6 +3456,7 @@ addLayer("world", {
         if (hasUpgrade('world',14)) speed = speed.times(upgradeEffect('world',14));
         if (hasAchievement('a',65)) speed = speed.times(achievementEffect('a',65));
         if (hasMilestone('yugamu',3)) speed = speed.times(buyableEffect('yugamu',31));
+        if (hasAchievement('a',72)) speed = speed.times(1.5);
         return speed;
     },
 
@@ -3471,6 +3546,47 @@ addLayer("world", {
         description: "Unlock World Research in the lab.",
         unlocked() { return hasUpgrade('world',13)&&hasUpgrade('world',14) },
         cost(){return new Decimal(20)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        },
+        22:{ title: "Upland",
+        description: "World Steps gives you extra move in the Maze.",
+        unlocked() { return hasUpgrade('world',21) },
+        cost(){return new Decimal(30)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            return player[this.layer].points.div(10);
+        },
+        },
+        23:{ title: "Sight From Godess",
+        description: "World Steps boosts Luminous Churches gain.",
+        unlocked() { return hasUpgrade('world',22) },
+        cost(){return new Decimal(40)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            return player[this.layer].points.div(10).max(1);
+        },
+        },
+        24:{ title: "Sight inside Chaoz",
+        description: "World Steps boosts Flourish Labyrinths gain.",
+        unlocked() { return hasUpgrade('world',22) },
+        cost(){return new Decimal(40)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            return player[this.layer].points.div(10).max(1);
+        },
+        },
+        31:{ title: "Restriction with Possibilities",
+        description: "Unlock more types of World Steps.(Currently, nothing here)",
+        unlocked() { return hasUpgrade('world',23)&&hasUpgrade('world',24) },
+        cost(){return new Decimal(50)},
         onPurchase(){
             player.world.Worldtimer = new Decimal(0);
         },
@@ -3724,12 +3840,22 @@ addLayer("a", {
             tooltip: "Unlock World Layer.",
         },
         65: {
-            name: "The True Presbyter in The World.",
+            name: "The True Presbyter in The World",
             done() { return player.rei.roses.gte(100)},
             tooltip: "Gain 100 Glowing Roses.<br>Rewards:Glowing Roses now boosts The Speed of World Steps gain.",
             effect(){
                 return player.rei.roses.plus(1).log(10).plus(1);
             },
+        },
+        71: {
+            name: "Dire Straits",
+            done() { return player.yugamu.timesmoved.gte(10)},
+            tooltip: "Move more than 10 times in the Maze<br>Rewards:Gain more 5 moves in the Maze.",
+        },
+        72: {
+            name: "Triangulation",
+            done() { return hasMilestone('rei',4)&&hasMilestone('yugamu',4)},
+            tooltip: "Reach LC&FL's 5th milestone.<br>Rewards:The speed of World Steps gain x1.5.",
         },
     },
     tabFormat: [
