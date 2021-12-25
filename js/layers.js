@@ -256,7 +256,7 @@ addLayer("mem", {
     },
     clickables: {
         rows: 1,
-        cols: 1,
+        cols: 2,
         11: {
             title: "",
             display: "Remove all Memory upgrades",
@@ -1137,7 +1137,7 @@ addLayer("lethe", {
         if (hasAchievement('a',35)) mult = mult.times(tmp.dark.effect);
         if (hasUpgrade('lethe',42)) mult = mult.times(player.mem.points.log10().max(1));
         if (hasChallenge('kou',41)) mult = mult.times(tmp.lethe.buyables[11].effect);
-        if (hasMilestone('lab',5)) mult = mult.times(player.lab.power.div(10).max(1));
+        if (hasMilestone('lab',6)) mult = mult.times(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',94)) mult = mult.times(buyableEffect('lab',32));
         return mult
     },
@@ -2971,7 +2971,9 @@ addLayer("rei", {
     },
 
     gainMult() {
-        return new Decimal(1)
+        let mult = new Decimal(1);
+        if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
+        return mult;
     },
     gainExp() {  
         return new Decimal(1)
@@ -3012,10 +3014,12 @@ addLayer("rei", {
             canComplete(){return false},
             gainMult(){
                 let mult = new Decimal(1);
+                if (hasMilestone('yugamu',3)) mult = mult.times(buyableEffect('yugamu',21));
                 return mult;
             },
             amt(){//gain per sec
                 let gain = player.points.log10().div(50).max(0).sqrt();
+                gain =gain.times(tmp["rei"].challenges[11].gainMult);
                 return gain;
             },
             onEnter(){
@@ -3090,11 +3094,26 @@ addLayer("yugamu", {
                 "prestige-button",
                 "resource-display",
                 "blank",
-                ["display-text", function() { return "This can hurt me." }],
+                ["display-text", function() { return "You can move "+formatWhole(tmp.yugamu.movetimes)+" times at total." }],
+                ["display-text", function() { return "You have moved "+formatWhole(player.yugamu.timesmoved)+" times." }],
                 "blank",
                 ["row",[["buyable",11]]],
-                ["row",[["buyable",21],["blank",["100px","100px"]],["buyable",22]]],
+                ["blank",["8px","8px"]],
+                ["row",[["buyable",21],["blank",["8px","8px"]],["clickable",11],["blank",["8px","8px"]],["buyable",22]]],
+                ["blank",["8px","8px"]],
                 ["row",[["buyable",31]]],
+                "blank",
+                //effect display
+                ["column",[["display-text",function(){return "You have moved <h3>North</h3> "+formatWhole(player.yugamu.buyables[11])+" times"}],"blank",["display-text",function(){return "Which boosts your Luminous Churches & Flourish Labyrinths gain by " + format(buyableEffect('yugamu',11))+"x"}]],{width: "100%"}],
+                "blank",
+                "blank",
+                ["row",[
+                    ["column",[["display-text",function(){return "You have moved <h3>West</h3> "+formatWhole(player.yugamu.buyables[21])+" times"}],"blank",["display-text",function(){return "Which boosts your Glowing Roses gain by " + format(buyableEffect('yugamu',21))+"x"}]],{width: "50%"}],
+                    ["column",[["display-text",function(){return "You have moved <h3>East</h3> "+formatWhole(player.yugamu.buyables[22])+" times"}],"blank",["display-text",function(){return "Which boosts other directions' effect by "+ format(buyableEffect('yugamu',22))+"x"}]],{width: "50%"}],
+                ]],
+                "blank",
+                "blank",
+                ["column",[["display-text",function(){return "You have moved <h3>South</h3> "+formatWhole(player.yugamu.buyables[31])+" times"}],"blank",["display-text",function(){return "Which boosts The Speed of World Steps gain by "+ format(buyableEffect('yugamu',31))+"x"}]],{width: "100%"}],
                 ]
         },
     },
@@ -3102,7 +3121,9 @@ addLayer("yugamu", {
 
     
     gainMult() {
-        return new Decimal(1)
+        let mult = new Decimal(1);
+        if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
+        return mult;
     },
     gainExp() {  
         return new Decimal(1)
@@ -3139,6 +3160,15 @@ addLayer("yugamu", {
         },
     },
 
+    update(diff){
+        if (player.yugamu.actionpoint == 0) {
+            player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.actionpoint());
+            player.yugamu.timesmoved = player.yugamu.timesmoved.plus(1);
+            player.yugamu.actionpoint = layers.yugamu.actionpoint();
+        };
+    },
+
+
     //maze releated
     canclickingclickables(n){//use layers
     let buyableid = ['11','21','22','31'];//TMT原来的clickable返回的不是数组，得单独保存其编号。
@@ -3146,7 +3176,7 @@ addLayer("yugamu", {
 
     for (var i = 1;i<=n;i++)
     {
-	randindex = Math.floor(Math.random()*(buyableid.length - 1));//0~数组长-1
+	randindex = Math.floor(Math.random()*(buyableid.length));//0~数组长
 	shouldcanclick.push(buyableid[randindex]);
 	buyableid.splice(randindex,1);
     };
@@ -3159,7 +3189,7 @@ addLayer("yugamu", {
         return mt;
     },
 
-    actionpoint(){//use tmp && !use Decimal
+    actionpoint(){//use tmp && !use Decimal && use layers when call
         return 1;
     },
 
@@ -3171,7 +3201,7 @@ addLayer("yugamu", {
             display: "↑",
             unlocked() { return hasMilestone('yugamu',3) },
             canAfford() { 
-                if (tmp.yugamu.movetimes==tmp.yugamu.timesmoved) return false;
+                if (tmp.yugamu.movetimes.lte(player.yugamu.timesmoved)) return false;
                 for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
                             {
                                if (this.id == player.yugamu.canclickingclickables[i]) return true;
@@ -3179,7 +3209,17 @@ addLayer("yugamu", {
                 return false; 
             },
             buy() { 
-
+                player.yugamu.actionpoint = player.yugamu.actionpoint - 1;
+                player.yugamu.buyables[this.id] = player.yugamu.buyables[this.id].plus(1);
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                    {
+                         if (this.id == player.yugamu.canclickingclickables[i]) {player.yugamu.canclickingclickables.splice(i,1);};
+                     };
+            },
+            effect(){
+                let eff = player.yugamu.buyables[this.id].div(2).plus(1);
+                eff = eff.times(buyableEffect('yugamu',22));
+                return eff;
             },
             style: {width: "100px", height: "100px"},
         },
@@ -3188,7 +3228,7 @@ addLayer("yugamu", {
             display: "←",
             unlocked() { return hasMilestone('yugamu',3) },
             canAfford() {
-                if (tmp.yugamu.movetimes==tmp.yugamu.timesmoved) return false;
+                if (tmp.yugamu.movetimes.lte(player.yugamu.timesmoved)) return false;
                 for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
                     {
                          if (this.id == player.yugamu.canclickingclickables[i]) return true;
@@ -3196,7 +3236,17 @@ addLayer("yugamu", {
                 return false;
             },
             buy() { 
-
+                player.yugamu.actionpoint = player.yugamu.actionpoint - 1;
+                player.yugamu.buyables[this.id] = player.yugamu.buyables[this.id].plus(1);
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                    {
+                         if (this.id == player.yugamu.canclickingclickables[i]) {player.yugamu.canclickingclickables.splice(i,1);};
+                     };
+            },
+            effect(){
+                let eff = player.yugamu.buyables[this.id].div(20).plus(1);
+                eff = eff.times(buyableEffect('yugamu',22));
+                return eff;
             },
             style: {width: "100px", height: "100px"},
         },
@@ -3205,7 +3255,7 @@ addLayer("yugamu", {
             display: "→",
             unlocked() { return hasMilestone('yugamu',3) },
             canAfford() { 
-                if (tmp.yugamu.movetimes==tmp.yugamu.timesmoved) return false;
+                if (tmp.yugamu.movetimes.lte(player.yugamu.timesmoved)) return false;
                 for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
                             {
                                if (this.id == player.yugamu.canclickingclickables[i]) return true;
@@ -3213,7 +3263,15 @@ addLayer("yugamu", {
                 return false; 
             },
             buy() { 
-
+                player.yugamu.actionpoint = player.yugamu.actionpoint - 1;
+                player.yugamu.buyables[this.id] = player.yugamu.buyables[this.id].plus(1);
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                    {
+                         if (this.id == player.yugamu.canclickingclickables[i]) {player.yugamu.canclickingclickables.splice(i,1);};
+                     };
+            },
+            effect(){
+                return player.yugamu.buyables[this.id].div(50).plus(1);
             },
             style: {width: "100px", height: "100px"},
         },
@@ -3222,7 +3280,7 @@ addLayer("yugamu", {
             display: "↓",
             unlocked() { return hasMilestone('yugamu',3) },
             canAfford() { 
-                if (tmp.yugamu.movetimes==tmp.yugamu.timesmoved) return false;
+                if (tmp.yugamu.movetimes.lte(player.yugamu.timesmoved)) return false;
                 for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
                             {
                                if (this.id == player.yugamu.canclickingclickables[i]) return true;
@@ -3230,9 +3288,37 @@ addLayer("yugamu", {
                 return false; 
             },
             buy() { 
-
+                player.yugamu.actionpoint = player.yugamu.actionpoint - 1;
+                player.yugamu.buyables[this.id] = player.yugamu.buyables[this.id].plus(1);
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                    {
+                         if (this.id == player.yugamu.canclickingclickables[i]) {player.yugamu.canclickingclickables.splice(i,1);};
+                     };
+            },
+            effect(){
+                let eff = player.yugamu.buyables[this.id].div(5).plus(1);
+                eff = eff.times(buyableEffect('yugamu',22));
+                return eff;
             },
             style: {width: "100px", height: "100px"},
+        },
+    },
+    clickables:{
+        11: {
+            title: "Mental Breakdown",
+            display: "",
+            unlocked() { return hasMilestone('yugamu',3) },
+            canClick() { return player.yugamu.timesmoved.gt(0) },
+            onClick() { 
+                if (!confirm("It's okay to be mad when you get lost in Maze……But are you sure there is no other way out?")) return;
+                player.yugamu.timesmoved = new Decimal(0);
+                player.yugamu.actionpoint = layers.yugamu.actionpoint();
+                player.yugamu.buyables[11] = new Decimal(0);
+                player.yugamu.buyables[21] = new Decimal(0);
+                player.yugamu.buyables[22] = new Decimal(0);
+                player.yugamu.buyables[31] = new Decimal(0);
+            },
+            style: {width: "150px", height: "150px"},
         },
     },
 })
@@ -3295,6 +3381,7 @@ addLayer("world", {
         if (hasUpgrade('world',13)) speed = speed.times(upgradeEffect('world',13));
         if (hasUpgrade('world',14)) speed = speed.times(upgradeEffect('world',14));
         if (hasAchievement('a',65)) speed = speed.times(achievementEffect('a',65));
+        if (hasMilestone('yugamu',3)) speed = speed.times(buyableEffect('yugamu',31));
         return speed;
     },
 
@@ -3323,7 +3410,7 @@ addLayer("world", {
 
     upgrades:{
         11:{ title: "Researching World",
-        description: "World steps boosts Research Power gain",
+        description: "World Steps boosts Research Power gain",
         unlocked() { return player.world.unlocked },
         cost(){return new Decimal(5)},
         onPurchase(){
@@ -3335,7 +3422,7 @@ addLayer("world", {
         }
         },
         12:{ title: "Draft Map",
-        description: "the speed of World steps gain x2",
+        description: "the speed of World Steps gain x2",
         unlocked() { return hasUpgrade('world',11) },
         cost(){return new Decimal(5)},
         onPurchase(){
@@ -3343,8 +3430,8 @@ addLayer("world", {
         },
         },
         13:{ title: "Visiting Churches",
-        description: "Luminous Churches boosts the speed of World steps gain.",
-        fullDisplay: "<b>Visiting Churches</b><br>Luminous Churches boosts the speed of World steps gain.<br>Cost: 10 World steps<br>3 Luminous Churches",
+        description: "Luminous Churches boosts the speed of World Steps gain.",
+        fullDisplay: "<b>Visiting Churches</b><br>Luminous Churches boosts the speed of World Steps gain.<br>Cost: 10 World Steps<br>3 Luminous Churches",
         unlocked() { return hasUpgrade('world',12) },
         canAfford(){
             return player[this.layer].points.gte(10)&&player.rei.points.gte(3);
@@ -3362,8 +3449,8 @@ addLayer("world", {
         }
         },
         14:{ title: "Exploring Labyrinths",
-        description: "Flourish Labyrinths boosts the speed of World steps gain.",
-        fullDisplay: "<b>Exploring Labyrinths</b><br>Flourish Labyrinths boosts the speed of World steps gain.<br>Cost: 10 World steps<br>3 Flourish Labyrinths",
+        description: "Flourish Labyrinths boosts the speed of World Steps gain.",
+        fullDisplay: "<b>Exploring Labyrinths</b><br>Flourish Labyrinths boosts the speed of World Steps gain.<br>Cost: 10 World Steps<br>3 Flourish Labyrinths",
         unlocked() { return hasUpgrade('world',12) },
         canAfford(){
             return player[this.layer].points.gte(10)&&player.yugamu.points.gte(3);
@@ -3639,7 +3726,7 @@ addLayer("a", {
         65: {
             name: "The True Presbyter in The World.",
             done() { return player.rei.roses.gte(100)},
-            tooltip: "Gain 100 Glowing Roses.<br>Rewards:Glowing Roses now boosts The Speed of World steps gain.",
+            tooltip: "Gain 100 Glowing Roses.<br>Rewards:Glowing Roses now boosts The Speed of World Steps gain.",
             effect(){
                 return player.rei.roses.plus(1).log(10).plus(1);
             },
