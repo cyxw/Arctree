@@ -54,6 +54,7 @@ addLayer("mem", {
 
         if (inChallenge("kou",11)) mult = mult.pow(0.75);
         if (inChallenge('rei',11)) mult = mult.pow(0.5);
+        if (player.world.restrictChallenge) mult = mult.pow(0.9);
 
         return mult
     },
@@ -1987,6 +1988,7 @@ addLayer("lab", {
         if (hasMilestone('rei',2)) gain = gain.times(player.rei.points.div(100).plus(1));
         if (hasMilestone('yugamu',2)) gain = gain.times(player.yugamu.points.div(100).plus(1));
         if (hasUpgrade('lab',111)) gain = gain.times(buyableEffect('lab',11));
+        if (hasUpgrade('world',31)) gain = gain.times(layers.world.restrictReward());
 
         return gain;
     },
@@ -2013,6 +2015,15 @@ addLayer("lab", {
         player.lab.power = player.lab.power.sub(player.lab.power.times(0.01).times(diff));
         if (player.lab.power.lt(0)) player.lab.power = new Decimal(1e-10);
         if (player.lab.points.lt(0)) player.lab.points = new Decimal(1e-10);
+    },
+
+    shouldNotify(){
+        let buyableid = [11,12,13,21,22,31,32,41,42];
+        for(var i = 0; i < buyableid.length; i++){
+            if (layers.lab.buyables[buyableid[i]].canAfford()){
+                return true;
+            };
+    }
     },
 
     microtabs:{
@@ -3026,6 +3037,7 @@ addLayer("rei", {
         let mult = new Decimal(1);
         if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
         if (hasUpgrade('world',23)) mult = mult.div(upgradeEffect('world',23));
+        if (hasUpgrade('world',31)) mult = mult.div(layers.world.fixedReward());
         return mult;
     },
     gainExp() {  
@@ -3111,6 +3123,7 @@ addLayer("yugamu", {
         unlockOrder:0,
         canclickingclickables : [],
         movetimes : new Decimal(0),
+        DirectioncanChoose : 1,
         actionpoint : 1,
         timesmoved : new Decimal(0),
         auto: false,         
@@ -3186,6 +3199,7 @@ addLayer("yugamu", {
         let mult = new Decimal(1);
         if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
         if (hasUpgrade('world',24)) mult = mult.div(upgradeEffect('world',24));
+        if (hasUpgrade('world',31)) mult = mult.div(layers.world.fixedReward());
         return mult;
     },
     gainExp() {  
@@ -3229,9 +3243,18 @@ addLayer("yugamu", {
         },
     },
 
+    shouldNotify(){
+        let buyableid = [11,21,22,31];
+        for(var i = 0; i < buyableid.length; i++){
+            if (layers.yugamu.buyables[buyableid[i]].canAfford()){
+                return true;
+            };
+    }
+    },
+
     update(diff){
         if (player.yugamu.actionpoint == 0) {
-            player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.actionpoint());
+            player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.DirectioncanChoose());
             player.yugamu.timesmoved = player.yugamu.timesmoved.plus(1);
             player.yugamu.actionpoint = layers.yugamu.actionpoint();
         };
@@ -3245,12 +3268,18 @@ addLayer("yugamu", {
 
     for (var i = 1;i<=n;i++)
     {
-	randindex = Math.floor(Math.random()*(buyableid.length));//0~数组长
+	randindex = Math.floor(Math.random()*(buyableid.length));//0~数组长-1
 	shouldcanclick.push(buyableid[randindex]);
 	buyableid.splice(randindex,1);
     };
 
     return shouldcanclick
+    },
+
+    DirectioncanChoose(){
+        let num = 1;
+        if (hasAchievement('a',73)) num = 2;
+        return num;
     },
 
     movetimes(){//use tmp
@@ -3391,6 +3420,7 @@ addLayer("yugamu", {
                 player.yugamu.buyables[21] = new Decimal(0);
                 player.yugamu.buyables[22] = new Decimal(0);
                 player.yugamu.buyables[31] = new Decimal(0);
+                player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.DirectioncanChoose());
             },
             style: {width: "150px", height: "150px"},
         },
@@ -3406,9 +3436,14 @@ addLayer("world", {
 		points: new Decimal(0),
         best:new Decimal(0),
         unlockOrder:0,
-        WorldstepHeight: new Decimal(10),//Do not use plaer.world.WorldstepHeight
+        WorldstepHeight: new Decimal(10),//Do not use player.world.WorldstepHeight
         Worldtimer: new Decimal(0),
         StepgrowthSpeed: new Decimal(1),//per second
+        fixednum: new Decimal(0),
+        restrictionnum: new Decimal(0),
+        currentStepType: 0,//not Decimal
+        Worldrandomnum : 0,//not Decimal
+        restrictChallenge: false,
         }},
     resource: "World Steps",
     color: "#ddeee3",
@@ -3428,6 +3463,11 @@ addLayer("world", {
     position:2,
     layerShown(){return hasAchievement('a',64)},
     unlocked(){return hasUpgrade('lab',101)},
+
+    shouldNotify(){
+        return (player.world.currentStepType>=99&&!player.world.restrictChallenge);
+    },
+
     doReset(resettingLayer){
         let keep=[];
         if (layers[resettingLayer].row > this.row) {layerDataReset('world', keep);}
@@ -3439,7 +3479,13 @@ addLayer("world", {
             width: 500,
             height: 25,
             progress() { return player.world.Worldtimer.div(tmp["world"].WorldstepHeight) },
-            fillStyle:{'background-color':'#ddeee3'},
+            barcolor() {
+                if (player.world.currentStepType<75) return '#ddeee3';
+                else if (player.world.currentStepType<87) return '#bc24cb';
+                else if (player.world.currentStepType<99) return '#eec109';
+                else return '#e8272a';
+            },
+            fillStyle(){return {'background-color':layers.world.bars.WorldProgressBar.barcolor()}},
         },
     },
 
@@ -3451,27 +3497,54 @@ addLayer("world", {
 
     StepgrowthSpeed(){
         let speed = new Decimal(1);
+        if (player.world.currentStepType>=99&&player.world.restrictChallenge) return (player.points.plus(1).log10().div(2));
         if (hasUpgrade('world',12)) speed = speed.times(2);
         if (hasUpgrade('world',13)) speed = speed.times(upgradeEffect('world',13));
         if (hasUpgrade('world',14)) speed = speed.times(upgradeEffect('world',14));
         if (hasAchievement('a',65)) speed = speed.times(achievementEffect('a',65));
         if (hasMilestone('yugamu',3)) speed = speed.times(buyableEffect('yugamu',31));
         if (hasAchievement('a',72)) speed = speed.times(1.5);
+        if (player.world.currentStepType<87&&player.world.currentStepType>=75) speed = speed.times(1+player.world.Worldrandomnum);
+        if (player.world.currentStepType<99&&player.world.currentStepType>=87) speed = speed.times(Math.min(1-player.world.Worldrandomnum*0.99,0.75));
+        if (player.world.currentStepType>=99&&!player.world.restrictChallenge) speed = new Decimal(0);
         return speed;
+    },
+
+    fixedReward(){
+        let softcap = new Decimal(500);
+        let softcappower = 0.25;
+        let reward = player.world.fixednum.div(2).plus(1);
+        if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
+        return reward;
+    },
+
+    restrictReward(){
+        let softcap = new Decimal(20);
+        let softcappower = 0.25;
+        let reward = Decimal.pow(2.5,player.world.restrictionnum);
+        if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
+        return reward;
     },
 
     update(diff){//重头戏
         if (!player.world.unlocked) player.world.Worldtimer = new Decimal(0);
         player.world.Worldtimer = player.world.Worldtimer.plus(tmp["world"].StepgrowthSpeed.times(diff));
         if (player.world.Worldtimer.gte(tmp["world"].WorldstepHeight)) {
+
+            if (player.world.currentStepType<99&&player.world.currentStepType>=87) player.world.fixednum = player.world.fixednum.plus(1);
+            if (player.world.currentStepType>=99) {player.world.restrictionnum = player.world.restrictionnum.plus(1);player.world.restrictChallenge = false;};
             player[this.layer].points = player[this.layer].points.plus(1);
             player.world.Worldtimer = new Decimal(0);
+            if (hasUpgrade('world',31)) player.world.currentStepType = Math.floor(Math.random()*(100));//0~99
+            player.world.Worldrandomnum = Math.random();
         };
 
         if (player[this.layer].points.gt(player[this.layer].best)) player[this.layer].best = player[this.layer].points;
     },
     
-    tabFormat: [
+    tabFormat: {
+        Upgrades:{
+            content:[
         "blank", 
         "main-display", 
         "blank", 
@@ -3479,9 +3552,50 @@ addLayer("world", {
         "blank",
         ["bar","WorldProgressBar"],
         ["display-text",function() {return formatWhole(player.world.Worldtimer)+" / "+formatWhole(tmp["world"].WorldstepHeight)+" Step Height"},{}],
+        ["display-text",
+        function(){
+            if (player.world.currentStepType<75) return "";
+            if (player.world.currentStepType<87&&player.world.currentStepType>=75) return ("You are going through random World Step. Current speed: " + format(Math.max(1+player.world.Worldrandomnum)) +"x");
+            if (player.world.currentStepType<99&&player.world.currentStepType>=87) return ("You are going through fixed World Step. Current speed: " + format(Math.min(1-player.world.Worldrandomnum*0.99,0.75)) +"x")
+            if (player.world.currentStepType>=99){
+                if (!player.world.restrictChallenge) return "You need to Enduring a small Challenge to go through restricted World Step."
+                else return "You are going through restricted World Step.<br>Your Fragments generation & Memories gain ^0.9 & The Speed of World Steps gain is based on your Fragments."
+            };
+        }
+        ,{}],
         "blank",
         "upgrades",
-    ],
+        "clickables",
+        ]
+        },
+        Atlas:{
+            unlocked(){return hasUpgrade("world",31)},
+            content:[
+                "blank", 
+                "main-display", 
+                "blank", 
+                "resource-display",
+                "blank",
+                ["bar","WorldProgressBar"],
+                ["display-text",function() {return formatWhole(player.world.Worldtimer)+" / "+formatWhole(tmp["world"].WorldstepHeight)+" Step Height"},{}],
+                "blank",
+                ["row",[
+                ["column", [
+                    ["display-text",function() {return "You have gone through <h3 style='color: #eec109;'>"+formatWhole(player.world.fixednum)+"</h3> fixed World Steps."},{}],
+                    "blank",
+                    ["display-text",function() {return "Which boosts Luminous Churches&Flourish Labyrinths gain by <h3 style='color: #eec109;'>"+format(layers.world.fixedReward())+"</h3>x"},{}],
+                    "blank",
+                ],{width:"50%"}],
+                ["column", [
+                    ["display-text",function() {return "You have gone through <h3 style='color: #e8272a;'>"+formatWhole(player.world.restrictionnum)+"</h3> restricted World Steps."},{}],
+                    "blank",
+                    ["display-text",function() {return "Which boosts Research Points gain by <h3 style='color: #e8272a;'>"+format(layers.world.restrictReward())+"</h3>x"},{}],
+                    "blank",
+                ],{width:"50%"}],]
+                ,{}],
+            ],
+        },
+    },
 
     upgrades:{
         11:{ title: "Researching World",
@@ -3558,7 +3672,7 @@ addLayer("world", {
             player.world.Worldtimer = new Decimal(0);
         },
         effect(){
-            return player[this.layer].points.div(10);
+            return player[this.layer].points.div(5).sqrt();
         },
         },
         23:{ title: "Sight From Godess",
@@ -3584,13 +3698,46 @@ addLayer("world", {
         },
         },
         31:{ title: "Restriction with Possibilities",
-        description: "Unlock more types of World Steps.(Currently, nothing here)",
+        description: "Unlock more types of World Steps.",
         unlocked() { return hasUpgrade('world',23)&&hasUpgrade('world',24) },
         cost(){return new Decimal(50)},
         onPurchase(){
             player.world.Worldtimer = new Decimal(0);
         },
         },
+    },
+    clickables: {
+        //rows: 1,
+        //cols: 1,
+        11: {
+			title: "Enduring Restriction Challenge",
+			display(){
+				return ((player.world.currentStepType>=99)?(player.world.restrictChallenge?"In":"Out"):"Locked")
+			},
+			unlocked() { return hasUpgrade('world',31) },
+			canClick() { return (player.world.currentStepType>=99) },
+			onClick() { 
+                if (player.world.restrictChallenge) player.world.Worldtimer = new Decimal(0);
+                if (!player.world.restrictChallenge) {
+                    player.points = new Decimal(0);
+                    doReset('mem',true);
+                    doReset('light',true);
+                    doReset('dark',true);
+                };
+                player.world.restrictChallenge = !player.world.restrictChallenge;
+            },
+			style: {"background-color"() { return player.world.restrictChallenge?"#e8272a":"#666666" }},
+		    },
+        12: {
+            title: "Fall Down",
+            display: "Lose 20% of your World Steps.",
+            unlocked() { return player.world.points.gte(10) },
+            canClick() { return player.world.points.gte(10) },
+            onClick() { 
+                if (!confirm("This button is designed to go through restriction World Step quickly, but it can cost much! Are you sure?")) return;
+                player.world.points = player.world.points.times(0.8).floor();
+            },
+            },
     },
 
 })
@@ -3856,6 +4003,11 @@ addLayer("a", {
             name: "Triangulation",
             done() { return hasMilestone('rei',4)&&hasMilestone('yugamu',4)},
             tooltip: "Reach LC&FL's 5th milestone.<br>Rewards:The speed of World Steps gain x1.5.",
+        },
+        73: {
+            name: "Nothing Can Stop Us",
+            done() { return player.world.restrictionnum.gte(1)&&player.world.fixednum.gte(1)},
+            tooltip: "Gone through both difficult World Steps.<br>Rewards:You can choose among two directions in Maze.",
         },
     },
     tabFormat: [

@@ -75,6 +75,7 @@ function getPointGen() {
 	if (inChallenge("kou",21)) gain = gain.pow(1.05);
 	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12));
 	if (inChallenge('rei',11)) gain = gain.pow(0.5);
+	if (player.world.restrictChallenge) gain = gain.pow(0.9);
 
 	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
         return gain
