@@ -1137,7 +1137,7 @@ addLayer("lethe", {
         mult = new Decimal(1);
         if (hasMilestone('kou',5)) mult=mult.times(tmp.kou.effect);
         if (hasAchievement('a',35)) mult = mult.times(tmp.dark.effect);
-        if (hasUpgrade('lethe',42)) mult = mult.times(player.mem.points.log10().max(1));
+        if (hasUpgrade('lethe',42)) mult = mult.times(player.mem.points.plus(1).log10().max(1));
         if (hasChallenge('kou',41)) mult = mult.times(tmp.lethe.buyables[11].effect);
         if (hasMilestone('lab',6)) mult = mult.times(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',94)) mult = mult.times(buyableEffect('lab',32));
