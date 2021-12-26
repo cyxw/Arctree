@@ -1938,9 +1938,9 @@ addLayer("lab", {
         unlocked: false,
 		points: new Decimal(0),
         best:new Decimal(0),
-        //total:new Decimal(0),
         unlockOrder:0,
         power:new Decimal(0),
+        generatorauto:false,
         //powermult:new Decimal(0),
         //powerexp:new Decimal(0),
         }},
@@ -1989,17 +1989,20 @@ addLayer("lab", {
         if (hasMilestone('yugamu',2)) gain = gain.times(player.yugamu.points.div(100).plus(1));
         if (hasUpgrade('lab',111)) gain = gain.times(buyableEffect('lab',11));
         if (hasUpgrade('world',31)) gain = gain.times(layers.world.restrictReward());
+        if (hasUpgrade('lab',121)) gain = gain.times(1.5);
 
         return gain;
     },
     pointsoftcap(){
         let sc = new Decimal(100000);
+        if (hasUpgrade('lab',121)) sc = sc.times(2);
         return sc;
     },
 
     update(diff) {
 
         let auto=[11,12,13,21,22,31,32];
+        if (hasUpgrade('lab',122)) auto =auto.concat([41,42]);
         for(var i = 0; i < auto.length; i++){
             if (layers.lab.buyables[auto[i]].canAfford()&&layers.lab.buyables[auto[i]].autoed()){
                 layers.lab.buyables[auto[i]].buy()
@@ -2055,6 +2058,7 @@ addLayer("lab", {
             content:[
             "blank",
             ["row",[["upgrade","111"],["upgrade","112"],["upgrade","113"],["upgrade","114"]]],
+            ["row",[["upgrade","121"],["upgrade","122"],["upgrade","123"],["upgrade","124"]]],
         ]
     },
         }
@@ -2608,6 +2612,46 @@ addLayer("lab", {
             return player.lab.power.plus(1).log(10).sqrt().max(0);
         },
         },
+        121:{ title: "Storage Battery",
+        description: "Research Points gain x1.5, and its softcap x2",
+        unlocked(){return hasUpgrade('lab',113)&&hasUpgrade('lab',114)},
+        cost:new Decimal(75000),
+        },
+        122:{ title: "Productivity Transformer",
+        description: "Unlock Research Generator & Tech Transformer autobuyer",
+        unlocked(){return hasUpgrade('lab',121)},
+        cost:new Decimal(90000),
+        },
+        123:{ title: "Fluorescent Steps",
+        description: "Light Tachyons itself boosts The Speed of World Steps gain.",
+        fullDisplay(){return "<b>Fluorescent Steps</b><br>Light Tachyons itself boosts The Speed of World Steps gain.<br><br>Cost: 150,000 Research Points<br>7 Luminous Churches"},
+        unlocked(){return hasUpgrade('lab',122)},
+        canAfford(){
+            return player.lab.points.gte(150000)&&player.rei.points.gte(7);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(150000);
+            player.rei.points = player.rei.points.sub(7);
+            },
+        effect(){
+            return player.light.points.plus(1).log10().div(2.5);
+        },
+        },
+        124:{ title: "Unstable Steps",
+        description: "Dark Matters itself boosts The Speed of World Steps gain.",
+        fullDisplay(){return "<b>Unstable Steps</b><br>Dark Matters itself boosts The Speed of World Steps gain.<br><br>Cost: 150,000 Research Points<br>7 Flourish Labyrinths"},
+        unlocked(){return hasUpgrade('lab',122)},
+        canAfford(){
+            return player.lab.points.gte(150000)&&player.yugamu.points.gte(7);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(150000);
+            player.yugamu.points = player.yugamu.points.sub(7);
+            },
+        effect(){
+            return player.dark.points.plus(1).log10().div(2.5);
+        },
+        },
     },
     achievements:{//Research Progress
         11: {
@@ -2671,6 +2715,12 @@ addLayer("lab", {
             unlocked(){return hasAchievement('lab',21)},
             done() { return hasUpgrade('lab',112) },
             tooltip: "Hire some priests to your lab.",
+        },
+        25: {
+            name: "Does Anybody Say sth About Softcap™?",
+            unlocked(){return hasAchievement('lab',21)},
+            done() { return hasUpgrade('lab',121) },
+            tooltip: "Enlarge your Research Points capacity.",
         },
     },
     buyables:{//Research Transformers
@@ -2949,7 +2999,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return false },
+				autoed() { return player.lab.generatorauto },
 			},
             42: {
 				title: "Tech Transformer",
@@ -2983,7 +3033,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return false },
+				autoed() { return player.lab.generatorauto },
 			},
     }
 })
@@ -3087,6 +3137,7 @@ addLayer("rei", {
                 let mult = new Decimal(1);
                 if (hasMilestone('yugamu',3)) mult = mult.times(buyableEffect('yugamu',21));
                 if (hasUpgrade('lab',113)) mult = mult.times(upgradeEffect('lab',113));
+                if (hasUpgrade('world',33)) mult = mult.times(upgradeEffect('world',33));
                 return mult;
             },
             amt(){//gain per sec
@@ -3504,8 +3555,12 @@ addLayer("world", {
         if (hasAchievement('a',65)) speed = speed.times(achievementEffect('a',65));
         if (hasMilestone('yugamu',3)) speed = speed.times(buyableEffect('yugamu',31));
         if (hasAchievement('a',72)) speed = speed.times(1.5);
+        if (hasAchievement('a',74)) speed = speed.times(achievementEffect('a',74));
+        if (hasUpgrade('lab',123)) speed = speed.times(upgradeEffect('lab',123));
+        if (hasUpgrade('lab',124)) speed = speed.times(upgradeEffect('lab',124));
         if (player.world.currentStepType<87&&player.world.currentStepType>=75) speed = speed.times(1+player.world.Worldrandomnum);
         if (player.world.currentStepType<99&&player.world.currentStepType>=87) speed = speed.times(Math.min(1-player.world.Worldrandomnum*0.99,0.75));
+        if (hasUpgrade('world',34)&&speed.lt(upgradeEffect('world',34))) speed = upgradeEffect('world',34);
         if (player.world.currentStepType>=99&&!player.world.restrictChallenge) speed = new Decimal(0);
         return speed;
     },
@@ -3521,7 +3576,7 @@ addLayer("world", {
     restrictReward(){
         let softcap = new Decimal(20);
         let softcappower = 0.25;
-        let reward = Decimal.pow(2.5,player.world.restrictionnum);
+        let reward = Decimal.pow(1.5,player.world.restrictionnum);
         if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
         return reward;
     },
@@ -3672,7 +3727,9 @@ addLayer("world", {
             player.world.Worldtimer = new Decimal(0);
         },
         effect(){
-            return player[this.layer].points.div(5).sqrt();
+            let eff = player[this.layer].points.div(5).sqrt();
+            if (hasUpgrade('world',32)) eff = player[this.layer].best.div(5).sqrt();
+            return eff;
         },
         },
         23:{ title: "Sight From Godess",
@@ -3703,6 +3760,36 @@ addLayer("world", {
         cost(){return new Decimal(50)},
         onPurchase(){
             player.world.Worldtimer = new Decimal(0);
+        },
+        },
+        32:{ title: "Everest",
+        description: "Upland now gives extra move in maze based on your best World Steps you have.",
+        unlocked() { return hasUpgrade('world',31)},
+        cost(){return new Decimal(100)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        },
+        33:{ title: "Babel Tower",
+        description: "World Steps boost Glowing Roses gain.",
+        unlocked() { return hasUpgrade('world',32)},
+        cost(){return new Decimal(125)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            return player[this.layer].points.sqrt().div(50).plus(1);
+        },
+        },
+        34:{ title: "Backtracking Method",
+        description: "The minium Speed of World Steps gain now boosted by times moved in Maze, regardless of magnification.",
+        unlocked() { return hasUpgrade('world',32)},
+        cost(){return new Decimal(125)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            return player.yugamu.timesmoved.sqrt().times(2).max(1);
         },
         },
     },
@@ -4009,6 +4096,14 @@ addLayer("a", {
             done() { return player.world.restrictionnum.gte(1)&&player.world.fixednum.gte(1)},
             tooltip: "Gone through both difficult World Steps.<br>Rewards:You can choose among two directions in Maze.",
         },
+        74: {
+            name: "Doll House",
+            done() { return player.kou.points.gte(100)},
+            tooltip: "Have more than 100 Red Dolls<br>Rewards:Red Dolls itself boosts The Speed of World Steps gain.",
+            effect(){
+                return player.kou.points.plus(1).log10().div(1.5).max(1);
+            },
+        },
     },
     tabFormat: [
         "blank", 
@@ -4060,5 +4155,15 @@ addLayer("ab", {
 			onClick() { player.kou.auto = !player.kou.auto },
 			style: {"background-color"() { return player.kou.auto?"#ffa0be":"#666666" }},
 		    },
+        14: {
+			title: "Research Generator & Tech Transformer",
+			display(){
+				return (hasUpgrade('lab',122))?(player.lab.generatorauto?"On":"Off"):"Locked"
+			},
+			unlocked() { return hasUpgrade('world',21) },
+			canClick() { return hasUpgrade('lab',122) },
+			onClick() { player.lab.generatorauto = !player.lab.generatorauto },
+			style: {"background-color"() { return player.lab.generatorauto?"#00bdf9":"#666666" }},
+		    }, 
 	},
 })
