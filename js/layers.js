@@ -2059,6 +2059,9 @@ addLayer("lab", {
             "blank",
             ["row",[["upgrade","111"],["upgrade","112"],["upgrade","113"],["upgrade","114"]]],
             ["row",[["upgrade","121"],["upgrade","122"],["upgrade","123"],["upgrade","124"]]],
+            ["row",[["upgrade","131"],["upgrade","132"],["upgrade","133"],["upgrade","134"]]],
+            ["row",[["upgrade","141"],["upgrade","142"],["upgrade","143"],["upgrade","144"]]],
+            ["row",[["upgrade","151"] ]]
         ]
     },
         }
@@ -2652,6 +2655,113 @@ addLayer("lab", {
             return player.dark.points.plus(1).log10().div(2.5);
         },
         },
+        131:{ title: "Compass",
+        description: "Fomula of the effect you moved North is better",
+        fullDisplay(){return "<b>Compass</b><br>Fomula of the effect you moved North is better.<br><br>Cost: 250,000 Research Points<br>Req: Moved North 20 times"},
+        unlocked(){return hasUpgrade('lab',123)&&hasUpgrade('lab',124)},
+        canAfford(){
+            return player.lab.points.gte(250000)&&player.yugamu.buyables[11].gte(20);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(250000);
+            },
+        },
+        132:{ title: "Noticeboard",
+        description: "Fomula of the effect you moved East is better",
+        fullDisplay(){return "<b>Noticeboard</b><br>Fomula of the effect you moved East is better.<br><br>Cost: 250,000 Research Points<br>Req: Moved East 20 times"},
+        unlocked(){return hasUpgrade('lab',123)&&hasUpgrade('lab',124)},
+        canAfford(){
+            return player.lab.points.gte(250000)&&player.yugamu.buyables[22].gte(20);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(250000);
+            },
+        },
+        133:{ title: "Garden",
+        description: "Fomula of the effect you moved West is better",
+        fullDisplay(){return "<b>Garden</b><br>Fomula of the effect you moved West is better.<br><br>Cost: 250,000 Research Points<br>Req: Moved West 20 times"},
+        unlocked(){return hasUpgrade('lab',123)&&hasUpgrade('lab',124)},
+        canAfford(){
+            return player.lab.points.gte(250000)&&player.yugamu.buyables[21].gte(20);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(250000);
+            },
+        },
+        134:{ title: "Sky Mark",
+        description: "Fomula of the effect you moved South is better",
+        fullDisplay(){return "<b>Sky Mark</b><br>Fomula of the effect you moved South is better.<br><br>Cost: 250,000 Research Points<br>Req: Moved South 20 times"},
+        unlocked(){return hasUpgrade('lab',123)&&hasUpgrade('lab',124)},
+        canAfford(){
+            return player.lab.points.gte(250000)&&player.yugamu.buyables[31].gte(20);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(250000);
+            },
+        },
+        141:{ title: "Gardenhouse",
+        description: "Research Points boosts Glowing Roses gain.",
+        unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
+        cost:new Decimal(750000),
+        effect(){
+            return player[this.layer].points.plus(1).log(10).div(15).plus(1);
+        },
+        },
+        142:{ title: "DFS Method",
+        description: "Research Points gives you more move times in the Maze.",
+        unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
+        cost:new Decimal(750000),
+        effect(){
+            return player[this.layer].points.plus(1).log(10).max(1);
+        },
+        },
+        143:{ title: "The Blueprint of Theology",
+        description: "Research Points boosts Luminous Churches gain.",
+        fullDisplay(){return "<b>The Blueprint of Theology</b><br>Research Points boosts Luminous Churches gain.<br><br>Cost: 1,000,000 Research Points<br>8 Luminous Churches"},
+        unlocked(){return hasUpgrade('lab',141)&&hasUpgrade('lab',142)},
+        canAfford(){
+            return player.lab.points.gte(1000000)&&player.rei.points.gte(8);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(1000000);
+            player.rei.points = player.rei.points.sub(8);
+            },
+            effect(){
+                return player[this.layer].points.plus(1).log(10).div(10).plus(1);
+            },
+        },
+        144:{ title: "The Blueprint of Anxiety",
+        description: "Research Points boosts Flourish Labyrinths gain.",
+        fullDisplay(){return "<b>The Blueprint of Anxiety</b><br>Research Points boosts Flourish Labyrinths gain.<br><br>Cost: 1,000,000 Research Points<br>8 Flourish Labyrinths"},
+        unlocked(){return hasUpgrade('lab',141)&&hasUpgrade('lab',142)},
+        canAfford(){
+            return player.lab.points.gte(1000000)&&player.yugamu.points.gte(8);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(1000000);
+            player.yugamu.points = player.yugamu.points.sub(8);
+            },
+            effect(){
+                return player[this.layer].points.plus(1).log(10).div(10).plus(1);
+            },
+        },
+        151:{ title: "Celebrate Anniversary",
+        description: "Celebrate first anniversary of setting up your lab.",
+        fullDisplay(){return "<b>Celebrate Anniversary</b><br>Celebrate first anniversary of setting up your lab(Currently, nothing here).<br><br>Cost: 9 Luminous Churches<br>9 Flourish Labyrinths<br>900 World Steps"},
+        unlocked(){return (hasUpgrade('lab',143)&&hasUpgrade('lab',144))},
+        canAfford(){
+            return player.rei.points.gte(9)&&player.yugamu.points.gte(9)&&player.world.points.gte(900);
+        },
+        pay(){
+            player.rei.points = player.rei.points.sub(9);
+            player.yugamu.points = player.yugamu.points.sub(9);
+            player.world.points = player.world.points.sub(900);
+            },
+        onPurchase(){
+            //player.world.unlocked = true;showTab('none');
+        },
+            style: {height: '200px', width: '200px'},
+        },
     },
     achievements:{//Research Progress
         11: {
@@ -3088,6 +3198,7 @@ addLayer("rei", {
         if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
         if (hasUpgrade('world',23)) mult = mult.div(upgradeEffect('world',23));
         if (hasUpgrade('world',31)) mult = mult.div(layers.world.fixedReward());
+        if (hasUpgrade('lab',143)) mult = mult.div(upgradeEffect('lab',143));
         return mult;
     },
     gainExp() {  
@@ -3138,6 +3249,7 @@ addLayer("rei", {
                 if (hasMilestone('yugamu',3)) mult = mult.times(buyableEffect('yugamu',21));
                 if (hasUpgrade('lab',113)) mult = mult.times(upgradeEffect('lab',113));
                 if (hasUpgrade('world',33)) mult = mult.times(upgradeEffect('world',33));
+                if (hasUpgrade('lab',141)) mult = mult.times(upgradeEffect('lab',141));
                 return mult;
             },
             amt(){//gain per sec
@@ -3146,7 +3258,8 @@ addLayer("rei", {
                 return gain;
             },
             onEnter(){
-                player.rei.roses = new Decimal(0);
+                if (!hasAchievement('a',75)) player.rei.roses = new Decimal(0);
+                else player.rei.roses = player.rei.roses.div(2);
                 doReset("mem",true);
                 doReset("light",true);
                 doReset("dark",true);
@@ -3251,6 +3364,7 @@ addLayer("yugamu", {
         if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
         if (hasUpgrade('world',24)) mult = mult.div(upgradeEffect('world',24));
         if (hasUpgrade('world',31)) mult = mult.div(layers.world.fixedReward());
+        if (hasUpgrade('lab',144)) mult = mult.div(upgradeEffect('lab',144));
         return mult;
     },
     gainExp() {  
@@ -3339,6 +3453,7 @@ addLayer("yugamu", {
         if (hasUpgrade('world',22)) mt = mt.plus(upgradeEffect('world',22));
         if (hasAchievement('a',71)) mt = mt.plus(5);
         if (hasUpgrade('lab',114)) mt = mt.plus(upgradeEffect('lab',114));
+        if (hasUpgrade('lab',142)) mt = mt.plus(upgradeEffect('lab',142));
         mt = mt.round();
         return mt;
     },
@@ -3372,6 +3487,7 @@ addLayer("yugamu", {
             },
             effect(){
                 let eff = player.yugamu.buyables[this.id].div(2).plus(1);
+                if (hasUpgrade('lab',131)) eff = player.yugamu.buyables[this.id].div(1.5).plus(1);
                 eff = eff.times(buyableEffect('yugamu',22));
                 return eff;
             },
@@ -3399,6 +3515,7 @@ addLayer("yugamu", {
             },
             effect(){
                 let eff = player.yugamu.buyables[this.id].div(20).plus(1);
+                if (hasUpgrade('lab',133)) eff = player.yugamu.buyables[this.id].div(10).plus(1);
                 eff = eff.times(buyableEffect('yugamu',22));
                 return eff;
             },
@@ -3425,7 +3542,9 @@ addLayer("yugamu", {
                      };
             },
             effect(){
-                return player.yugamu.buyables[this.id].div(50).plus(1);
+                let eff = player.yugamu.buyables[this.id].div(50).plus(1);
+                if (hasUpgrade('lab',132)) eff = player.yugamu.buyables[this.id].div(25).plus(1);
+                return eff;
             },
             style: {width: "100px", height: "100px"},
         },
@@ -3451,6 +3570,7 @@ addLayer("yugamu", {
             },
             effect(){
                 let eff = player.yugamu.buyables[this.id].div(5).plus(1);
+                if (hasUpgrade('lab',134)) eff = player.yugamu.buyables[this.id].div(4).plus(1);
                 eff = eff.times(buyableEffect('yugamu',22));
                 return eff;
             },
@@ -3765,7 +3885,7 @@ addLayer("world", {
         32:{ title: "Everest",
         description: "Upland now gives extra move in maze based on your best World Steps you have.",
         unlocked() { return hasUpgrade('world',31)},
-        cost(){return new Decimal(100)},
+        cost(){return new Decimal(75)},
         onPurchase(){
             player.world.Worldtimer = new Decimal(0);
         },
@@ -3773,7 +3893,7 @@ addLayer("world", {
         33:{ title: "Babel Tower",
         description: "World Steps boost Glowing Roses gain.",
         unlocked() { return hasUpgrade('world',32)},
-        cost(){return new Decimal(125)},
+        cost(){return new Decimal(100)},
         onPurchase(){
             player.world.Worldtimer = new Decimal(0);
         },
@@ -3784,7 +3904,7 @@ addLayer("world", {
         34:{ title: "Backtracking Method",
         description: "The minium Speed of World Steps gain now boosted by times moved in Maze, regardless of magnification.",
         unlocked() { return hasUpgrade('world',32)},
-        cost(){return new Decimal(125)},
+        cost(){return new Decimal(100)},
         onPurchase(){
             player.world.Worldtimer = new Decimal(0);
         },
@@ -3799,10 +3919,10 @@ addLayer("world", {
         11: {
 			title: "Enduring Restriction Challenge",
 			display(){
-				return ((player.world.currentStepType>=99)?(player.world.restrictChallenge?"In":"Out"):"Locked")
+				return ((player.world.currentStepType>=99&&!inChallenge('rei',11))?(player.world.restrictChallenge?"In":"Out"):"Locked")
 			},
 			unlocked() { return hasUpgrade('world',31) },
-			canClick() { return (player.world.currentStepType>=99) },
+			canClick() { return (player.world.currentStepType>=99&&!inChallenge('rei',11)) },
 			onClick() { 
                 if (player.world.restrictChallenge) player.world.Worldtimer = new Decimal(0);
                 if (!player.world.restrictChallenge) {
@@ -4099,10 +4219,15 @@ addLayer("a", {
         74: {
             name: "Doll House",
             done() { return player.kou.points.gte(100)},
-            tooltip: "Have more than 100 Red Dolls<br>Rewards:Red Dolls itself boosts The Speed of World Steps gain.",
+            tooltip: "Have more than 100 Red Dolls.<br>Rewards:Red Dolls itself boosts The Speed of World Steps gain.",
             effect(){
                 return player.kou.points.plus(1).log10().div(1.5).max(1);
             },
+        },
+        75: {
+            name: "Anthemy",
+            done() { return player.rei.roses.gte(1000)},
+            tooltip: "Gain 1000 Glowing Roses.<br>Rewards:Entering Zero Sky no longer reset Glowing Roses, but ÷2 instead.",
         },
     },
     tabFormat: [
