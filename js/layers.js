@@ -44,13 +44,18 @@ addLayer("mem", {
         if (hasUpgrade('mem', 33)) mult = mult.pow(upgradeEffect('mem', 33))
         if (hasUpgrade('mem', 34)&&!hasAchievement('a',22)) mult = mult.times(!hasUpgrade('light', 11)?0.85:upgradeEffect('light', 11))
         if (player.dark.unlocked) mult = mult.times(tmp.dark.effect);
-        if (hasUpgrade('light', 12)) mult=mult.times(tmp["light"].effect.div(2).gt(1)?tmp["light"].effect.div(2):1);
+        if (hasUpgrade('light', 12)) mult=mult.times(tmp["light"].effect.div(2).max(1));
         if (hasUpgrade('lethe', 44)&&player.mem.points.lte( upgradeEffect('lethe',44) )) mult = mult.times(player.dark.points.div(20).max(1));
         if (hasUpgrade('lethe',32)||hasUpgrade('lethe',43)) mult = mult.times(tmp.lethe.effect);
         if (hasUpgrade('lethe',23)) mult = mult.times(upgradeEffect('lethe',23));
         if (hasUpgrade('lethe',34)) mult = mult.times(upgradeEffect('lethe',34));
         if (hasMilestone('lab',2)) mult = mult.times(player.lab.power.div(10).max(1));
+
+
         if (inChallenge("kou",11)) mult = mult.pow(0.75);
+        if (inChallenge('rei',11)) mult = mult.pow(0.5);
+        if (player.world.restrictChallenge) mult = mult.pow(0.9);
+
         return mult
     },
     directMult(){
@@ -230,7 +235,7 @@ addLayer("mem", {
             player.dark.points = player.dark.points.sub(65);
             player.light.points = player.light.points.sub(65);
         },
-        unlocked() { return ( (hasUpgrade("dark", 34)&&hasUpgrade("light",34)&&player.dark.points.gte(60)&&player.light.points.gte(60)) || hasAchievement('a',21))},
+        unlocked() { return ( (hasUpgrade("dark", 34)&&hasUpgrade("light",34))|| hasAchievement('a',21))},
         style(){return {'height':'200px', 'width':'200px'}},
         onPurchase(){doReset('kou',true);showTab('none');player[this.layer].upgrades=[41];},
         },
@@ -245,14 +250,14 @@ addLayer("mem", {
             player.kou.points = player.kou.points.sub(75);
             player.lethe.points = player.lethe.points.sub(1e107);
         },
-        unlocked() { return (player.points.gte(1e125)&&player.kou.points.gte(70)&&player.lethe.points.gte(1e100)&&hasChallenge('kou',51))||hasAchievement('a',55)},
+        unlocked() { return (hasChallenge('kou',51))||hasAchievement('a',55)},
         style(){return {'height':'200px', 'width':'200px'}},
         onPurchase(){showTab('none');player.lab.unlocked = true;player.lab.points= new Decimal(1);},
         },
     },
     clickables: {
         rows: 1,
-        cols: 1,
+        cols: 2,
         11: {
             title: "",
             display: "Remove all Memory upgrades",
@@ -355,11 +360,11 @@ addLayer("light", {
             requirementDescription: "1 Light Tachyon",
             done() { return player.light.best.gte(1)&&hasAchievement('a',21)},
             unlocked(){return hasAchievement('a',21)},
-            effectDescription: "This Layer no longer hidden.",
+            effectDescription: "This Layer no longer hidden & Light Upgrades give back its cost by Achievements.",
         },
         1: {
-            requirementDescription: "8 Light Tachyons",
-            done() { return player.light.best.gte(8)&&hasAchievement('a',21)},
+            requirementDescription: "5 Light Tachyons",
+            done() { return player.light.best.gte(5)&&hasAchievement('a',21)},
             unlocked(){return hasAchievement('a',21)},
             effectDescription: "Keep all your row1&row2 Memory upgrades when L or D reset.",
         },
@@ -410,7 +415,7 @@ addLayer("light", {
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(Math.random());
 
-        if (eff.lt(1)) return 1;
+        if (eff.lt(1)) return new Decimal(1);
         return eff;
     },
     effectDescription() {
@@ -424,17 +429,26 @@ addLayer("light", {
         effect() {
             return (hasUpgrade('light',21))?new Decimal(0.95):new Decimal(0.9);
         },
-        onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost);},
+        onPurchase(){
+            if (hasMilestone('light',0)&&!hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+            if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost);
+        },
         cost() {return new Decimal(1).times(tmp["kou"].costMult42l)},
         },
         12:{ title: "Wandering For Beauty",
         description: "Light Tachyons also effects Memories gain at a reduced rate.",
         unlocked() { return hasUpgrade("light", 11) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(3).times(tmp["kou"].costMult42l)},
         },
         13:{ title: "Experiencing Happiness",
         description: "Light Tachyons also effects its own gain at a reduced rate.",
         unlocked() { return hasUpgrade("light", 12) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(5).times(tmp["kou"].costMult42l)},
         },
         14:{ title: "After That Butterfly",
@@ -443,42 +457,66 @@ addLayer("light", {
         effect() {
             return player[this.layer].points.plus(1).log10().plus(1).pow(0.5);
         },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(8).times(tmp["kou"].costMult42l)},
         },
         21:{ title: "Seeking Delight.",
         description: "Conclusion decreases Memories gain more less, and gain ^0.33 instead of ^0.25 Memories after softcap.",
         unlocked() { return hasUpgrade("light", 14) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(10).times(tmp["kou"].costMult42l)},
         },
         22:{ title: "More Brightness",
         description: "You can buy max Light Tachyons And lower Memories requirement for further Light Tachyons",
         unlocked() { return hasUpgrade("light", 21)||hasMilestone('kou',0) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(15).times(tmp["kou"].costMult42l)},
         },
         23:{ title: "Fragment Sympathy",
         description: "Directly Transfer decreases Fragments gain less.",
         unlocked() { return hasUpgrade("light", 22) },
-        onPurchase(){if (hasAchievement('a',32)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost());},
+        onPurchase(){
+            if (hasMilestone('light',0)&&!hasAchievement('a',32)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+            if (hasAchievement('a',32)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost);
+        },
         cost() {return new Decimal(20).times(tmp["kou"].costMult42l)},
         },
         24:{ title: "Sadness Overjoy",
         description: "Light Tachyons also effects Dark Matters gain.",
         unlocked() { return hasUpgrade("light", 23) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(30).times(tmp["kou"].costMult42l)},
         },
         31:{ title: "Hardware BUS",
         description: "Light Tachyons effect formula now much better.",
         unlocked() { return hasUpgrade("light", 24)||hasMilestone('kou',3) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(35).times(tmp["kou"].costMult42l)},
         },
         32:{ title: "Moments of Lifes",
         description: "Gain ^0.40 instead of ^0.33 Memories after softcap.",
         unlocked() { return hasUpgrade("light", 31)||hasMilestone('kou',3) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(40).times(tmp["kou"].costMult42l)},
         },
         33:{ title: "Prepare To Travel",
         description: "Light Tachyons itself now makes Directly Transfer boosts more Memories gain.",
         unlocked() { return hasUpgrade("light", 32)||hasMilestone('kou',3) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player[this.layer].points.div(500);
             if (eff.lte(0.1)) return new Decimal(0.1);
@@ -490,6 +528,9 @@ addLayer("light", {
         34:{ title: "The Light",
         description: "Lower Memories requirement for further Light Tachyons, and Light Tachyons itself now boosts Dark Matters gain.",
         unlocked() { return hasUpgrade("light", 33)||hasMilestone('kou',3) },
+        onPurchase(){
+            if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player[this.layer].points.div(3);
             if (eff.lt(1.25)) return new Decimal(1.25);
@@ -573,11 +614,12 @@ addLayer("dark", {
             requirementDescription: "1 Dark Matter",
             done() { return player.dark.best.gte(1)&&hasAchievement('a',21)},
             unlocked(){return hasAchievement('a',21)},
-            effectDescription: "This Layer no longer hidden.",
+            effectDescription: "This Layer no longer hidden & Dark Upgrades give back its cost by Achievements.",
         },
         1: {
-            requirementDescription: "8 Dark Matters",
-            done() { return player.dark.best.gte(8)&&hasAchievement('a',21)},
+            requirementDescription: "5 Dark Matters",
+            done() { return player.dark.best.gte(5)&&hasAchievement('a',21)},
+            
             unlocked(){return hasAchievement('a',21)},
             effectDescription: "Keep your first two Memory upgrades on row 3 when L or D reset.",
         },
@@ -639,6 +681,9 @@ addLayer("dark", {
         11:{ title: "Overclock",
         description: "Your Fragments generation is doubled when under 9999",
         unlocked() { return player.dark.unlocked },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(1).times(tmp["kou"].costMult42d)},
         effect() {
             let eff = new Decimal(9999);
@@ -649,16 +694,25 @@ addLayer("dark", {
         12:{ title: "Seeking For Other Sides",
         description: "Dark Matters also effects Fragments generation at a reduced rate.",     
         unlocked() { return hasUpgrade("dark", 11) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(3).times(tmp["kou"].costMult42d)},
         },
         13:{ title: "Crack Everything",
         description: "Dark Matters also effects its own gain at a reduced rate.",
         unlocked() { return hasUpgrade("dark", 12) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(5).times(tmp["kou"].costMult42d)},
         },
         14:{ title: "Wrath In Calm",
         description: "Dark Matters itself boosts its own gain.",
         unlocked() { return hasUpgrade("dark", 13) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             return player[this.layer].points.plus(1).log10().plus(1).pow(0.5);
         },
@@ -667,6 +721,9 @@ addLayer("dark", {
         21:{ title: "Power Override",
         description: "Overclock ends at 19,998 and Memories softcap starts 50x later.",
         unlocked() { return hasUpgrade("dark", 14) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             return new Decimal(2);
         },
@@ -675,27 +732,42 @@ addLayer("dark", {
         22:{ title: "More Darkness",
         description: "You can buy max Dark Matters And lower Fragments requirement for further Dark Matters",
         unlocked() { return hasUpgrade("dark", 21)||hasMilestone('lethe',0)},
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(15).times(tmp["kou"].costMult42d)},
         },
         23:{ title: "Force Operation",
         description: "Keep Conclusion upgrade when L or D reset.",
         unlocked() { return hasUpgrade("dark", 22)&&(hasUpgrade("light", 21)||hasMilestone('lethe',2)) },
-        onPurchase(){if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost());player.mem.upgrades.push(34)},
+        onPurchase(){
+            if (hasMilestone('dark',0)&&!hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+            if (hasAchievement('a',22)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost);player.mem.upgrades.push(34)
+        },
         cost() {return new Decimal(20).times(tmp["kou"].costMult42d)},
         },
         24:{ title: "Calm in Warth",
         description: "Dark Matters also effects Light Tachyons gain.",
         unlocked() { return hasUpgrade("dark", 23) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(30).times(tmp["kou"].costMult42d)},
         },
         31:{ title: "Memory Organizing",
         description: "Dark Matters effect formula now much better.",
         unlocked() { return hasUpgrade("dark", 24)||hasMilestone('lethe',3) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         cost() {return new Decimal(35).times(tmp["kou"].costMult42d)},
         },
         32:{ title: "Moments of Anger",
         description: "Dark Matters itself makes Memories softcap starts later.",
         unlocked() { return hasUpgrade("dark", 31)||hasMilestone('lethe',3) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player[this.layer].points.div(2);
             if (eff.lt(1.5)) return new Decimal(1.5);
@@ -706,6 +778,9 @@ addLayer("dark", {
         33:{ title: "Prepare To Bleed",
         description: "Achievements now boost Dark Matters gain.",
         unlocked() { return hasUpgrade("dark", 32)||hasMilestone('lethe',3) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player.a.achievements.length;
             if (eff<= 1) return new Decimal(1);
@@ -716,6 +791,9 @@ addLayer("dark", {
         34:{ title: "The Dark",
         description: "Lower Fragments requirement for further Dark Matters, and Dark Matters itself now boosts Light Tachyons gain.",
         unlocked() { return hasUpgrade("dark", 33)||hasMilestone('lethe',3) },
+        onPurchase(){
+            if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
+        },
         effect() {
             let eff = player[this.layer].points.div(3);
             if (eff.lt(1.25)) return new Decimal(1.25);
@@ -757,6 +835,7 @@ addLayer("kou", {
         if (hasUpgrade('lethe',23)) mult = mult.div(upgradeEffect('lethe',23));
         if (hasMilestone('lab',5)) mult = mult.div(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',93)) mult = mult.div(buyableEffect('lab',31));
+        if (hasMilestone('rei',4)) mult = mult.div(player.rei.roses.plus(1).log10().times(2).max(1));
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -1010,7 +1089,7 @@ addLayer("kou", {
             name: "Red Comet",
             completionLimit: 1,
             challengeDescription: "Enduring all Happiness Challenges above.",
-            unlocked() { return (player.kou.points.gte(70)&&player.lethe.points.gte(1e100)&&hasChallenge('kou',42))||hasChallenge('kou',51)},
+            unlocked() { return hasChallenge('kou',42)},
             countsAs : [11,12,21,22,31,32,41,42],
             onEnter(){
                 doReset('light',true);
@@ -1058,10 +1137,11 @@ addLayer("lethe", {
         mult = new Decimal(1);
         if (hasMilestone('kou',5)) mult=mult.times(tmp.kou.effect);
         if (hasAchievement('a',35)) mult = mult.times(tmp.dark.effect);
-        if (hasUpgrade('lethe',42)) mult = mult.times(player.mem.points.log10().max(1));
+        if (hasUpgrade('lethe',42)) mult = mult.times(player.mem.points.plus(1).log10().max(1));
         if (hasChallenge('kou',41)) mult = mult.times(tmp.lethe.buyables[11].effect);
-        if (hasMilestone('lab',5)) mult = mult.times(player.lab.power.div(10).max(1));
+        if (hasMilestone('lab',6)) mult = mult.times(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',94)) mult = mult.times(buyableEffect('lab',32));
+        if (hasMilestone('rei',4)) mult = mult.times(player.rei.roses.plus(1).log10().times(2).max(1));
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -1337,6 +1417,9 @@ addLayer("lethe", {
                 let price = player.light.points.gte(pricenum)&&player.kou.points.gte(40);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(40).times(achievementEffect('a',42))).floor();
+            },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
         },
@@ -1353,6 +1436,9 @@ addLayer("lethe", {
                 let around = (hasUpgrade('lethe',13)||hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',23)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25));
                 let price = player.kou.points.gte(50);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp['light'].effect.gte(2.5e11);
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(50).times(achievementEffect('a',42))).floor();
             },
             effect(){
                 return player.kou.points.div(2).max(1);
@@ -1376,6 +1462,9 @@ addLayer("lethe", {
             },
             effect(){
                 return Decimal.log10(player.kou.resetTime+1).plus(1).sqrt();
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(35).times(achievementEffect('a',42))).floor();
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1449,6 +1538,9 @@ addLayer("lethe", {
                 let price = player.kou.points.gte(30)&&player.mem.points.gte(5e65)&&player.light.points.gte(pricenum);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(30).times(achievementEffect('a',42))).floor();
+            },
             effect(){
                 return player.kou.points.div(1.5).max(1);
             },
@@ -1470,6 +1562,9 @@ addLayer("lethe", {
                 let price = player.kou.points.gte(25)&&player.mem.points.gte(2e65);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(25).times(achievementEffect('a',42))).floor();
+            },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
         },
@@ -1486,6 +1581,9 @@ addLayer("lethe", {
                 let around = (hasUpgrade('lethe',14)||hasUpgrade('lethe',15)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35));
                 let price = player.kou.points.gte(50);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp['dark'].effect.gte(400000000);
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(50).times(achievementEffect('a',42))).floor();
             },
             effect(){
                 return player.kou.points.div(2).max(1);
@@ -1551,6 +1649,7 @@ addLayer("lethe", {
                 let a = player.mem.points.gte(5e43);
 				return a && (player.lethe.upgrades.length<tmp.lethe.nodeSlots)
             },
+            
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
         },
@@ -1573,6 +1672,9 @@ addLayer("lethe", {
                 let around = (hasUpgrade('lethe',23)||hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',33)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',43)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45));
                 let price = player.kou.points.gte(30)&&player.mem.points.gte(5e65)&&player.dark.points.gte(pricenum);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(30).times(achievementEffect('a',42))).floor();
             },
             effect(){
                 if (player.light.points.lte(player.dark.points)) return 1;
@@ -1599,6 +1701,9 @@ addLayer("lethe", {
                 let around = (hasUpgrade('lethe',24)||hasUpgrade('lethe',25)||hasUpgrade('lethe',34)||hasUpgrade('lethe',35)||hasUpgrade('lethe',44)||hasUpgrade('lethe',45));
                 let price = player.dark.points.gte(pricenum)&&player.kou.points.gte(40);
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
+            },
+            onPurchase(){
+                if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(40).times(achievementEffect('a',42))).floor();
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1833,9 +1938,9 @@ addLayer("lab", {
         unlocked: false,
 		points: new Decimal(0),
         best:new Decimal(0),
-        //total:new Decimal(0),
         unlockOrder:0,
         power:new Decimal(0),
+        generatorauto:false,
         //powermult:new Decimal(0),
         //powerexp:new Decimal(0),
         }},
@@ -1863,6 +1968,7 @@ addLayer("lab", {
         if (hasAchievement('lab',13)) mult = mult.plus(achievementEffect('lab',13));
         if (hasUpgrade('lab',63)) mult = mult.times(upgradeEffect('lab',63));
         if (hasUpgrade('lab',64)) mult = mult.times(upgradeEffect('lab',64));
+        if (hasUpgrade('world',11)) mult = mult.times(upgradeEffect('world',11));
         mult = mult.pow(tmp["lab"].powerexp)
         return mult;
     },
@@ -1881,17 +1987,22 @@ addLayer("lab", {
         //mult
         if (hasMilestone('rei',2)) gain = gain.times(player.rei.points.div(100).plus(1));
         if (hasMilestone('yugamu',2)) gain = gain.times(player.yugamu.points.div(100).plus(1));
+        if (hasUpgrade('lab',111)) gain = gain.times(buyableEffect('lab',11));
+        if (hasUpgrade('world',31)) gain = gain.times(layers.world.restrictReward());
+        if (hasUpgrade('lab',121)) gain = gain.times(1.5);
 
         return gain;
     },
     pointsoftcap(){
         let sc = new Decimal(100000);
+        if (hasUpgrade('lab',121)) sc = sc.times(2);
         return sc;
     },
 
     update(diff) {
 
         let auto=[11,12,13,21,22,31,32];
+        if (hasUpgrade('lab',122)) auto =auto.concat([41,42]);
         for(var i = 0; i < auto.length; i++){
             if (layers.lab.buyables[auto[i]].canAfford()&&layers.lab.buyables[auto[i]].autoed()){
                 layers.lab.buyables[auto[i]].buy()
@@ -1907,6 +2018,15 @@ addLayer("lab", {
         player.lab.power = player.lab.power.sub(player.lab.power.times(0.01).times(diff));
         if (player.lab.power.lt(0)) player.lab.power = new Decimal(1e-10);
         if (player.lab.points.lt(0)) player.lab.points = new Decimal(1e-10);
+    },
+
+    shouldNotify(){
+        let buyableid = [11,12,13,21,22,31,32,41,42];
+        for(var i = 0; i < buyableid.length; i++){
+            if (layers.lab.buyables[buyableid[i]].canAfford()){
+                return true;
+            };
+    }
     },
 
     microtabs:{
@@ -1933,6 +2053,17 @@ addLayer("lab", {
                 ["row",[["upgrade","101"] ]]
             ]
         },
+        "World Researches":{
+            unlocked(){return hasUpgrade('world',21)},
+            content:[
+            "blank",
+            ["row",[["upgrade","111"],["upgrade","112"],["upgrade","113"],["upgrade","114"]]],
+            ["row",[["upgrade","121"],["upgrade","122"],["upgrade","123"],["upgrade","124"]]],
+            ["row",[["upgrade","131"],["upgrade","132"],["upgrade","133"],["upgrade","134"]]],
+            ["row",[["upgrade","141"],["upgrade","142"],["upgrade","143"],["upgrade","144"]]],
+            ["row",[["upgrade","151"] ]]
+        ]
+    },
         }
 
     },
@@ -2213,7 +2344,7 @@ addLayer("lab", {
         51:{ title: "Anonymous Effect",
         description: "Unlock two new layers of phenomenon you think isn't normal.",
         fullDisplay(){return "<b>Anonymous Effect</b><br>Unlock two new layers of phenomenon which you think aren't normal.<br><br>Cost: 2,000 Research Points.<br>250,000,000 Research Power"},
-        unlocked(){return (hasUpgrade('lab',44)&&player.lab.points.gte(1500))||hasAchievement('lab',21)},
+        unlocked(){return (hasUpgrade('lab',44))||hasAchievement('lab',21)},
         canAfford(){
             return player.lab.points.gte(2000)&&player.lab.power.gte(250000000);
         },
@@ -2422,7 +2553,7 @@ addLayer("lab", {
         101:{ title: "The World",
         description: "With so many works done, now it is time to take a glance to that mysterious World.",
         fullDisplay(){return "<b>The World</b><br>With so many works done. Now it is time to take a glance to that mysterious World.<br><br>Cost: 3 Luminous Churches<br>3 Flourish Labyrinths"},
-        unlocked(){return (hasUpgrade('lab',93)&&hasUpgrade('lab',94)&&player.lab.points.gte(25000))||hasAchievement('a',64)},
+        unlocked(){return (hasUpgrade('lab',93)&&hasUpgrade('lab',94))||hasAchievement('a',64)},
         canAfford(){
             return player.rei.points.gte(3)&&player.yugamu.points.gte(3);
         },
@@ -2432,6 +2563,202 @@ addLayer("lab", {
             },
         onPurchase(){
             player.world.unlocked = true;showTab('none');
+        },
+            style: {height: '200px', width: '200px'},
+        },
+        111:{ title: "Outsource Management",
+        description: "Research Transformer now boosts Research Points gain.",
+        unlocked(){return hasUpgrade('world',21)},
+        cost:new Decimal(25000),
+        },
+        112:{ title: "Priests",
+        description: "Luminous Churches boosts Glowing Roses gain.",
+        fullDisplay(){return "<b>Priests</b><br>Luminous Churches boosts Glowing Roses gain.<br><br>Cost: 30,000 Research Points<br>4 Luminous Churches"},
+        unlocked(){return hasUpgrade('lab',111)},
+        canAfford(){
+            return player.lab.points.gte(30000)&&player.rei.points.gte(4);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(30000);
+            player.rei.points = player.rei.points.sub(4);
+            },
+        effect(){
+            return player.rei.points.div(20).plus(1);
+        },
+        },
+        113:{ title: "Tissue Decomposition",
+        description: "Research Power boosts Glowing Roses gain.",
+        fullDisplay(){return "<b>Tissue Decomposition</b><br>Research Power boosts Glowing Roses gain.<br><br>Cost: 40,000 Research Points<br>150 Glowing Roses"},
+        unlocked(){return hasUpgrade('lab',112)},
+        canAfford(){
+            return player.lab.points.gte(40000)&&player.rei.roses.gte(150);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(40000);
+            player.rei.roses = player.rei.roses.sub(150);
+            },
+        effect(){
+            return player.lab.power.plus(1).log(10).div(10).max(1);
+        },
+        },
+        114:{ title: "Gyroscope",
+        description: "Research Power gives you more move times in the Maze.",
+        fullDisplay(){return "<b>Gyroscope</b><br>Research Power gives you more move times in the Maze.<br><br>Cost: 40,000 Research Points<br>Req: 30 moved times in the Maze"},
+        unlocked(){return hasUpgrade('lab',112)},
+        canAfford(){
+            return player.lab.points.gte(40000)&&player.yugamu.timesmoved.gte(30);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(40000);
+            },
+        effect(){
+            return player.lab.power.plus(1).log(10).sqrt().max(0);
+        },
+        },
+        121:{ title: "Storage Battery",
+        description: "Research Points gain x1.5, and its softcap x2",
+        unlocked(){return hasUpgrade('lab',113)&&hasUpgrade('lab',114)},
+        cost:new Decimal(75000),
+        },
+        122:{ title: "Productivity Transformer",
+        description: "Unlock Research Generator & Tech Transformer autobuyer",
+        unlocked(){return hasUpgrade('lab',121)},
+        cost:new Decimal(90000),
+        },
+        123:{ title: "Fluorescent Steps",
+        description: "Light Tachyons itself boosts The Speed of World Steps gain.",
+        fullDisplay(){return "<b>Fluorescent Steps</b><br>Light Tachyons itself boosts The Speed of World Steps gain.<br><br>Cost: 150,000 Research Points<br>7 Luminous Churches"},
+        unlocked(){return hasUpgrade('lab',122)},
+        canAfford(){
+            return player.lab.points.gte(150000)&&player.rei.points.gte(7);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(150000);
+            player.rei.points = player.rei.points.sub(7);
+            },
+        effect(){
+            return player.light.points.plus(1).log10().div(2.5);
+        },
+        },
+        124:{ title: "Unstable Steps",
+        description: "Dark Matters itself boosts The Speed of World Steps gain.",
+        fullDisplay(){return "<b>Unstable Steps</b><br>Dark Matters itself boosts The Speed of World Steps gain.<br><br>Cost: 150,000 Research Points<br>7 Flourish Labyrinths"},
+        unlocked(){return hasUpgrade('lab',122)},
+        canAfford(){
+            return player.lab.points.gte(150000)&&player.yugamu.points.gte(7);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(150000);
+            player.yugamu.points = player.yugamu.points.sub(7);
+            },
+        effect(){
+            return player.dark.points.plus(1).log10().div(2.5);
+        },
+        },
+        131:{ title: "Compass",
+        description: "Fomula of the effect you moved North is better",
+        fullDisplay(){return "<b>Compass</b><br>Fomula of the effect you moved North is better.<br><br>Cost: 250,000 Research Points<br>Req: Moved North 20 times"},
+        unlocked(){return hasUpgrade('lab',123)&&hasUpgrade('lab',124)},
+        canAfford(){
+            return player.lab.points.gte(250000)&&player.yugamu.buyables[11].gte(20);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(250000);
+            },
+        },
+        132:{ title: "Noticeboard",
+        description: "Fomula of the effect you moved East is better",
+        fullDisplay(){return "<b>Noticeboard</b><br>Fomula of the effect you moved East is better.<br><br>Cost: 250,000 Research Points<br>Req: Moved East 20 times"},
+        unlocked(){return hasUpgrade('lab',123)&&hasUpgrade('lab',124)},
+        canAfford(){
+            return player.lab.points.gte(250000)&&player.yugamu.buyables[22].gte(20);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(250000);
+            },
+        },
+        133:{ title: "Garden",
+        description: "Fomula of the effect you moved West is better",
+        fullDisplay(){return "<b>Garden</b><br>Fomula of the effect you moved West is better.<br><br>Cost: 250,000 Research Points<br>Req: Moved West 20 times"},
+        unlocked(){return hasUpgrade('lab',123)&&hasUpgrade('lab',124)},
+        canAfford(){
+            return player.lab.points.gte(250000)&&player.yugamu.buyables[21].gte(20);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(250000);
+            },
+        },
+        134:{ title: "Sky Mark",
+        description: "Fomula of the effect you moved South is better",
+        fullDisplay(){return "<b>Sky Mark</b><br>Fomula of the effect you moved South is better.<br><br>Cost: 250,000 Research Points<br>Req: Moved South 20 times"},
+        unlocked(){return hasUpgrade('lab',123)&&hasUpgrade('lab',124)},
+        canAfford(){
+            return player.lab.points.gte(250000)&&player.yugamu.buyables[31].gte(20);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(250000);
+            },
+        },
+        141:{ title: "Gardenhouse",
+        description: "Research Points boosts Glowing Roses gain.",
+        unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
+        cost:new Decimal(750000),
+        effect(){
+            return player[this.layer].points.plus(1).log(10).div(15).plus(1);
+        },
+        },
+        142:{ title: "DFS Method",
+        description: "Research Points gives you more move times in the Maze.",
+        unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
+        cost:new Decimal(750000),
+        effect(){
+            return player[this.layer].points.plus(1).log(10).max(1);
+        },
+        },
+        143:{ title: "The Blueprint of Theology",
+        description: "Research Points boosts Luminous Churches gain.",
+        fullDisplay(){return "<b>The Blueprint of Theology</b><br>Research Points boosts Luminous Churches gain.<br><br>Cost: 1,000,000 Research Points<br>8 Luminous Churches"},
+        unlocked(){return hasUpgrade('lab',141)&&hasUpgrade('lab',142)},
+        canAfford(){
+            return player.lab.points.gte(1000000)&&player.rei.points.gte(8);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(1000000);
+            player.rei.points = player.rei.points.sub(8);
+            },
+            effect(){
+                return player[this.layer].points.plus(1).log(10).div(10).plus(1);
+            },
+        },
+        144:{ title: "The Blueprint of Anxiety",
+        description: "Research Points boosts Flourish Labyrinths gain.",
+        fullDisplay(){return "<b>The Blueprint of Anxiety</b><br>Research Points boosts Flourish Labyrinths gain.<br><br>Cost: 1,000,000 Research Points<br>8 Flourish Labyrinths"},
+        unlocked(){return hasUpgrade('lab',141)&&hasUpgrade('lab',142)},
+        canAfford(){
+            return player.lab.points.gte(1000000)&&player.yugamu.points.gte(8);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(1000000);
+            player.yugamu.points = player.yugamu.points.sub(8);
+            },
+            effect(){
+                return player[this.layer].points.plus(1).log(10).div(10).plus(1);
+            },
+        },
+        151:{ title: "Celebrate Anniversary",
+        description: "Celebrate first anniversary of setting up your lab.",
+        fullDisplay(){return "<b>Celebrate Anniversary</b><br>Celebrate first anniversary of setting up your lab(Currently, nothing here).<br><br>Cost: 9 Luminous Churches<br>9 Flourish Labyrinths<br>900 World Steps"},
+        unlocked(){return (hasUpgrade('lab',143)&&hasUpgrade('lab',144))},
+        canAfford(){
+            return player.rei.points.gte(9)&&player.yugamu.points.gte(9)&&player.world.points.gte(900);
+        },
+        pay(){
+            player.rei.points = player.rei.points.sub(9);
+            player.yugamu.points = player.yugamu.points.sub(9);
+            player.world.points = player.world.points.sub(900);
+            },
+        onPurchase(){
+            //player.world.unlocked = true;showTab('none');
         },
             style: {height: '200px', width: '200px'},
         },
@@ -2487,6 +2814,24 @@ addLayer("lab", {
             done() { return hasUpgrade('lab',73)||hasUpgrade('lab',74) },
             tooltip: "Begin to turn your Research Transformers into more useful things.<br>Rewards:Tech Transformer's formula now better.",
         },
+        23: {
+            name: "Things Become More Intresting~",
+            unlocked(){return hasAchievement('lab',21)},
+            done() { return hasUpgrade('world',21) },
+            tooltip: "Unlock World Researches.",
+        },
+        24: {
+            name: "\"I thought it was a lab about science……\"",
+            unlocked(){return hasAchievement('lab',21)},
+            done() { return hasUpgrade('lab',112) },
+            tooltip: "Hire some priests to your lab.",
+        },
+        25: {
+            name: "Does Anybody Say sth About Softcap™?",
+            unlocked(){return hasAchievement('lab',21)},
+            done() { return hasUpgrade('lab',121) },
+            tooltip: "Enlarge your Research Points capacity.",
+        },
     },
     buyables:{//Research Transformers
 			//rows: 1,
@@ -2502,7 +2847,7 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.lab.power)+" / "+formatWhole(cost.fo)+" Research Power"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points.";
+                    let display = formatWhole(player.lab.power)+" / "+formatWhole(cost.fo)+" Research Power"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',111)?("<br>Also boosts Research Points gain by x"+format(buyableEffect('lab',11))):"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',21); }, 
@@ -2516,6 +2861,11 @@ addLayer("lab", {
 					player.lab.power = player.lab.power.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
+                },
+                effect(){
+                    let eff = new Decimal(1);
+                    if (hasUpgrade('lab',111)) eff = eff.plus(player[this.layer].buyables[this.id].div(100))
+                    return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44)  },
@@ -2759,7 +3109,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return false },
+				autoed() { return player.lab.generatorauto },
 			},
             42: {
 				title: "Tech Transformer",
@@ -2793,7 +3143,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return false },
+				autoed() { return player.lab.generatorauto },
 			},
     }
 })
@@ -2804,6 +3154,7 @@ addLayer("rei", {
         points: new Decimal(0),
         best: new Decimal(0),
         total: new Decimal(0),
+        roses:new Decimal(0),
         unlockOrder:0,
         auto: false,         
     }},
@@ -2830,8 +3181,25 @@ addLayer("rei", {
     type: "static",
     exponent: 1.5,
 
+    update(diff){
+        if (inChallenge('rei',11)){
+            player.points = player.points.sub(player.points.div(10).times(diff)).max(1e-10);
+            player.mem.points = player.mem.points.sub(player.mem.points.div(10).times(diff)).max(1e-10);
+            player.light.points = player.light.points.sub(player.light.points.div(10).times(diff)).max(1e-10);
+            player.dark.points = player.dark.points.sub(player.dark.points.div(10).times(diff)).max(1e-10);
+            player.kou.points = player.kou.points.sub(player.kou.points.div(10).times(diff)).max(1e-10);
+            player.lethe.points = player.lethe.points.sub(player.lethe.points.div(10).times(diff)).max(1e-10);
+            player.rei.roses = player.rei.roses.plus(tmp["rei"].challenges[11].amt.times(diff));
+        }
+    },
+
     gainMult() {
-        return new Decimal(1)
+        let mult = new Decimal(1);
+        if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
+        if (hasUpgrade('world',23)) mult = mult.div(upgradeEffect('world',23));
+        if (hasUpgrade('world',31)) mult = mult.div(layers.world.fixedReward());
+        if (hasUpgrade('lab',143)) mult = mult.div(upgradeEffect('lab',143));
+        return mult;
     },
     gainExp() {  
         return new Decimal(1)
@@ -2855,9 +3223,59 @@ addLayer("rei", {
             requirementDescription: "5 total Luminous Churches",
             done() { return player.rei.total.gte(5)},
             unlocked(){return player.rei.unlocked},
-            effectDescription: "Luminous Churches boosts Research Points gain & All random num set to it's maxnum.",
+            effectDescription: "Luminous Churches boosts Research Points gain & All random num set to their maxnum.",
         },
-    }
+        3: {
+            requirementDescription: "10 total Luminous Churches",
+            done() { return player.rei.total.gte(10)},
+            unlocked(){return player.rei.unlocked},
+            effectDescription: "Unlock Zero Sky.",
+        },
+        4: {
+            requirementDescription: "5 best Luminous Churches",
+            done() { return player.rei.best.gte(5)},
+            unlocked(){return hasMilestone('rei',3)},
+            effectDescription: "Glowing Roses also boosts Red Dolls and Forgotten Drops gain.",
+        },
+    },
+
+    challenges:{
+        11:{
+            name: "Zero sky",
+            unlocked() { return hasMilestone('rei',3) },
+            canComplete(){return false},
+            gainMult(){
+                let mult = new Decimal(1);
+                if (hasMilestone('yugamu',3)) mult = mult.times(buyableEffect('yugamu',21));
+                if (hasUpgrade('lab',113)) mult = mult.times(upgradeEffect('lab',113));
+                if (hasUpgrade('world',33)) mult = mult.times(upgradeEffect('world',33));
+                if (hasUpgrade('lab',141)) mult = mult.times(upgradeEffect('lab',141));
+                return mult;
+            },
+            amt(){//gain per sec
+                let gain = player.points.log10().div(50).max(0).sqrt();
+                gain =gain.times(tmp["rei"].challenges[11].gainMult);
+                return gain;
+            },
+            onEnter(){
+                if (!hasAchievement('a',75)) player.rei.roses = new Decimal(0);
+                else player.rei.roses = player.rei.roses.div(2);
+                doReset("mem",true);
+                doReset("light",true);
+                doReset("dark",true);
+                doReset("kou",true);
+                doReset("lethe",true);
+            },
+            fullDisplay(){
+                let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +(inChallenge('rei',11)?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
+                if (hasMilestone('rei',4)) show = show + "<br>Red Dolls & Forgotten Drops gain by "+format(player.rei.roses.plus(1).log10().times(2).max(1)) +"x";
+                return show;
+            },
+            style(){
+                return {'background-color': "#ffe6f6",color: "#383838", 'border-radius': "25px", height: "400px", width: "400px"}
+            }
+        }
+    },
 })
 
 addLayer("yugamu", {
@@ -2867,6 +3285,11 @@ addLayer("yugamu", {
         best: new Decimal(0),
         total: new Decimal(0),
         unlockOrder:0,
+        canclickingclickables : [],
+        movetimes : new Decimal(0),
+        DirectioncanChoose : 1,
+        actionpoint : 1,
+        timesmoved : new Decimal(0),
         auto: false,         
     }},
     name: "Flourish Labyrinths", // This is optional, only used in a few places, If absent it just uses the layer id.
@@ -2892,8 +3315,57 @@ addLayer("yugamu", {
     type: "static",
     exponent: 1.5,
 
+    tabFormat: {
+        "Milestones": {
+            content: [
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                "milestones",]
+        },
+        "Maze": {
+            unlocked() { return hasMilestone('yugamu',3) },
+            content: [
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                ["display-text", function() { return "You can move "+formatWhole(tmp.yugamu.movetimes)+" times at total." }],
+                ["display-text", function() { return "You have moved "+formatWhole(player.yugamu.timesmoved)+" times." }],
+                "blank",
+                ["row",[["buyable",11]]],
+                ["blank",["8px","8px"]],
+                ["row",[["buyable",21],["blank",["8px","8px"]],["clickable",11],["blank",["8px","8px"]],["buyable",22]]],
+                ["blank",["8px","8px"]],
+                ["row",[["buyable",31]]],
+                "blank",
+                //effect display
+                ["column",[["display-text",function(){return "You have moved <h3>North</h3> "+formatWhole(player.yugamu.buyables[11])+" times"}],"blank",["display-text",function(){return "Which boosts your Luminous Churches & Flourish Labyrinths gain by " + format(buyableEffect('yugamu',11))+"x"}]],{width: "100%"}],
+                "blank",
+                "blank",
+                ["row",[
+                    ["column",[["display-text",function(){return "You have moved <h3>West</h3> "+formatWhole(player.yugamu.buyables[21])+" times"}],"blank",["display-text",function(){return "Which boosts your Glowing Roses gain by " + format(buyableEffect('yugamu',21))+"x"}]],{width: "50%"}],
+                    ["column",[["display-text",function(){return "You have moved <h3>East</h3> "+formatWhole(player.yugamu.buyables[22])+" times"}],"blank",["display-text",function(){return "Which boosts other directions' effect by "+ format(buyableEffect('yugamu',22))+"x"}]],{width: "50%"}],
+                ]],
+                "blank",
+                "blank",
+                ["column",[["display-text",function(){return "You have moved <h3>South</h3> "+formatWhole(player.yugamu.buyables[31])+" times"}],"blank",["display-text",function(){return "Which boosts The Speed of World Steps gain by "+ format(buyableEffect('yugamu',31))+"x"}]],{width: "100%"}],
+                ]
+        },
+    },
+
+
+    
     gainMult() {
-        return new Decimal(1)
+        let mult = new Decimal(1);
+        if (hasMilestone('yugamu',3)) mult = mult.div(buyableEffect('yugamu',11));
+        if (hasUpgrade('world',24)) mult = mult.div(upgradeEffect('world',24));
+        if (hasUpgrade('world',31)) mult = mult.div(layers.world.fixedReward());
+        if (hasUpgrade('lab',144)) mult = mult.div(upgradeEffect('lab',144));
+        return mult;
     },
     gainExp() {  
         return new Decimal(1)
@@ -2919,7 +3391,211 @@ addLayer("yugamu", {
             unlocked(){return player.yugamu.unlocked},
             effectDescription: "Flourish Labyrinth boosts Research Points gain & Keep central 9 Guiding Beacons when reset.",
         },
+        3: {
+            requirementDescription: "10 total Flourish Labyrinths",
+            done() { return player.yugamu.total.gte(10)},
+            unlocked(){return player.yugamu.unlocked},
+            onComplete(){
+                player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(1);
+            },
+            effectDescription: "Unlock Maze.",
+        },
+        4: {
+            requirementDescription: "5 best Flourish Labyrinths",
+            done() { return player.yugamu.best.gte(5)},
+            unlocked(){return hasMilestone('yugamu',3)},
+            effectDescription: "Your movetime limit now calculated based on total Flourish Labyrinths you gain instead of best Flourish Labyrinths you have.",
+        },
+    },
+
+    shouldNotify(){
+        let buyableid = [11,21,22,31];
+        for(var i = 0; i < buyableid.length; i++){
+            if (layers.yugamu.buyables[buyableid[i]].canAfford()){
+                return true;
+            };
     }
+    },
+
+    update(diff){
+        if (player.yugamu.actionpoint == 0) {
+            player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.DirectioncanChoose());
+            player.yugamu.timesmoved = player.yugamu.timesmoved.plus(1);
+            player.yugamu.actionpoint = layers.yugamu.actionpoint();
+        };
+    },
+
+
+    //maze releated
+    canclickingclickables(n){//use layers
+    let buyableid = ['11','21','22','31'];//TMT原来的clickable返回的不是数组，得单独保存其编号。
+    let shouldcanclick = [];
+
+    for (var i = 1;i<=n;i++)
+    {
+	randindex = Math.floor(Math.random()*(buyableid.length));//0~数组长-1
+	shouldcanclick.push(buyableid[randindex]);
+	buyableid.splice(randindex,1);
+    };
+
+    return shouldcanclick
+    },
+
+    DirectioncanChoose(){
+        let num = 1;
+        if (hasAchievement('a',73)) num = 2;
+        return num;
+    },
+
+    movetimes(){//use tmp
+        let mt = player[this.layer].best.times(2);
+        if (hasMilestone('yugamu',4)) mt = player[this.layer].total.times(2);
+        if (hasUpgrade('world',22)) mt = mt.plus(upgradeEffect('world',22));
+        if (hasAchievement('a',71)) mt = mt.plus(5);
+        if (hasUpgrade('lab',114)) mt = mt.plus(upgradeEffect('lab',114));
+        if (hasUpgrade('lab',142)) mt = mt.plus(upgradeEffect('lab',142));
+        mt = mt.round();
+        return mt;
+    },
+
+    actionpoint(){//use tmp && !use Decimal && use layers when call
+        return 1;
+    },
+
+    buyables: {
+        rows: 3,
+        cols: 2,
+        11: {
+            title: "",
+            display: "↑",
+            unlocked() { return hasMilestone('yugamu',3) },
+            canAfford() { 
+                if (tmp.yugamu.movetimes.lte(player.yugamu.timesmoved)) return false;
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                            {
+                               if (this.id == player.yugamu.canclickingclickables[i]) return true;
+                            }
+                return false; 
+            },
+            buy() { 
+                player.yugamu.actionpoint = player.yugamu.actionpoint - 1;
+                player.yugamu.buyables[this.id] = player.yugamu.buyables[this.id].plus(1);
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                    {
+                         if (this.id == player.yugamu.canclickingclickables[i]) {player.yugamu.canclickingclickables.splice(i,1);};
+                     };
+            },
+            effect(){
+                let eff = player.yugamu.buyables[this.id].div(2).plus(1);
+                if (hasUpgrade('lab',131)) eff = player.yugamu.buyables[this.id].div(1.5).plus(1);
+                eff = eff.times(buyableEffect('yugamu',22));
+                return eff;
+            },
+            style: {width: "100px", height: "100px"},
+        },
+        21: {
+            title: "",
+            display: "←",
+            unlocked() { return hasMilestone('yugamu',3) },
+            canAfford() {
+                if (tmp.yugamu.movetimes.lte(player.yugamu.timesmoved)) return false;
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                    {
+                         if (this.id == player.yugamu.canclickingclickables[i]) return true;
+                     }
+                return false;
+            },
+            buy() { 
+                player.yugamu.actionpoint = player.yugamu.actionpoint - 1;
+                player.yugamu.buyables[this.id] = player.yugamu.buyables[this.id].plus(1);
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                    {
+                         if (this.id == player.yugamu.canclickingclickables[i]) {player.yugamu.canclickingclickables.splice(i,1);};
+                     };
+            },
+            effect(){
+                let eff = player.yugamu.buyables[this.id].div(20).plus(1);
+                if (hasUpgrade('lab',133)) eff = player.yugamu.buyables[this.id].div(10).plus(1);
+                eff = eff.times(buyableEffect('yugamu',22));
+                return eff;
+            },
+            style: {width: "100px", height: "100px"},
+        },
+        22: {
+            title: "",
+            display: "→",
+            unlocked() { return hasMilestone('yugamu',3) },
+            canAfford() { 
+                if (tmp.yugamu.movetimes.lte(player.yugamu.timesmoved)) return false;
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                            {
+                               if (this.id == player.yugamu.canclickingclickables[i]) return true;
+                            }
+                return false; 
+            },
+            buy() { 
+                player.yugamu.actionpoint = player.yugamu.actionpoint - 1;
+                player.yugamu.buyables[this.id] = player.yugamu.buyables[this.id].plus(1);
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                    {
+                         if (this.id == player.yugamu.canclickingclickables[i]) {player.yugamu.canclickingclickables.splice(i,1);};
+                     };
+            },
+            effect(){
+                let eff = player.yugamu.buyables[this.id].div(50).plus(1);
+                if (hasUpgrade('lab',132)) eff = player.yugamu.buyables[this.id].div(25).plus(1);
+                return eff;
+            },
+            style: {width: "100px", height: "100px"},
+        },
+        31: {
+            title: "",
+            display: "↓",
+            unlocked() { return hasMilestone('yugamu',3) },
+            canAfford() { 
+                if (tmp.yugamu.movetimes.lte(player.yugamu.timesmoved)) return false;
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                            {
+                               if (this.id == player.yugamu.canclickingclickables[i]) return true;
+                            }
+                return false; 
+            },
+            buy() { 
+                player.yugamu.actionpoint = player.yugamu.actionpoint - 1;
+                player.yugamu.buyables[this.id] = player.yugamu.buyables[this.id].plus(1);
+                for(var i = 0; i < player.yugamu.canclickingclickables.length; i++)
+                    {
+                         if (this.id == player.yugamu.canclickingclickables[i]) {player.yugamu.canclickingclickables.splice(i,1);};
+                     };
+            },
+            effect(){
+                let eff = player.yugamu.buyables[this.id].div(5).plus(1);
+                if (hasUpgrade('lab',134)) eff = player.yugamu.buyables[this.id].div(4).plus(1);
+                eff = eff.times(buyableEffect('yugamu',22));
+                return eff;
+            },
+            style: {width: "100px", height: "100px"},
+        },
+    },
+    clickables:{
+        11: {
+            title: "Mental Breakdown",
+            display: "",
+            unlocked() { return hasMilestone('yugamu',3) },
+            canClick() { return player.yugamu.timesmoved.gt(0) },
+            onClick() { 
+                if (!confirm("It's okay to be mad when you get lost in the Maze……But are you sure there is no other way out?")) return;
+                player.yugamu.timesmoved = new Decimal(0);
+                player.yugamu.actionpoint = layers.yugamu.actionpoint();
+                player.yugamu.buyables[11] = new Decimal(0);
+                player.yugamu.buyables[21] = new Decimal(0);
+                player.yugamu.buyables[22] = new Decimal(0);
+                player.yugamu.buyables[31] = new Decimal(0);
+                player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.DirectioncanChoose());
+            },
+            style: {width: "150px", height: "150px"},
+        },
+    },
 })
 
 addLayer("world", {
@@ -2931,19 +3607,24 @@ addLayer("world", {
 		points: new Decimal(0),
         best:new Decimal(0),
         unlockOrder:0,
-        WorldstepHeight: new Decimal(10),//Do not use plaer.world.WorldstepHeight
+        WorldstepHeight: new Decimal(10),//Do not use player.world.WorldstepHeight
         Worldtimer: new Decimal(0),
         StepgrowthSpeed: new Decimal(1),//per second
+        fixednum: new Decimal(0),
+        restrictionnum: new Decimal(0),
+        currentStepType: 0,//not Decimal
+        Worldrandomnum : 0,//not Decimal
+        restrictChallenge: false,
         }},
     resource: "World Steps",
     color: "#ddeee3",
     nodeStyle() { return {
         background: (player.world.unlocked||canReset("world"))?("linear-gradient(#ededed, #383838)"):"#bf8f8f",
         //"background-size":"120px 120px",
-        height: "95px",
-        width: "95px",
+        height: "96px",
+        width: "96px",
         "border" : "0px",
-        "outline":"rgb(100,100,100) solid 5px",
+        "outline":"rgb(100,100,100) solid 4px",
     }},
     type: "none", // 怹也不通过重置获得点数,但是怹应该会被重置
     branches: ["mem"],
@@ -2953,6 +3634,11 @@ addLayer("world", {
     position:2,
     layerShown(){return hasAchievement('a',64)},
     unlocked(){return hasUpgrade('lab',101)},
+
+    shouldNotify(){
+        return (player.world.currentStepType>=99&&!player.world.restrictChallenge);
+    },
+
     doReset(resettingLayer){
         let keep=[];
         if (layers[resettingLayer].row > this.row) {layerDataReset('world', keep);}
@@ -2964,7 +3650,13 @@ addLayer("world", {
             width: 500,
             height: 25,
             progress() { return player.world.Worldtimer.div(tmp["world"].WorldstepHeight) },
-            fillStyle:{'background-color':'#ddeee3'},
+            barcolor() {
+                if (player.world.currentStepType<75) return '#ddeee3';
+                else if (player.world.currentStepType<87) return '#bc24cb';
+                else if (player.world.currentStepType<99) return '#eec109';
+                else return '#e8272a';
+            },
+            fillStyle(){return {'background-color':layers.world.bars.WorldProgressBar.barcolor()}},
         },
     },
 
@@ -2976,21 +3668,58 @@ addLayer("world", {
 
     StepgrowthSpeed(){
         let speed = new Decimal(1);
+        if (player.world.currentStepType>=99&&player.world.restrictChallenge) return (player.points.plus(1).log10().div(2));
+        if (hasUpgrade('world',12)) speed = speed.times(2);
+        if (hasUpgrade('world',13)) speed = speed.times(upgradeEffect('world',13));
+        if (hasUpgrade('world',14)) speed = speed.times(upgradeEffect('world',14));
+        if (hasAchievement('a',65)) speed = speed.times(achievementEffect('a',65));
+        if (hasMilestone('yugamu',3)) speed = speed.times(buyableEffect('yugamu',31));
+        if (hasAchievement('a',72)) speed = speed.times(1.5);
+        if (hasAchievement('a',74)) speed = speed.times(achievementEffect('a',74));
+        if (hasUpgrade('lab',123)) speed = speed.times(upgradeEffect('lab',123));
+        if (hasUpgrade('lab',124)) speed = speed.times(upgradeEffect('lab',124));
+        if (player.world.currentStepType<87&&player.world.currentStepType>=75) speed = speed.times(1+player.world.Worldrandomnum);
+        if (player.world.currentStepType<99&&player.world.currentStepType>=87) speed = speed.times(Math.min(1-player.world.Worldrandomnum*0.99,0.75));
+        if (hasUpgrade('world',34)&&speed.lt(upgradeEffect('world',34))) speed = upgradeEffect('world',34);
+        if (player.world.currentStepType>=99&&!player.world.restrictChallenge) speed = new Decimal(0);
         return speed;
+    },
+
+    fixedReward(){
+        let softcap = new Decimal(500);
+        let softcappower = 0.25;
+        let reward = player.world.fixednum.div(2).plus(1);
+        if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
+        return reward;
+    },
+
+    restrictReward(){
+        let softcap = new Decimal(20);
+        let softcappower = 0.25;
+        let reward = Decimal.pow(1.5,player.world.restrictionnum);
+        if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
+        return reward;
     },
 
     update(diff){//重头戏
         if (!player.world.unlocked) player.world.Worldtimer = new Decimal(0);
-        player.world.Worldtimer = player.world.Worldtimer.plus(player.world.StepgrowthSpeed.times(diff));
+        player.world.Worldtimer = player.world.Worldtimer.plus(tmp["world"].StepgrowthSpeed.times(diff));
         if (player.world.Worldtimer.gte(tmp["world"].WorldstepHeight)) {
+
+            if (player.world.currentStepType<99&&player.world.currentStepType>=87) player.world.fixednum = player.world.fixednum.plus(1);
+            if (player.world.currentStepType>=99) {player.world.restrictionnum = player.world.restrictionnum.plus(1);player.world.restrictChallenge = false;};
             player[this.layer].points = player[this.layer].points.plus(1);
             player.world.Worldtimer = new Decimal(0);
+            if (hasUpgrade('world',31)) player.world.currentStepType = Math.floor(Math.random()*(100));//0~99
+            player.world.Worldrandomnum = Math.random();
         };
 
         if (player[this.layer].points.gt(player[this.layer].best)) player[this.layer].best = player[this.layer].points;
     },
     
-    tabFormat: [
+    tabFormat: {
+        Upgrades:{
+            content:[
         "blank", 
         "main-display", 
         "blank", 
@@ -2998,10 +3727,225 @@ addLayer("world", {
         "blank",
         ["bar","WorldProgressBar"],
         ["display-text",function() {return formatWhole(player.world.Worldtimer)+" / "+formatWhole(tmp["world"].WorldstepHeight)+" Step Height"},{}],
+        ["display-text",
+        function(){
+            if (player.world.currentStepType<75) return "";
+            if (player.world.currentStepType<87&&player.world.currentStepType>=75) return ("You are going through random World Step. Current speed: " + format(Math.max(1+player.world.Worldrandomnum)) +"x");
+            if (player.world.currentStepType<99&&player.world.currentStepType>=87) return ("You are going through fixed World Step. Current speed: " + format(Math.min(1-player.world.Worldrandomnum*0.99,0.75)) +"x")
+            if (player.world.currentStepType>=99){
+                if (!player.world.restrictChallenge) return "You need to Enduring a small Challenge to go through restricted World Step."
+                else return "You are going through restricted World Step.<br>Your Fragments generation & Memories gain ^0.9 & The Speed of World Steps gain is based on your Fragments."
+            };
+        }
+        ,{}],
         "blank",
-        ["display-text",function() {return "Currently, nothing here"},{}],
-        ["display-text",function() {return "If you have any idea on The World should be like, please tell the mod creator!"},{}],
-    ],
+        "upgrades",
+        "clickables",
+        ]
+        },
+        Atlas:{
+            unlocked(){return hasUpgrade("world",31)},
+            content:[
+                "blank", 
+                "main-display", 
+                "blank", 
+                "resource-display",
+                "blank",
+                ["bar","WorldProgressBar"],
+                ["display-text",function() {return formatWhole(player.world.Worldtimer)+" / "+formatWhole(tmp["world"].WorldstepHeight)+" Step Height"},{}],
+                "blank",
+                ["row",[
+                ["column", [
+                    ["display-text",function() {return "You have gone through <h3 style='color: #eec109;'>"+formatWhole(player.world.fixednum)+"</h3> fixed World Steps."},{}],
+                    "blank",
+                    ["display-text",function() {return "Which boosts Luminous Churches&Flourish Labyrinths gain by <h3 style='color: #eec109;'>"+format(layers.world.fixedReward())+"</h3>x"},{}],
+                    "blank",
+                ],{width:"50%"}],
+                ["column", [
+                    ["display-text",function() {return "You have gone through <h3 style='color: #e8272a;'>"+formatWhole(player.world.restrictionnum)+"</h3> restricted World Steps."},{}],
+                    "blank",
+                    ["display-text",function() {return "Which boosts Research Points gain by <h3 style='color: #e8272a;'>"+format(layers.world.restrictReward())+"</h3>x"},{}],
+                    "blank",
+                ],{width:"50%"}],]
+                ,{}],
+            ],
+        },
+    },
+
+    upgrades:{
+        11:{ title: "Researching World",
+        description: "World Steps boosts Research Power gain",
+        unlocked() { return player.world.unlocked },
+        cost(){return new Decimal(5)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            let eff = player.world.points.div(10).plus(1);
+            return eff;
+        }
+        },
+        12:{ title: "Draft Map",
+        description: "the speed of World Steps gain x2",
+        unlocked() { return hasUpgrade('world',11) },
+        cost(){return new Decimal(5)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        },
+        13:{ title: "Visiting Churches",
+        description: "Luminous Churches boosts the speed of World Steps gain.",
+        fullDisplay: "<b>Visiting Churches</b><br>Luminous Churches boosts the speed of World Steps gain.<br>Cost: 10 World Steps<br>3 Luminous Churches",
+        unlocked() { return hasUpgrade('world',12) },
+        canAfford(){
+            return player[this.layer].points.gte(10)&&player.rei.points.gte(3);
+        },
+        pay(){
+            player[this.layer].points = player[this.layer].points.sub(10);
+            player.rei.points = player.rei.points.sub(3)
+        },
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            let eff = player.rei.points.div(10).plus(1);
+            return eff;
+        }
+        },
+        14:{ title: "Exploring Labyrinths",
+        description: "Flourish Labyrinths boosts the speed of World Steps gain.",
+        fullDisplay: "<b>Exploring Labyrinths</b><br>Flourish Labyrinths boosts the speed of World Steps gain.<br>Cost: 10 World Steps<br>3 Flourish Labyrinths",
+        unlocked() { return hasUpgrade('world',12) },
+        canAfford(){
+            return player[this.layer].points.gte(10)&&player.yugamu.points.gte(3);
+        },
+        pay(){
+            player[this.layer].points = player[this.layer].points.sub(10);
+            player.yugamu.points = player.yugamu.points.sub(3)
+        },
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            let eff = player.yugamu.points.div(10).plus(1);
+            return eff;
+        }
+        },
+        21:{ title: "Preliminary Report",
+        description: "Unlock World Research in the lab.",
+        unlocked() { return hasUpgrade('world',13)&&hasUpgrade('world',14) },
+        cost(){return new Decimal(20)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        },
+        22:{ title: "Upland",
+        description: "World Steps gives you extra move in the Maze.",
+        unlocked() { return hasUpgrade('world',21) },
+        cost(){return new Decimal(30)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            let eff = player[this.layer].points.div(5).sqrt();
+            if (hasUpgrade('world',32)) eff = player[this.layer].best.div(5).sqrt();
+            return eff;
+        },
+        },
+        23:{ title: "Sight From Godess",
+        description: "World Steps boosts Luminous Churches gain.",
+        unlocked() { return hasUpgrade('world',22) },
+        cost(){return new Decimal(40)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            return player[this.layer].points.div(10).max(1);
+        },
+        },
+        24:{ title: "Sight inside Chaoz",
+        description: "World Steps boosts Flourish Labyrinths gain.",
+        unlocked() { return hasUpgrade('world',22) },
+        cost(){return new Decimal(40)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            return player[this.layer].points.div(10).max(1);
+        },
+        },
+        31:{ title: "Restriction with Possibilities",
+        description: "Unlock more types of World Steps.",
+        unlocked() { return hasUpgrade('world',23)&&hasUpgrade('world',24) },
+        cost(){return new Decimal(50)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        },
+        32:{ title: "Everest",
+        description: "Upland now gives extra move in maze based on your best World Steps you have.",
+        unlocked() { return hasUpgrade('world',31)},
+        cost(){return new Decimal(75)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        },
+        33:{ title: "Babel Tower",
+        description: "World Steps boost Glowing Roses gain.",
+        unlocked() { return hasUpgrade('world',32)},
+        cost(){return new Decimal(100)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            return player[this.layer].points.sqrt().div(50).plus(1);
+        },
+        },
+        34:{ title: "Backtracking Method",
+        description: "The minium Speed of World Steps gain now boosted by times moved in Maze, regardless of magnification.",
+        unlocked() { return hasUpgrade('world',32)},
+        cost(){return new Decimal(100)},
+        onPurchase(){
+            player.world.Worldtimer = new Decimal(0);
+        },
+        effect(){
+            return player.yugamu.timesmoved.sqrt().times(2).max(1);
+        },
+        },
+    },
+    clickables: {
+        //rows: 1,
+        //cols: 1,
+        11: {
+			title: "Enduring Restriction Challenge",
+			display(){
+				return ((player.world.currentStepType>=99&&!inChallenge('rei',11))?(player.world.restrictChallenge?"In":"Out"):"Locked")
+			},
+			unlocked() { return hasUpgrade('world',31) },
+			canClick() { return (player.world.currentStepType>=99&&!inChallenge('rei',11)) },
+			onClick() { 
+                if (player.world.restrictChallenge) player.world.Worldtimer = new Decimal(0);
+                if (!player.world.restrictChallenge) {
+                    player.points = new Decimal(0);
+                    doReset('mem',true);
+                    doReset('light',true);
+                    doReset('dark',true);
+                };
+                player.world.restrictChallenge = !player.world.restrictChallenge;
+            },
+			style: {"background-color"() { return player.world.restrictChallenge?"#e8272a":"#666666" }},
+		    },
+        12: {
+            title: "Fall Down",
+            display: "Lose 20% of your World Steps.",
+            unlocked() { return player.world.points.gte(10) },
+            canClick() { return player.world.points.gte(10) },
+            onClick() { 
+                if (!confirm("This button is designed to go through restriction World Step quickly, but it can cost much! Are you sure?")) return;
+                player.world.points = player.world.points.times(0.8).floor();
+            },
+            },
+    },
 
 })
 
@@ -3176,7 +4120,15 @@ addLayer("a", {
         42: {
             name: "Toyhouse",
             done() { return hasChallenge('kou',11)},
-            tooltip: "Finish Broken Toyhouse challenge.",
+            tooltip() {
+                return "Finish Broken Toyhouse challenge.<br>Rewards:Guiding Beacons costing Red Dolls will give back Red Dolls cost by Achievement."+( (hasAchievement('a',42))?("<br>Currently:"+format(achievementEffect('a',42))+"x"):"" )
+            },
+            effect(){
+                let eff = new Decimal(0.5);
+                eff = eff.plus((player.a.achievements.length-17)/10);
+                if (eff.gt(1)) eff = new Decimal(1);
+                return eff;
+            }
         },
         43: {
             name: "Force Balance",
@@ -3239,7 +4191,43 @@ addLayer("a", {
         64: {
             name: "Glance into The World",
             done() { return player.world.unlocked},
-            tooltip: "Unlock World Layer.<br>Rewards:No Idea.",
+            tooltip: "Unlock World Layer.",
+        },
+        65: {
+            name: "The True Presbyter in The World",
+            done() { return player.rei.roses.gte(100)},
+            tooltip: "Gain 100 Glowing Roses.<br>Rewards:Glowing Roses now boosts The Speed of World Steps gain.",
+            effect(){
+                return player.rei.roses.plus(1).log(10).plus(1);
+            },
+        },
+        71: {
+            name: "Dire Straits",
+            done() { return player.yugamu.timesmoved.gte(10)},
+            tooltip: "Move more than 10 times in the Maze<br>Rewards:Gain more 5 moves in the Maze.",
+        },
+        72: {
+            name: "Triangulation",
+            done() { return hasMilestone('rei',4)&&hasMilestone('yugamu',4)},
+            tooltip: "Reach LC&FL's 5th milestone.<br>Rewards:The speed of World Steps gain x1.5.",
+        },
+        73: {
+            name: "Nothing Can Stop Us",
+            done() { return player.world.restrictionnum.gte(1)&&player.world.fixednum.gte(1)},
+            tooltip: "Gone through both difficult World Steps.<br>Rewards:You can choose among two directions in Maze.",
+        },
+        74: {
+            name: "Doll House",
+            done() { return player.kou.points.gte(100)},
+            tooltip: "Have more than 100 Red Dolls.<br>Rewards:Red Dolls itself boosts The Speed of World Steps gain.",
+            effect(){
+                return player.kou.points.plus(1).log10().div(1.5).max(1);
+            },
+        },
+        75: {
+            name: "Anthemy",
+            done() { return player.rei.roses.gte(1000)},
+            tooltip: "Gain 1000 Glowing Roses.<br>Rewards:Entering Zero Sky no longer reset Glowing Roses, but ÷2 instead.",
         },
     },
     tabFormat: [
@@ -3292,5 +4280,15 @@ addLayer("ab", {
 			onClick() { player.kou.auto = !player.kou.auto },
 			style: {"background-color"() { return player.kou.auto?"#ffa0be":"#666666" }},
 		    },
+        14: {
+			title: "Research Generator & Tech Transformer",
+			display(){
+				return (hasUpgrade('lab',122))?(player.lab.generatorauto?"On":"Off"):"Locked"
+			},
+			unlocked() { return hasUpgrade('world',21) },
+			canClick() { return hasUpgrade('lab',122) },
+			onClick() { player.lab.generatorauto = !player.lab.generatorauto },
+			style: {"background-color"() { return player.lab.generatorauto?"#00bdf9":"#666666" }},
+		    }, 
 	},
 })

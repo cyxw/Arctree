@@ -13,11 +13,13 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.2.5",
-	name: "Researching Other Angles",
+	num: "0.0.3.0",
+	name: "Glance into The World",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.3,0</h3><br>
+		- Call row4 done.<br>
 	<h3>v0.0.2.5</h3><br>
 		- All row4 layers added with basic stuff.<br>
 		- All row3 QoL added.<br>
@@ -74,6 +76,8 @@ function getPointGen() {
 	if (inChallenge("kou",11)) gain = gain.pow(0.75);
 	if (inChallenge("kou",21)) gain = gain.pow(1.05);
 	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12));
+	if (inChallenge('rei',11)) gain = gain.pow(0.5);
+	if (player.world.restrictChallenge) gain = gain.pow(0.9);
 
 	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
         return gain
