@@ -3919,7 +3919,7 @@ addLayer("world", {
         11: {
 			title: "Enduring Restriction Challenge",
 			display(){
-				return ((player.world.currentStepType>=99&&!inChallenge('rei',11))?(player.world.restrictChallenge?"In":"Out"):"Locked")
+				return ((player.world.currentStepType>=99&&!inChallenge('rei',11))?(player.world.restrictChallenge?"In":"Out"):((inChallenge('rei',11))?"Locked due to Zero Sky":"Locked"))
 			},
 			unlocked() { return hasUpgrade('world',31) },
 			canClick() { return (player.world.currentStepType>=99&&!inChallenge('rei',11)) },
