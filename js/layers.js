@@ -131,7 +131,7 @@ addLayer("mem", {
         cost() {return new Decimal(3).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 11)||hasMilestone('light',1) },
         effect() {
-            let eff=player[this.layer].points.add(1).pow(0.25);
+            let eff=player[this.layer].points.plus(1).pow(0.25);
             if (hasUpgrade('mem', 32)) eff=eff.pow(1.25);
             return eff;
         }
@@ -151,7 +151,7 @@ addLayer("mem", {
         cost() {return new Decimal(20).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 13)||hasMilestone('light',1) },
         effect() {
-            return player.points.plus(1).log10().pow(0.75).plus(1)
+            return player.points.plus(1).log10().pow(0.75).plus(1).max(1);
         }
         },
         21:{ title: "Thought Combination",
@@ -169,7 +169,7 @@ addLayer("mem", {
         cost() {return new Decimal(50).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 21)||hasMilestone('light',1) },
         effect() {
-            return player[this.layer].points.add(1).pow(0.5)
+            return player[this.layer].points.plus(1).pow(0.5)
         }
         },
         23:{ title: "Time Boosting",
@@ -177,7 +177,7 @@ addLayer("mem", {
         cost() {return new Decimal(100).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 22)||hasMilestone('light',1) },
         effect() {
-            return player.points.plus(1).times(1.5).log10().log10(2).pow(0.01).plus(1)
+            return player.points.plus(1).times(1.5).log10().log10(2).pow(0.01).plus(1).max(1);
         }
         },
         24:{ title: "Directly Drown",
@@ -185,7 +185,7 @@ addLayer("mem", {
         cost() {return new Decimal(1000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 23)||hasMilestone('light',1) },
         effect() {
-            return player.points.pow(0.05).plus(1).log10().plus(2).log10(5).plus(1);
+            return player.points.plus(1).pow(0.05).plus(1).log10().plus(2).log10(5).plus(1).max(1);
         }
         },
         31:{ title: "Thought Growth",
@@ -193,7 +193,7 @@ addLayer("mem", {
         cost() {return new Decimal(20000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return hasUpgrade("mem", 24)||hasMilestone('dark',1) },
         effect() {
-            return player[this.layer].points.plus(1).log10().pow(0.5).log10(2);
+            return player[this.layer].points.plus(1).log10().pow(0.5).log10(2).max(1);
         },
         },
         32:{ title: "Memory Inflation",
@@ -208,7 +208,7 @@ addLayer("mem", {
         unlocked() { return hasUpgrade("mem", 32)},
         effect() {//Mem, not Frag
             let eff = new Decimal(1.5);
-            if (hasUpgrade("light", 33)) eff=eff.add(upgradeEffect('light', 33))
+            if (hasUpgrade("light", 33)) eff=eff.plus(upgradeEffect('light', 33))
             return eff;
         },
         onPurchase(){player.points=new Decimal(1);player[this.layer].points = new Decimal(1);},
@@ -323,7 +323,7 @@ addLayer("light", {
         if (hasUpgrade('dark', 34)) mult=mult.div(upgradeEffect('dark', 34));
         if (hasUpgrade('lethe',32)) mult = mult.div(tmp.lethe.effect);
         if (hasUpgrade('lethe',23)) mult = mult.div(upgradeEffect('lethe',23));
-        if (inChallenge("kou",21)) mult = mult.times(player.dark.points.pow(5).max(1));
+        if (inChallenge("kou",21)) mult = mult.times(player.dark.points.plus(1).pow(5).max(1));
         if (inChallenge("kou",31)) mult = mult.div(player.dark.points.sub(player[this.layer].points).max(1));
         if (hasChallenge("kou",31)) mult = mult.div(player.dark.points.sub(player[this.layer].points).div(2).max(1));
         if (hasUpgrade('lethe',11)) mult = mult.div(upgradeEffect('lethe',11));
@@ -577,7 +577,7 @@ addLayer("dark", {
         if (hasUpgrade('light', 34)) mult=mult.div(upgradeEffect('light', 34));
         if (hasUpgrade('lethe',43)) mult = mult.div(tmp.lethe.effect);
         if (hasUpgrade('lethe',34)) mult = mult.div(upgradeEffect('lethe',34));
-        if (inChallenge("kou",21)) mult = mult.times(player.light.points.pow(5).max(1));
+        if (inChallenge("kou",21)) mult = mult.times(player.light.points.plus(1).pow(5).max(1));
         if (inChallenge("kou",31)) mult = mult.div(player.light.points.sub(player[this.layer].points).max(1));
         if (hasChallenge("kou",31)) mult = mult.div(player.light.points.sub(player[this.layer].points).div(2).max(1));
         if (hasMilestone('lab',4)) mult = mult.div(player.lab.power.div(10).max(1));
