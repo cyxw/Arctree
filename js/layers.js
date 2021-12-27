@@ -831,7 +831,7 @@ addLayer("kou", {
         mult = new Decimal(1);//不要忘了这里是static层
         if (hasMilestone('lethe',5)) mult=mult.div(tmp.lethe.effect);
         if (hasAchievement('a',35)) mult = mult.div(tmp.light.effect);
-        if (hasUpgrade('lethe',24)) mult = mult.div(player.points.log10().max(1).div(100).plus(1));
+        if (hasUpgrade('lethe',24)) mult = mult.div(player.points.plus(1).log10().max(1).div(100).plus(1));
         if (hasUpgrade('lethe',23)) mult = mult.div(upgradeEffect('lethe',23));
         if (hasMilestone('lab',5)) mult = mult.div(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',93)) mult = mult.div(buyableEffect('lab',31));
@@ -3253,7 +3253,7 @@ addLayer("rei", {
                 return mult;
             },
             amt(){//gain per sec
-                let gain = player.points.log10().div(50).max(0).sqrt();
+                let gain = player.points.plus(1).log10().div(50).max(0).sqrt();
                 gain =gain.times(tmp["rei"].challenges[11].gainMult);
                 return gain;
             },
