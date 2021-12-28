@@ -65,7 +65,7 @@ function getPointGen() {
 	if (hasUpgrade('mem', 22)) gain = gain.times(upgradeEffect('mem', 22))	
 	if (player.light.unlocked) gain = gain.times(tmp.light.effect);
 	if (player.lethe.unlocked) gain = gain.times(tmp.lethe.effect);
-	if (player.lethe.buyables[11].unlocked) gain = gian.times(tmp.lethe.buyables[11].effect);
+	if (player.lethe.buyables[11].unlocked) gain = gian.times(buyableEffect('lethe',11));
 	if (hasMilestone('lab',0)) gain = gain.times(player.lab.power.div(10).max(1));
 	if (hasMilestone('lab',1)) gain = gain.times(player.lab.points.max(1));
 	

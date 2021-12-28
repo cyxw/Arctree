@@ -1160,7 +1160,7 @@ addLayer("lethe", {
 
      update(diff){
         if (layers.lethe.buyables[11].autoed()&&layers.lethe.buyables[11].canAfford())layers.lethe.buyables[11].buy();
-
+        if (isNaN(player.lethe.points.toNumber())||player.lethe.points.lt(0)) player.lethe.points = new Decimal(0);
      },
 
     doReset(resettingLayer){
@@ -1328,8 +1328,8 @@ addLayer("lethe", {
         let eff = player[this.layer].points.plus(1).pow(2).log10().plus(1);
         if (inChallenge('kou',22)) eff=eff.times(1+Math.random()*0.5);
         if (hasUpgrade('lethe',51)) eff=eff.times(upgradeEffect('lethe',51));
-        if (inChallenge('kou',41)) eff=eff.times(tmp.lethe.buyables[11].effect);
-        if (hasAchievement('kou',45)) eff=eff.times((player[this.layer].buyables[11].div(2).lt(1))?1:(player[this.layer].buyables[11].div(2)));
+        if (inChallenge('kou',41)) eff=eff.times(buyableEffect('lethe',11));
+        if (hasAchievement('kou',45)) eff=eff.times(player[this.layer].buyables[11].div(2).max(1));
         if (hasUpgrade('lethe',54)) eff=eff.times(upgradeEffect('lethe',54));
         if (hasUpgrade('lethe',21)) eff=eff.times(upgradeEffect('lethe',21));
 
@@ -1677,7 +1677,7 @@ addLayer("lethe", {
                 if (hasAchievement('a',42)) player.kou.points = player.kou.points.plus(new Decimal(30).times(achievementEffect('a',42))).floor();
             },
             effect(){
-                if (player.light.points.lte(player.dark.points)) return 1;
+                if (player.light.points.lte(player.dark.points)) return new Decimal(1);
                 return tmp.kou.effect.pow(2.5);
             },
             unlocked() { return true },
