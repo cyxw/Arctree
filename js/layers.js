@@ -1160,7 +1160,7 @@ addLayer("lethe", {
 
      update(diff){
         if (layers.lethe.buyables[11].autoed()&&layers.lethe.buyables[11].canAfford())layers.lethe.buyables[11].buy();
-        if (isNaN(player.lethe.points.toNumber())||player.lethe.points.lt(0)) player.lethe.points = new Decimal(0);
+        //if (isNaN(player.lethe.points.toNumber())||player.lethe.points.lt(0)) player.lethe.points = new Decimal(0);
      },
 
     doReset(resettingLayer){
