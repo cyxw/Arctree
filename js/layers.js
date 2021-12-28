@@ -114,6 +114,7 @@ addLayer("mem", {
         if (!player.mem.autohold) player.mem.autoholdtimer=new Decimal(0);
         if (player.mem.autohold) player.mem.autoholdtimer=player.mem.autoholdtimer.plus(diff);
         if (player.mem.autoholdtimer.gte(1)&&canReset(this.layer)){doReset(this.layer);player.mem.autoholdtimer = new Decimal(0);};
+        if (isNaN(player[this.layer].points.toNumber())) player[this.layer].points = new Decimal(0);
     },
 
     upgrades:{
@@ -406,7 +407,7 @@ addLayer("light", {
         let eff=Decimal.times(tmp.light.effectBase,player.light.points.plus(1));
         if (hasUpgrade('light',31)) eff=eff.times(player[this.layer].points.sqrt());
         if (hasAchievement('a',33)) eff=eff.times(Decimal.log10(player[this.layer].resetTime+1).plus(1));
-        if (hasChallenge("kou", 11)) eff=eff.times(player.points.plus(1).log(10).plus(1).sqrt());
+        if (hasChallenge("kou", 11)) eff=eff.times(player.points.plus(1).log10().plus(1).sqrt());
         if (inChallenge('kou',22)) eff=eff.times(Math.random());
         if (hasUpgrade('lethe',13)) eff=eff.times(tmp.kou.effect.pow(1.5));
         if (hasUpgrade('lethe',31)) eff=eff.times(tmp.lethe.effect);
@@ -661,7 +662,7 @@ addLayer("dark", {
         let eff=Decimal.pow(player[this.layer].points.plus(1).log10().plus(1),tmp.dark.effectBase);
         if (hasUpgrade('dark', 31)) eff = Decimal.pow(player[this.layer].points.plus(1).times(2).sqrt().plus(1),tmp.dark.effectBase);
         if (hasAchievement('a',33)) eff=eff.times(Decimal.log10(player[this.layer].resetTime+1).plus(1));
-        if (hasChallenge("kou", 11)) eff=eff.times(player.points.plus(1).log(10).plus(1).sqrt());
+        if (hasChallenge("kou", 11)) eff=eff.times(player.points.plus(1).log10().plus(1).sqrt());
         if (inChallenge('kou',22)) eff=eff.times(Math.random());
         if (hasUpgrade('lethe',35)) eff = eff.times(tmp.kou.effect.pow(1.5));
         if (hasUpgrade('lethe',53)) eff=eff.times(tmp.lethe.effect);
@@ -783,7 +784,7 @@ addLayer("dark", {
         },
         effect() {
             let eff = player.a.achievements.length;
-            if (eff<= 1) return new Decimal(1);
+            if (eff<= 1) return 1;
             return eff;
         },
         cost() {return new Decimal(44).times(tmp["kou"].costMult42d)},
@@ -1160,7 +1161,7 @@ addLayer("lethe", {
 
      update(diff){
         if (layers.lethe.buyables[11].autoed()&&layers.lethe.buyables[11].canAfford())layers.lethe.buyables[11].buy();
-        //if (isNaN(player.lethe.points.toNumber())||player.lethe.points.lt(0)) player.lethe.points = new Decimal(0);
+        if (isNaN(player.lethe.points.toNumber())||player.lethe.points.lt(0)) player.lethe.points = new Decimal(0);
      },
 
     doReset(resettingLayer){
@@ -1393,7 +1394,7 @@ addLayer("lethe", {
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&tmp['kou'].effect.gte(12.5);
             },
             effect(){
-                return player.light.points.plus(1).log(10).div(2).max(1);
+                return player.light.points.plus(1).log10().div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1488,7 +1489,7 @@ addLayer("lethe", {
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&tmp['lethe'].effect.gte(330);
             },
             effect(){
-                return player.light.points.plus(1).log(10).div(2).max(1);
+                return player.light.points.plus(1).log10().div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1513,7 +1514,7 @@ addLayer("lethe", {
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
             effect(){
-                return player.light.points.plus(1).log(10).div(2).max(1);
+                return player.light.points.plus(1).log10().div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1723,7 +1724,7 @@ addLayer("lethe", {
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp["light"].effect.gte(2.5e11);
             },
             effect(){
-                return player[this.layer].points.plus(1).log(10).div(2).max(1);
+                return player[this.layer].points.plus(1).log10().div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1815,7 +1816,7 @@ addLayer("lethe", {
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&tmp["kou"].effect.gte(12.5);
             },
             effect(){
-                return player.dark.points.plus(1).log(10).div(2).max(1);
+                return player.dark.points.plus(1).log10().div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1855,7 +1856,7 @@ addLayer("lethe", {
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp['dark'].effect.gte(400000000);
             },
             effect(){
-                return player[this.layer].points.plus(1).log(10).div(2).max(1);
+                return player[this.layer].points.plus(1).log10().div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1901,7 +1902,7 @@ addLayer("lethe", {
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&tmp["lethe"].effect.gte(330);
             },
             effect(){
-                return player.dark.points.plus(1).log(10).div(2).max(1);
+                return player.dark.points.plus(1).log10().div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -2016,8 +2017,8 @@ addLayer("lab", {
         if (player.lab.points.gte(player.lab.best)) player.lab.best = player.lab.points;
         if (player.lab.unlocked) player.lab.power = player.lab.power.plus(tmp["lab"].powermult.times(diff));
         player.lab.power = player.lab.power.sub(player.lab.power.times(0.01).times(diff));
-        if (player.lab.power.lt(0)) player.lab.power = new Decimal(1e-10);
-        if (player.lab.points.lt(0)) player.lab.points = new Decimal(1e-10);
+        if (player.lab.power.lt(diff)) player.lab.power = new Decimal(diff);
+        if (player.lab.points.lt(diff)) player.lab.points = new Decimal(diff);
     },
 
     shouldNotify(){
@@ -2598,7 +2599,7 @@ addLayer("lab", {
             player.rei.roses = player.rei.roses.sub(150);
             },
         effect(){
-            return player.lab.power.plus(1).log(10).div(10).max(1);
+            return player.lab.power.plus(1).log10().div(10).max(1);
         },
         },
         114:{ title: "Gyroscope",
@@ -2612,7 +2613,7 @@ addLayer("lab", {
             player.lab.points = player.lab.points.sub(40000);
             },
         effect(){
-            return player.lab.power.plus(1).log(10).sqrt().max(0);
+            return player.lab.power.plus(1).log10().sqrt().max(0);
         },
         },
         121:{ title: "Storage Battery",
@@ -2704,7 +2705,7 @@ addLayer("lab", {
         unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
         cost:new Decimal(750000),
         effect(){
-            return player[this.layer].points.plus(1).log(10).div(15).plus(1);
+            return player[this.layer].points.plus(1).log10().div(15).plus(1);
         },
         },
         142:{ title: "DFS Method",
@@ -2712,7 +2713,7 @@ addLayer("lab", {
         unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
         cost:new Decimal(750000),
         effect(){
-            return player[this.layer].points.plus(1).log(10).max(1);
+            return player[this.layer].points.plus(1).log10().max(1);
         },
         },
         143:{ title: "The Blueprint of Theology",
@@ -2727,7 +2728,7 @@ addLayer("lab", {
             player.rei.points = player.rei.points.sub(8);
             },
             effect(){
-                return player[this.layer].points.plus(1).log(10).div(10).plus(1);
+                return player[this.layer].points.plus(1).log10().div(10).plus(1);
             },
         },
         144:{ title: "The Blueprint of Anxiety",
@@ -2742,7 +2743,7 @@ addLayer("lab", {
             player.yugamu.points = player.yugamu.points.sub(8);
             },
             effect(){
-                return player[this.layer].points.plus(1).log(10).div(10).plus(1);
+                return player[this.layer].points.plus(1).log10().div(10).plus(1);
             },
         },
         151:{ title: "Celebrate Anniversary",
@@ -4198,7 +4199,7 @@ addLayer("a", {
             done() { return player.rei.roses.gte(100)},
             tooltip: "Gain 100 Glowing Roses.<br>Rewards:Glowing Roses now boosts The Speed of World Steps gain.",
             effect(){
-                return player.rei.roses.plus(1).log(10).plus(1);
+                return player.rei.roses.plus(1).log10().plus(1);
             },
         },
         71: {

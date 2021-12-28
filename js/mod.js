@@ -81,7 +81,7 @@ function getPointGen() {
 	if (player.world.restrictChallenge) gain = gain.pow(0.9);
 
 	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
-	//if (isNaN(gain.toNumber())) return new Decimal(1);
+	if (isNaN(gain.toNumber())) return new Decimal(1);
         return gain
 }
 
