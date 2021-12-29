@@ -2017,8 +2017,8 @@ addLayer("lab", {
         if (player.lab.points.gte(player.lab.best)) player.lab.best = player.lab.points;
         if (player.lab.unlocked) player.lab.power = player.lab.power.plus(tmp["lab"].powermult.times(diff));
         player.lab.power = player.lab.power.sub(player.lab.power.times(0.01).times(diff));
-        if (player.lab.power.lt(diff)) player.lab.power = new Decimal(diff);
-        if (player.lab.points.lt(diff)) player.lab.points = new Decimal(diff);
+        if (player.lab.power.lt(0)) player.lab.power = new Decimal(0);
+        if (player.lab.points.lt(0)) player.lab.points = new Decimal(0);
     },
 
     shouldNotify(){
