@@ -1161,7 +1161,7 @@ addLayer("lethe", {
 
      update(diff){
         if (layers.lethe.buyables[11].autoed()&&layers.lethe.buyables[11].canAfford())layers.lethe.buyables[11].buy();
-        if (isNaN(player.lethe.points.toNumber())||player.lethe.points.lt(0)) player.lethe.points = new Decimal(0);
+        if (isNaN(player.lethe.points.toNumber())||player.lethe.points.lte(0)) player.lethe.points = new Decimal(0);
      },
 
     doReset(resettingLayer){
@@ -1258,7 +1258,7 @@ addLayer("lethe", {
                 canAfford() {
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
-                    return player[this.layer].unlocked && player.lethe.points.gte(cost.fo);
+                    return player[this.layer].unlocked && player.lethe.points.gt(cost.fo);
 				},
                 buy() { 
 					let cost = tmp[this.layer].buyables[this.id].cost;
