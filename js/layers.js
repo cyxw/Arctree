@@ -3062,7 +3062,7 @@ addLayer("lab", {
                 canAfford() {
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
-                    return player[this.layer].unlocked && player.lethe.points.gte(cost.fo);
+                    return player[this.layer].unlocked && player.lethe.points.gt(cost.fo);
 				},
                 buy() { 
 					let cost = tmp[this.layer].buyables[this.id].cost;
