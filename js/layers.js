@@ -668,6 +668,7 @@ addLayer("dark", {
         if (hasUpgrade('lethe',53)) eff=eff.times(tmp.lethe.effect);
         if (hasUpgrade('lethe',52)) eff=eff.times(upgradeEffect('lethe',52));
         if (hasUpgrade('lethe',25)) eff=eff.times(upgradeEffect('lethe',25));
+        if (hasUpgrade('lethe',55)) eff=eff.times(upgradeEffect('lethe',55));
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(Math.random());
@@ -1856,7 +1857,7 @@ addLayer("lethe", {
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots)&&!inChallenge('kou',12)&&tmp['dark'].effect.gte(400000000);
             },
             effect(){
-                return player[this.layer].points.plus(1).log10().div(2).max(1);
+                return player[this.layer].points.plus(1).max(1).log10().div(2).max(1);
             },
             unlocked() { return true },
             style: {height: '130px', width: '130px'},
@@ -1926,6 +1927,9 @@ addLayer("lethe", {
                 return around&&price&&(player.lethe.upgrades.length<tmp.lethe.nodeSlots);
             },
             unlocked() { return true },
+            effect(){
+                return player.a.achievements.length/4;
+            },
             style: {height: '130px', width: '130px'},
         },
     }
@@ -3048,7 +3052,7 @@ addLayer("lab", {
 				title: "Forgotten Transformer",
 				cost(x=player[this.layer].buyables[this.id]) {
 					return {
-						fo: new Decimal(1e95).times(Decimal.pow(1e5,x)).div(hasUpgrade('lab',34)?Decimal.log10(player.lethe.resetTime+1).div(1.5).max(1):1),
+						fo: new Decimal(1e95).times(Decimal.pow(1e5,x)).div(hasUpgrade('lab',34)?(Decimal.log10(player.lethe.resetTime+1).div(1.5).max(1)):1),
 					};
 				},
 				display() { // Everything else displayed in the buyable button after the title
