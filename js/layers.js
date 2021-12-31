@@ -1262,7 +1262,7 @@ addLayer("lethe", {
                     return player[this.layer].unlocked && player.lethe.points.gt(cost.fo);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();
 					player.lethe.points = player.lethe.points.sub(cost.fo);
 					player.lethe.buyables[this.id] = player.lethe.buyables[this.id].plus(1);
                 },
@@ -2862,7 +2862,7 @@ addLayer("lab", {
                     return player[this.layer].unlocked && player.lab.power.gte(cost.fo);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();
 					player.lab.power = player.lab.power.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
@@ -2896,7 +2896,7 @@ addLayer("lab", {
                     return player[this.layer].unlocked && player.points.gte(cost.fo);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();
 					player.points = player.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
@@ -2930,7 +2930,7 @@ addLayer("lab", {
                     return player[this.layer].unlocked && player.mem.points.gte(cost.fo);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();
 					player.mem.points = player.mem.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
@@ -2964,7 +2964,7 @@ addLayer("lab", {
                     return player[this.layer].unlocked && player.light.points.gte(cost.fo)&&!inChallenge('kou',12);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.light.points = player.light.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
@@ -2999,7 +2999,7 @@ addLayer("lab", {
                     return player[this.layer].unlocked && player.dark.points.gte(cost.fo)&&!inChallenge('kou',12);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.dark.points = player.dark.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
@@ -3034,7 +3034,7 @@ addLayer("lab", {
                     return player[this.layer].unlocked && player.kou.points.gte(cost.fo);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.kou.points = player.kou.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
@@ -3066,10 +3066,10 @@ addLayer("lab", {
                 canAfford() {
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
-                    return player[this.layer].unlocked && player.lethe.points.gt(cost.fo);
+                    return player[this.layer].unlocked && player.lethe.points.gte(cost.fo);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();
 					player.lethe.points = player.lethe.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                     player.lab.points = player.lab.points.plus(1);
@@ -3104,7 +3104,7 @@ addLayer("lab", {
                     return player[this.layer].unlocked && player.lab.points.gte(cost.fo);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();;
 					player.lab.points = player.lab.points.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                 },
@@ -3137,7 +3137,7 @@ addLayer("lab", {
                     return player[this.layer].unlocked && player.lab.power.gte(cost.fo);
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
+					let cost = layers[this.layer].buyables[this.id].cost();;
 					player.lab.power = player.lab.power.sub(cost.fo);
 					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
                 },
@@ -3719,7 +3719,7 @@ addLayer("world", {
             player.world.Worldrandomnum = Math.random();
         };
 
-        if (player[this.layer].points.gt(player[this.layer].best)) player[this.layer].best = player[this.layer].points;
+        if (player[this.layer].points.gte(player[this.layer].best)) player[this.layer].best = player[this.layer].points;
     },
     
     tabFormat: {
