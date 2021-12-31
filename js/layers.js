@@ -72,7 +72,7 @@ addLayer("mem", {
         return exp
     },
     row: 0, // Row the layer is in on the tree (0 is the first row)
-    displayRow: 1,
+    displayRow: 2,
     hotkeys: [
         {key: "m", description: "M: Reset for Memories", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
@@ -348,7 +348,7 @@ addLayer("light", {
         return dm;
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
-    displayRow: 1,
+    displayRow: 2,
     hotkeys: [
         {key: "l", description: "L: Reset for Light Tachyons", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
@@ -602,7 +602,7 @@ addLayer("dark", {
     },
 
     row: 1, // Row the layer is in on the tree (0 is the first row)
-    displayRow: 1,
+    displayRow: 2,
     hotkeys: [
         {key: "d", description: "D: Reset for Dark Matters", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
@@ -871,7 +871,7 @@ addLayer("kou", {
     resetsNothing(){return hasUpgrade('lab',81)},
 
     row: 2, // Row the layer is in on the tree (0 is the first row)
-    displayRow: 0,
+    displayRow: 1,
     hotkeys: [
         {key: "r", description: "R: Reset for Red dolls", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
@@ -1151,7 +1151,7 @@ addLayer("lethe", {
         return exp;
     },
     row: 2, // Row the layer is in on the tree (0 is the first row)
-    displayRow: 0,
+    displayRow: 1,
     increaseUnlockOrder: ["kou"],
 
     passiveGeneration() { 
@@ -1958,7 +1958,7 @@ addLayer("lab", {
     branches: ["mem"],
 
     row: 3, // Row the layer is in on the tree (0 is the first row)
-    displayRow: 2,
+    displayRow: 3,
     position:2,
     layerShown(){return hasAchievement('a',55)},
 
@@ -2752,7 +2752,7 @@ addLayer("lab", {
         },
         151:{ title: "Celebrate Anniversary",
         description: "Celebrate first anniversary of setting up your lab.",
-        fullDisplay(){return "<b>Celebrate Anniversary</b><br>Celebrate first anniversary of setting up your lab(Currently, nothing here).<br><br>Cost: 9 Luminous Churches<br>9 Flourish Labyrinths<br>900 World Steps"},
+        fullDisplay(){return "<b>Celebrate Anniversary</b><br>Celebrate first anniversary of setting up your lab.<br><br>Cost: 9 Luminous Churches<br>9 Flourish Labyrinths<br>900 World Steps"},
         unlocked(){return (hasUpgrade('lab',143)&&hasUpgrade('lab',144))},
         canAfford(){
             return player.rei.points.gte(9)&&player.yugamu.points.gte(9)&&player.world.points.gte(900);
@@ -2763,7 +2763,7 @@ addLayer("lab", {
             player.world.points = player.world.points.sub(900);
             },
         onPurchase(){
-            //player.world.unlocked = true;showTab('none');
+            player.storylayer.unlocked = true;showTab('none');
         },
             style: {height: '200px', width: '200px'},
         },
@@ -3171,7 +3171,7 @@ addLayer("rei", {
     }},
     resource: "Luminous Churches",
     row: 3,   
-    displayRow: 2,
+    displayRow: 3,
     hotkeys: [
         {key: "L", description: "Shift+L: Reset for Luminous Churches", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
@@ -3305,7 +3305,7 @@ addLayer("yugamu", {
     }},
     resource: "Flourish Labyrinths",
     row: 3,   
-    displayRow: 2,
+    displayRow: 3,
     hotkeys: [
         {key: "F", description: "Shift+F: Reset for Flourish Labyrinths", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
@@ -3449,6 +3449,7 @@ addLayer("yugamu", {
     DirectioncanChoose(){
         let num = 1;
         if (hasAchievement('a',73)) num = 2;
+        if (hasAchievement('a',82)) num = 3;
         return num;
     },
 
@@ -3635,7 +3636,7 @@ addLayer("world", {
     branches: ["mem"],
 
     row: 3, // Row the layer is in on the tree (0 is the first row)
-    displayRow: 0,
+    displayRow: 1,
     position:2,
     layerShown(){return hasAchievement('a',64)},
     unlocked(){return hasUpgrade('lab',101)},
@@ -3673,7 +3674,10 @@ addLayer("world", {
 
     StepgrowthSpeed(){
         let speed = new Decimal(1);
-        if (player.world.currentStepType>=99&&player.world.restrictChallenge) return (player.points.plus(1).log10().div(2));
+        if (player.world.currentStepType>=99&&player.world.restrictChallenge) {
+            if (!hasUpgrade('storylayer',11)) return (player.points.plus(1).log10().div(2));
+            else speed = player.points.plus(1).log10().div(50);
+        };
         if (hasUpgrade('world',12)) speed = speed.times(2);
         if (hasUpgrade('world',13)) speed = speed.times(upgradeEffect('world',13));
         if (hasUpgrade('world',14)) speed = speed.times(upgradeEffect('world',14));
@@ -3739,7 +3743,7 @@ addLayer("world", {
             if (player.world.currentStepType<99&&player.world.currentStepType>=87) return ("You are going through fixed World Step. Current speed: " + format(Math.min(1-player.world.Worldrandomnum*0.99,0.75)) +"x")
             if (player.world.currentStepType>=99){
                 if (!player.world.restrictChallenge) return "You need to Enduring a small Challenge to go through restricted World Step."
-                else return "You are going through restricted World Step.<br>Your Fragments generation & Memories gain ^0.9 & The Speed of World Steps gain is based on your Fragments."
+                else return ("You are going through restricted World Step.<br>Your Fragments generation & Memories gain ^0.9 & The Speed of World Steps gain is "+((hasUpgrade('storylayer',11))?"based on":"determined by")+" your Fragments.")
             };
         }
         ,{}],
@@ -3907,7 +3911,7 @@ addLayer("world", {
         },
         },
         34:{ title: "Backtracking Method",
-        description: "The minium Speed of World Steps gain now boosted by times moved in Maze, regardless of magnification.",
+        description: "The minium Speed of World Steps gain now determined by times moved in Maze, regardless of magnification.",
         unlocked() { return hasUpgrade('world',32)},
         cost(){return new Decimal(100)},
         onPurchase(){
@@ -3954,6 +3958,127 @@ addLayer("world", {
 
 })
 
+addLayer("storylayer", {
+    startData() { return {                  // startData is a function that returns default data for a layer. 
+        unlocked: false,                     // You can add more variables here to add them to your layer.
+        points: new Decimal(0),             // "points" is the internal name for the main resource of the layer.
+        best:new Decimal(0),
+        storyTimer: 0,
+        currentRequirement:0,
+        currentColor:"#98f898",
+        //storycounter: 0,//我寻思我也不会写 1.79e308篇故事//但是没准职能会被points取代
+    }},
+
+    name: "Story", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "S",
+    color: "#98f898",                       // The color for this layer, which affects many elements.
+    type: "none",//不被重置
+    resource: "Stories",
+    branches: ["world"],
+    row: 0,
+    displayRow:0,
+    position:3,
+
+    unlocked()  {return hasUpgrade('lab',151)},
+    layerShown() { return hasUpgrade('lab',151) },
+
+    infoboxes: {
+        story: {
+            title() {return "Stories"},
+            body() { //insert stories here //这不利于维护
+                if (player[this.layer].points.eq(0)){
+                    let story = "Christmas, a rare holiday. You were preparing for the celebration of your lab\'s first anniversary.<br>Just for the first time and just for only one time, you told yourself. There shouldn\'t be other businesses to bother your research.<br>Snowflakes slowly fell down at dusk, matching the christmas trees far away, just lighted out."
+                    if (player[this.layer].storyTimer > 10) {
+                        story += "<br><br>After placing the last batch of decoration, you suddenly felled cold. You made up your decision to buy a cup of coffee at the Starbucks nearby. You had been used to drinking coffee for the year just passed by. After all, you know, inspiration may come at any moment."
+                        story += "<br>\"Director?\" A voice came to interrupt your thinking. You turned around and found out that was the college girl who were studying for a Ph.D. of Philosophy, who loved digging into occultism."
+                        story += "<br>\"Oh, Joana, what\'s up?\" You were used to asking her like this, just as she was used to reporting directly to you just now."
+                    };
+                    if (player[this.layer].storyTimer > 15){
+                        story +="<br>\"Well, the thing is...... Wait a second, I need to organize my words. This idea came to me last night......\" She was hesitating. It wasn't like her, always crisp academic style."
+                        story +="<br>\"OK, take your time.\" You had to wait."
+                        story +="<br>\"......well, almost ready. But what I want to say is little more. It's not convenient here.\" Another unexpected answer."
+                        story +="<br>\"OK, I'm just going to Starbucks for a drink. Why don't you come too?\" You had a kind of premonition. This kind of curiousity may be the same important as the glass fragment you saw at the very beginning, but more fatal."
+                    };
+                    if (player[this.layer].storyTimer > 20){
+                        story +="<br><br>The Starbucks were bustling. You were suprised that you could find two seats here during Christmas holidays."
+                        story +="<br>After the waiter bringing coffee and snacks, you asked: \"What's in your mind?\""
+                        story +="<br>\"Things are that we have been researching the world fragments pointing to, right?\" Joana began her speaking, speed of voice returning to her usual style, \"I know, you were very satisfied to discover the existence of somebody there two month ago, and so did I.\""
+                        story +="<br>\"Yeah, an exciting moment. Unfortunately, we can't publish our findings tp the public yet. There're still lots of things unclear.\""
+                        story +="<br>\"And then we begun sociological study of that world, studying cities, studying religions, from books and cultures, from architectural styles, from ordinary people's lifestyle...... One outcome after another, most are unimportant though, but it's a big sum in the results of our laboratory.\""
+                        story +="<br>\"And that's why I am preparing for our lab's first anniversary. Isn't that a good thing?\" You became more and more confused."
+                    };
+                    if (player[this.layer].storyTimer > 30){
+                        story +="<br>\"That's what I'm going to say. Good is good, but all those involved in the research were dazzled by the sudden results at the beginning. It suddenly occurred to me that the report of the world advance team did not mention the data of the life detector last night.\""
+                        story +="<br>\"Huh? It doesn't matter? We have already seen a society made up by people here, functioning normally.\""
+                        story +="<br>\"That's the point, Director. I retrieved the report of the world advance team this morning, and found out that the life detector had not detect life at all!\" Joana almost shouted out, but she obviously  didn't want to shout in public, \"That means...\""
+                    };
+                    if (player[this.layer].storyTimer > 40) story += "<br>\"Is that mean what we saw in that world is not 'people'?\""
+                    if (player[this.layer].storyTimer >= 45)story += "<br><br>The cup of coffee in your hand was still hot, but you felled it was snowing more heavily outside."
+                    return story;
+                }
+                
+            },
+        unlocked(){return hasUpgrade('lab',151)},
+        titleStyle(){return {'background-color':layers.storylayer.currentColor()} },
+        bodyStyle: {'text-align':'left'},
+        },
+    },
+
+    update(diff){
+        if (!player[this.layer].unlocked) player[this.layer].storyTimer = 0;
+        else if(player[this.layer].storyTimer<layers.storylayer.currentRequirement()) player[this.layer].storyTimer += diff;
+    },
+
+    doReset(resettingLayer){},
+
+    currentRequirement(){//use layers
+        let req = 0;
+        //在这里插入每个故事走到头要多长时间
+        if (player[this.layer].points.eq(0)) req = 60;
+        return req;
+    },
+
+    currentColor(){
+        let color = "#98f898";
+        if (player[this.layer].points.eq(0)) color = "#00bdf9";
+        return color;
+    },
+
+    tabFormat: [
+        "blank", 
+        ["infobox","story",{'border-color':function(){return layers.storylayer.currentColor()}}],
+        ["bar","storybar"],
+        "upgrades",
+    ],
+
+    bars: {
+        storybar: {
+            direction: RIGHT,
+            width: 500,
+            height: 10,
+            progress() { return player.storylayer.storyTimer/(layers.storylayer.currentRequirement()) },
+            barcolor() {
+                return layers.storylayer.currentColor();
+            },
+            fillStyle(){return {'background-color':layers[this.layer].bars.storybar.barcolor()}},
+        },
+    },
+
+    upgrades: {
+        11:{ title: "Restart World Research",
+        fullDisplay(){
+            return "<b>Restart World Research</b><br>The speed of World Step gain in Restriction Challenge now <b>based on</b> your Fragments instead of <b>determinded by</b> your Fragments.<br><br>Cost:950 World Steps"
+        },
+        canAfford(){return player[this.layer].points.eq(0)&&player.storylayer.storyTimer>=60&&player.world.points.gte(950)},
+        pay(){
+            player.world.points = player.world.points.sub(950);
+        },
+        unlocked() { return (player[this.layer].points.eq(0)&&player.storylayer.storyTimer>=60)||hasUpgrade('storylayer',11)},
+        onPurchase(){player.storylayer.storyTimer = 0},
+        },
+    },
+})
+
 //GHOSTS
 
 addNode("ghost1", {
@@ -3961,7 +4086,7 @@ addNode("ghost1", {
     symbol: "G1", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick(){return false},
-    row: 0,
+    row: 1,
     color: "#000000",
     layerShown() {return "ghost";}
 })
@@ -3970,7 +4095,7 @@ addNode("ghost2", {
     symbol: "G2", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 2, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick(){return false},
-    row: 0,
+    row: 1,
     color: "#000000",
     layerShown() {return (tmp["world"].layerShown)?false:"ghost";}
 })
@@ -3979,7 +4104,7 @@ addNode("ghost3", {
     symbol: "G3", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick(){return false},
-    row: 0,
+    row: 1,
     color: "#000000",
     layerShown() {return "ghost";}
 })
@@ -3988,7 +4113,7 @@ addNode("ghost4", {
     symbol: "G4", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick(){return false},
-    row: 2,
+    row: 3,
     color: "#000000",
     layerShown() {return "ghost";}
 })
@@ -3997,7 +4122,7 @@ addNode("ghost5", {
     symbol: "G5", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick(){return false},
-    row: 2,
+    row: 3,
     color: "#000000",
     layerShown() {return "ghost";}
 })
@@ -4006,7 +4131,7 @@ addNode("ghostLC", {
     symbol: "GLC", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick(){return false},
-    row: 2,
+    row: 3,
     color: "#000000",
     layerShown() {return (tmp["rei"].layerShown)?false:"ghost";}
 })
@@ -4015,7 +4140,7 @@ addNode("ghostFL", {
     symbol: "GFL", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick(){return false},
-    row: 2,
+    row: 3,
     color: "#000000",
     layerShown() {return (tmp["yugamu"].layerShown)?false:"ghost";}
 })
@@ -4024,7 +4149,7 @@ addNode("ghostF", {
     symbol: "GF", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick(){return false},
-    row: 0,
+    row: 1,
     color: "#000000",
     layerShown() {return (tmp["lethe"].layerShown)?false:"ghost";}
 })
@@ -4233,6 +4358,16 @@ addLayer("a", {
             name: "Anthemy",
             done() { return player.rei.roses.gte(1000)},
             tooltip: "Gain 1000 Glowing Roses.<br>Rewards:Entering Zero Sky no longer reset Glowing Roses, but ÷2 instead.",
+        },
+        81: {
+            name: "Currently, nothing here",
+            done() { return player.storylayer.unlocked},
+            tooltip: "Begin your stories.",
+        },
+        82: {
+            name: "Lossy Move",
+            done() { return player.yugamu.timesmoved.gte(100)},
+            tooltip: "Move more than 100 times in the Maze<br>Rewards:You can choose among three directions in Maze.",
         },
     },
     tabFormat: [
