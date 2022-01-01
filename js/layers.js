@@ -50,6 +50,7 @@ addLayer("mem", {
         if (hasUpgrade('lethe',23)) mult = mult.times(upgradeEffect('lethe',23));
         if (hasUpgrade('lethe',34)) mult = mult.times(upgradeEffect('lethe',34));
         if (hasMilestone('lab',2)) mult = mult.times(player.lab.power.div(10).max(1));
+	    if (hasUpgrade('storylayer',12)) mult = mult.times(upgradeEffect('storylayer',12));
 
 
         if (inChallenge("kou",11)) mult = mult.pow(0.75);
@@ -3274,6 +3275,7 @@ addLayer("rei", {
             fullDisplay(){
                 let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +(inChallenge('rei',11)?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
                 if (hasMilestone('rei',4)) show = show + "<br>Red Dolls & Forgotten Drops gain by "+format(player.rei.roses.plus(1).log10().times(2).max(1)) +"x";
+                if (hasUpgrade('storylayer',12)) show += "<br>Fragments generation & Memories gain by "+format(upgradeEffect('storylayer',12))+"x";
                 return show;
             },
             style(){
@@ -3676,7 +3678,7 @@ addLayer("world", {
         let speed = new Decimal(1);
         if (player.world.currentStepType>=99&&player.world.restrictChallenge) {
             if (!hasUpgrade('storylayer',11)) return (player.points.plus(1).log10().div(2));
-            else speed = player.points.plus(1).log10().div(50);
+            else speed = player.points.plus(1).log10().div(1500);
         };
         if (hasUpgrade('world',12)) speed = speed.times(2);
         if (hasUpgrade('world',13)) speed = speed.times(upgradeEffect('world',13));
@@ -3966,7 +3968,7 @@ addLayer("storylayer", {
         storyTimer: 0,
         currentRequirement:0,
         currentColor:"#98f898",
-        //storycounter: 0,//我寻思我也不会写 1.79e308篇故事//但是没准职能会被points取代
+        storycounter: 0,//我寻思我也不会写 1.79e308篇故事//但是没准职能会被points取代//好吧还是有点作用的
     }},
 
     name: "Story", // This is optional, only used in a few places, If absent it just uses the layer id.
@@ -3984,9 +3986,13 @@ addLayer("storylayer", {
 
     infoboxes: {
         story: {
-            title() {return "Stories"},
+            title() {
+                if (player.storylayer.storycounter==0) return "F-1";
+                if (player.storylayer.storycounter==1) return "F-2";
+                return "Stories";
+            },
             body() { //insert stories here //这不利于维护
-                if (player[this.layer].points.eq(0)){
+                if (player.storylayer.storycounter==0){
                     let story = "Christmas, a rare holiday. You were preparing for the celebration of your lab\'s first anniversary.<br>Just for the first time and just for only one time, you told yourself. There shouldn\'t be other businesses to bother your research.<br>Snowflakes slowly fell down at dusk, matching the christmas trees far away, just lighted out."
                     if (player[this.layer].storyTimer > 10) {
                         story += "<br><br>After placing the last batch of decoration, you suddenly felled cold. You made up your decision to buy a cup of coffee at the Starbucks nearby. You had been used to drinking coffee for the year just passed by. After all, you know, inspiration may come at any moment."
@@ -4015,7 +4021,12 @@ addLayer("storylayer", {
                     if (player[this.layer].storyTimer > 40) story += "<br>\"Is that mean what we saw in that world is not 'people'?\""
                     if (player[this.layer].storyTimer >= 45)story += "<br><br>The cup of coffee in your hand was still hot, but you felled it was snowing more heavily outside."
                     return story;
-                }
+                };
+
+                if (player.storylayer.storycounter==1){
+                    let story = "Nothing here, really."
+                    return story;
+                };
                 
             },
         unlocked(){return hasUpgrade('lab',151)},
@@ -4034,19 +4045,22 @@ addLayer("storylayer", {
     currentRequirement(){//use layers
         let req = 0;
         //在这里插入每个故事走到头要多长时间
-        if (player[this.layer].points.eq(0)) req = 60;
+        if (player.storylayer.storycounter==0) req = 60;
+        if (player.storylayer.storycounter==1) req = 60;
         return req;
     },
 
     currentColor(){
         let color = "#98f898";
-        if (player[this.layer].points.eq(0)) color = "#00bdf9";
+        if (player.storylayer.storycounter==0) color = "#00bdf9";
+        if (player.storylayer.storycounter==1) color = "#00bdf9";
         return color;
     },
 
     tabFormat: [
         "blank", 
         ["infobox","story",{'border-color':function(){return layers.storylayer.currentColor()}}],
+        "clickables",
         ["bar","storybar"],
         "upgrades",
     ],
@@ -4064,17 +4078,58 @@ addLayer("storylayer", {
         },
     },
 
+    clickables: {
+        rows: 1,
+        cols: 2,
+        11: {
+            title: "",
+            display: "←",
+            unlocked() { return player.storylayer.unlocked },
+            canClick() { return player.storylayer.storycounter>0 },
+            onClick() { 
+                player.storylayer.storycounter -= 1;
+                player.storylayer.storyTimer  = layers.storylayer.currentRequirement();
+            },
+        },
+        12: {
+            title: "",
+            display: "→",
+            unlocked() { return player.storylayer.unlocked },
+            canClick() { return player.storylayer.points.gt(player.storylayer.storycounter) },
+            onClick() { 
+                player.storylayer.storycounter += 1;
+                player.storylayer.storyTimer = 0;
+            },
+        },
+    },
+
     upgrades: {
         11:{ title: "Restart World Research",
         fullDisplay(){
-            return "<b>Restart World Research</b><br>The speed of World Step gain in Restriction Challenge now <b>based on</b> your Fragments instead of <b>determinded by</b> your Fragments.<br><br>Cost:950 World Steps"
+            return "<b>Restart World Research</b><br>The speed of World Step gain in Restriction Challenge now <b>based on</b> your Fragments instead of <b>determinded by</b> your Fragments.<br><br>Cost:750 World Steps"
         },
-        canAfford(){return player[this.layer].points.eq(0)&&player.storylayer.storyTimer>=60&&player.world.points.gte(950)},
+        canAfford(){return player.storylayer.storycounter==0&&player.storylayer.storyTimer>=60&&player.world.points.gte(750)},
         pay(){
-            player.world.points = player.world.points.sub(950);
+            player.world.points = player.world.points.sub(750);
         },
-        unlocked() { return (player[this.layer].points.eq(0)&&player.storylayer.storyTimer>=60)||hasUpgrade('storylayer',11)},
-        onPurchase(){player.storylayer.storyTimer = 0},
+        unlocked() { return (player.storylayer.storycounter==0&&player.storylayer.storyTimer>=60)||hasUpgrade('storylayer',11)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        12:{ title: "Bouquet",
+        fullDisplay(){
+            return "<b>Bouquet</b><br>Glowing Roses now boosts your Fragments generation and Memories gain.<br><br>Cost:2,500 Glowing Roses"
+        },
+        canAfford(){return player.storylayer.storycounter==1&&player.storylayer.storyTimer>=60&&player.rei.roses.gte(2500)},
+        pay(){
+            player.rei.roses = player.rei.roses.sub(2500);
+        },
+        unlocked() { return (player.storylayer.storycounter==1&&player.storylayer.storyTimer>=60)||hasUpgrade('storylayer',12)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        effect(){
+            let eff = new Decimal(1);
+            if (hasUpgrade('storylayer',12)) eff = player.rei.roses.plus(1).log(8).times(2);
+            return eff;
+        },
         },
     },
 })
