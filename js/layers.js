@@ -55,7 +55,7 @@ addLayer("mem", {
 
         if (inChallenge("kou",11)) mult = mult.pow(0.75);
         if (inChallenge('rei',11)) mult = mult.pow(0.5);
-        if (player.world.restrictChallenge) mult = mult.pow(0.9);
+        if (player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) mult = mult.pow(0.9);
 
         return mult
     },
@@ -3248,7 +3248,7 @@ addLayer("rei", {
     challenges:{
         11:{
             name: "Zero sky",
-            unlocked() { return hasMilestone('rei',3) },
+            unlocked() { return hasMilestone('rei',3)&&!(player.world.currentStepType>=99&&player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) },
             canComplete(){return false},
             gainMult(){
                 let mult = new Decimal(1);
@@ -3452,6 +3452,7 @@ addLayer("yugamu", {
         let num = 1;
         if (hasAchievement('a',73)) num = 2;
         if (hasAchievement('a',82)) num = 3;
+        if (hasAchievement('a',91)) num = 4;
         return num;
     },
 
@@ -3689,8 +3690,14 @@ addLayer("world", {
         if (hasAchievement('a',74)) speed = speed.times(achievementEffect('a',74));
         if (hasUpgrade('lab',123)) speed = speed.times(upgradeEffect('lab',123));
         if (hasUpgrade('lab',124)) speed = speed.times(upgradeEffect('lab',124));
-        if (player.world.currentStepType<87&&player.world.currentStepType>=75) speed = speed.times(1+player.world.Worldrandomnum);
-        if (player.world.currentStepType<99&&player.world.currentStepType>=87) speed = speed.times(Math.min(1-player.world.Worldrandomnum*0.99,0.75));
+        if (player.world.currentStepType<87&&player.world.currentStepType>=75) {
+            if (hasUpgrade('storylayer',13)) speed = speed.times(2);
+            else speed = speed.times(1+player.world.Worldrandomnum);
+        };
+        if (player.world.currentStepType<99&&player.world.currentStepType>=87) {
+            if (hasUpgrade('storylayer',13)) speed = speed.times(0.75);
+            else speed = speed.times(Math.min(1-player.world.Worldrandomnum*0.99,0.75));
+        }
         if (hasUpgrade('world',34)&&speed.lt(upgradeEffect('world',34))) speed = upgradeEffect('world',34);
         if (player.world.currentStepType>=99&&!player.world.restrictChallenge) speed = new Decimal(0);
         return speed;
@@ -3706,6 +3713,7 @@ addLayer("world", {
 
     restrictReward(){
         let softcap = new Decimal(20);
+        if (hasAchievement('a',83)) softcap = new Decimal(25);
         let softcappower = 0.25;
         let reward = Decimal.pow(1.5,player.world.restrictionnum);
         if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
@@ -3724,6 +3732,7 @@ addLayer("world", {
             if (hasUpgrade('world',31)) player.world.currentStepType = Math.floor(Math.random()*(100));//0~99
             player.world.Worldrandomnum = Math.random();
         };
+        if (hasUpgrade('storylayer',14)&&player.world.currentStepType>=99&&!player.world.restrictChallenge) player.world.restrictChallenge = !player.world.restrictChallenge;
 
         if (player[this.layer].points.gte(player[this.layer].best)) player[this.layer].best = player[this.layer].points;
     },
@@ -3741,11 +3750,11 @@ addLayer("world", {
         ["display-text",
         function(){
             if (player.world.currentStepType<75) return "";
-            if (player.world.currentStepType<87&&player.world.currentStepType>=75) return ("You are going through random World Step. Current speed: " + format(Math.max(1+player.world.Worldrandomnum)) +"x");
-            if (player.world.currentStepType<99&&player.world.currentStepType>=87) return ("You are going through fixed World Step. Current speed: " + format(Math.min(1-player.world.Worldrandomnum*0.99,0.75)) +"x")
+            if (player.world.currentStepType<87&&player.world.currentStepType>=75) return ("You are going through random World Step. Current speed: " + format((hasUpgrade('storylayer',13))?2:(1+player.world.Worldrandomnum)) +"x");
+            if (player.world.currentStepType<99&&player.world.currentStepType>=87) return ("You are going through fixed World Step. Current speed: " + format((hasUpgrade('storylayer',13))?0.75:(Math.min(1-player.world.Worldrandomnum*0.99,0.75))) +"x")
             if (player.world.currentStepType>=99){
                 if (!player.world.restrictChallenge) return "You need to Enduring a small Challenge to go through restricted World Step."
-                else return ("You are going through restricted World Step.<br>Your Fragments generation & Memories gain ^0.9 & The Speed of World Steps gain is "+((hasUpgrade('storylayer',11))?"based on":"determined by")+" your Fragments.")
+                else return ("You are going through restricted World Step.<br>"+((hasUpgrade('storylayer',14))?"":"Your Fragments generation & Memories gain ^0.9 & ")+"The Speed of World Steps gain is "+((hasUpgrade('storylayer',11))?"based on":"determined by")+" your Fragments.")
             };
         }
         ,{}],
@@ -3930,10 +3939,11 @@ addLayer("world", {
         11: {
 			title: "Enduring Restriction Challenge",
 			display(){
+                if (hasUpgrade('storylayer',14)) return "Automated";
 				return ((player.world.currentStepType>=99&&!inChallenge('rei',11))?(player.world.restrictChallenge?"In":"Out"):((inChallenge('rei',11))?"Locked due to Zero Sky":"Locked"))
 			},
 			unlocked() { return hasUpgrade('world',31) },
-			canClick() { return (player.world.currentStepType>=99&&!inChallenge('rei',11)) },
+			canClick() { return (player.world.currentStepType>=99&&!inChallenge('rei',11)&&!hasUpgrade('storylayer',14)) },
 			onClick() { 
                 if (player.world.restrictChallenge) player.world.Worldtimer = new Decimal(0);
                 if (!player.world.restrictChallenge) {
@@ -3987,15 +3997,17 @@ addLayer("storylayer", {
     infoboxes: {
         story: {
             title() {
-                if (player.storylayer.storycounter==0) return "F-1";
-                if (player.storylayer.storycounter==1) return "F-2";
+                if (player.storylayer.storycounter==0) return "LA-1";
+                if (player.storylayer.storycounter==1) return "LA-2";
+                if (player.storylayer.storycounter==2) return "LC-1";
+                if (player.storylayer.storycounter==3) return "LC-2";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
                 if (player.storylayer.storycounter==0){
                     let story = "Christmas, a rare holiday. You were preparing for the celebration of your lab\'s first anniversary.<br>Just for the first time and just for only one time, you told yourself. There shouldn\'t be other businesses to bother your research.<br>Snowflakes slowly fell down at dusk, matching the christmas trees far away, just lighted out."
                     if (player[this.layer].storyTimer > 10) {
-                        story += "<br><br>After placing the last batch of decoration, you suddenly felled cold. You made up your decision to buy a cup of coffee at the Starbucks nearby. You had been used to drinking coffee for the year just passed by. After all, you know, inspiration may come at any moment."
+                        story += "<br><br>After placing the last batch of decoration, you suddenly felt cold. You made up your decision to buy a cup of coffee at the Starbucks nearby. You had been used to drinking coffee for the year just passed by. After all, you know, inspiration may come at any moment."
                         story += "<br>\"Director?\" A voice came to interrupt your thinking. You turned around and found out that was the college girl who were studying for a Ph.D. of Philosophy, who loved digging into occultism."
                         story += "<br>\"Oh, Joana, what\'s up?\" You were used to asking her like this, just as she was used to reporting directly to you just now."
                     };
@@ -4019,12 +4031,108 @@ addLayer("storylayer", {
                         story +="<br>\"That's the point, Director. I retrieved the report of the world advance team this morning, and found out that the life detector had not detect life at all!\" Joana almost shouted out, but she obviously  didn't want to shout in public, \"That means...\""
                     };
                     if (player[this.layer].storyTimer > 40) story += "<br>\"Is that mean what we saw in that world is not 'people'?\""
-                    if (player[this.layer].storyTimer >= 45)story += "<br><br>The cup of coffee in your hand was still hot, but you felled it was snowing more heavily outside."
+                    if (player[this.layer].storyTimer >= 45)story += "<br><br>The cup of coffee in your hand was still hot, but you felt it was snowing more heavily outside."
                     return story;
                 };
 
                 if (player.storylayer.storycounter==1){
-                    let story = "Nothing here, really."
+                    let story = "You never expected that you would not sleep for days. At least you slept for a while this day."
+                    story += "<br>As she mentioned, the result of discovering life forms in that world got nowhere. The life detector had no response, as if dead."
+                    story += "<br>By riskily and indirectly asking people there about the concept of life and death, you had to doubt that you found a new form of life---or a new definition of it...... Because they never thought they were dead."
+
+                    if (player[this.layer].storyTimer > 10){
+                        story += "<br><br>While to other researchers, it was just an episode caused by negligence. After all, <i>they</i> think, this was nothing more than another achievement of forgetting to consider, and would not affect the following and existing research."
+                        story += "<br>Both Joana and you thought that was definitely not the case, however. \"Trust intuition.\" you said, \"Ignorance may be fatal.\""
+                    };
+
+                    if (player[this.layer].storyTimer > 15){
+                        story += "<br>\"You don't seem to have a good rest recently, director......I'm here for the report on sociological research. We think we could publish this preliminary report after one month of hard work.\" The researcher in charge of sociological research said with concern---or he didn't listened to what you had said. "
+                        story += "<br>\"So?\" You wondered what this has to do with the report."
+                    };
+
+                    if (player[this.layer].storyTimer > 20){
+                        story += "<br>\"Some of the advance team went into the church not long ago. The Archbishop recognized them coming from another world at once, so our team members asked lots of questions about that world. I have to say that It have gained a lot......It's just a pity that we haven't won the chance to meet the High Priest in person.\" He spoke in cadence, as if he were telling a story. Sociologists like to tell stories, no matter they're true or false."
+                    };
+
+                    if (player[this.layer].storyTimer > 30){
+                        story += "<br><br>\"But I heard from the team members that the High Priest will preside over sacrifices and ceremonies personally , and that are not very rare.\" You wondered still."
+                    };
+                    if (player[this.layer].storyTimer > 35){
+                        story += "<br>\"How can you compare that with meeting her in person? It's once in a lifetime get an opportunity to ask questions directly to god! Just like the God allows you to phone him.\" The more he said, the face of him beamed with more joyful. You didn't know what he was aspiring for. He continued, \"Bad luck though, a ceremony had just ended when the team went into the city, which won't happen again for a while. So in fact we don't know the appearance of the High Priest.\""
+                    };
+                    if (player[this.layer].storyTimer > 40){
+                        story += "<br>\"In other words, do you think your report is incomplete before you meet the 'High Priest' in person?\" Sociologists really like to tell stories, you muttered in your heart."
+                        story += "<br>\"Yes, otherwise our report would always be 'preliminary'.\" He didn't seem to get what you really meant."
+                    }
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==2){
+                    let story = "She woke up again from the room at the top of the church. A new day began, one more time.";
+                    story += "<br>But was there any difference between the new day and the old day? Except occasional few days, the Archbishop came to remind about the ceremony---But so what, it was just a part of the eternity. Time is the product of eternity, flowing like water, and herself is the eternity."
+                    story += "<br>She simply managed herself in bed. She didn't know why she did it every day---Why needed to know? She didn't need to know the troubles of the world, she didn't need to know the feelings of mortals---She didn't even need to know yesterday and tomorrow."
+                    
+                    if (player[this.layer].storyTimer > 10){
+                        story +="<br><br>There was a steady knock on the door. It was the Archbishop. \"Please come in.\" She said, as always."
+                    }
+
+                    if (player[this.layer].storyTimer > 12){
+                        story += "<br>The Archbishop pushed the door, following him was a stranger."
+                    }
+
+                    if (player[this.layer].storyTimer > 15){
+                        story += "<br>\"My High Priest, here's a non-native coming and requesting an interview in person. He is not resident from Pure White City, even......\" The Archbishop paused, \"even not from our world.\""
+                    }
+
+                    if (player[this.layer].storyTimer > 20){
+                        story += "<br>\"Ah, that's not a big deal. He must be here, coming to see me to understand the world. No need to doubt, it doesn't surprise me.\" She replyed the Archbishop in her typical tone still---A solemn but not superior tone, \"You can do your own business first.\""
+                        story += "<br>\"Yes. I'll back after your talk is over.\" And then, the Archbishop went out."
+                        story += "<br><br>There were only her and the non-native in the room."
+                    }
+
+                    if (player[this.layer].storyTimer > 25){
+                        story += "<br>A little surprise to her, the stranger spoke first before her:"
+                        story += "<br>\"Sorry to bother you, High Priest, but we know few about this world.\" He was not deterred by majesty. Indeed, not a man in this world."
+                    }
+
+                    if (player[this.layer].storyTimer > 30){
+                        story += "<br>\"I will answer what I could answer. Just ask.\""
+                        story += "<br>The non-native took a board out of his clothes quickly. It looked like a clipboard. He must be prepared in advance."
+                        story += "<br>He asked a lot about this world, of course including questions about the Pure White City. She answered, one by one---Naturally, she had known these things from the beginning of her existence. As for when she began to exist in this world, she didn't know."
+                    }
+
+                    if (player[this.layer].storyTimer > 40){
+                        story +="<br><br>\"OK, I really benefit a lot from the conversation. Before I leave, I'd like to ask one last question.\" The stranger put back his clipboard, \"Is the position of the High Priest......eternal? If not, how does it designate a successor?\""
+                        story +="<br>\"The position of the High Priest......\" She paused."
+                    }
+                    
+                    if (player[this.layer].storyTimer > 50){
+                        story +="<br>Was existence eternal? It was certain that she existed since the beginning of the world. The High Priest build the Pure White City, as the extension of her power. It was she who makd the people live and work in peace and contentment, and she who bathed the world in light and glory......"
+                    }
+
+                    if (player[this.layer].storyTimer > 55){
+                        story += "<br>......?"
+                    }
+
+                    if (player[this.layer].storyTimer > 60){
+                        story += "<br>\"High Priest?\" The non-native asked again."
+                        story += "<br>\"Ah, yes. The position of the High Priest is eternal.\" At this moment did she recover from thinking."
+                        story += "<br>\"Alright, express my thanks again. It's a honour to talk to you.\" The stranger got up and saluted to leave. The Archbishop went in, taking him out of the door."
+                    }
+
+                    if (player[this.layer].storyTimer > 65){
+                        story += "<br><br>Now only herself alone, in her room high above. The sun had hung high in the gray sky."
+                    }
+
+                    if (player[this.layer].storyTimer > 70){
+                        story += "<br>\"Is that......true?\""
+                    }
+
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==3){
+                    let story = "Nothing here, really.";
                     return story;
                 };
                 
@@ -4037,7 +4145,7 @@ addLayer("storylayer", {
 
     update(diff){
         if (!player[this.layer].unlocked) player[this.layer].storyTimer = 0;
-        else if(player[this.layer].storyTimer<layers.storylayer.currentRequirement()) player[this.layer].storyTimer += diff;
+        else if(player[this.layer].storyTimer<layers.storylayer.currentRequirement()&&player.tab=='storylayer') player[this.layer].storyTimer += diff;
     },
 
     doReset(resettingLayer){},
@@ -4047,6 +4155,8 @@ addLayer("storylayer", {
         //在这里插入每个故事走到头要多长时间
         if (player.storylayer.storycounter==0) req = 60;
         if (player.storylayer.storycounter==1) req = 60;
+        if (player.storylayer.storycounter==2) req = 75;
+        if (player.storylayer.storycounter==3) req = 90;
         return req;
     },
 
@@ -4054,6 +4164,8 @@ addLayer("storylayer", {
         let color = "#98f898";
         if (player.storylayer.storycounter==0) color = "#00bdf9";
         if (player.storylayer.storycounter==1) color = "#00bdf9";
+        if (player.storylayer.storycounter==2) color = "#ffe6f6";
+        if (player.storylayer.storycounter==3) color = "#ffe6f6";
         return color;
     },
 
@@ -4090,6 +4202,7 @@ addLayer("storylayer", {
                 player.storylayer.storycounter -= 1;
                 player.storylayer.storyTimer  = layers.storylayer.currentRequirement();
             },
+            //style: {width: "50px", height: "50px"},
         },
         12: {
             title: "",
@@ -4098,8 +4211,10 @@ addLayer("storylayer", {
             canClick() { return player.storylayer.points.gt(player.storylayer.storycounter) },
             onClick() { 
                 player.storylayer.storycounter += 1;
-                player.storylayer.storyTimer = 0;
+                if(player.storylayer.points.eq(player.storylayer.storycounter))  player.storylayer.storyTimer = 0;
+                else player.storylayer.storyTimer  = layers.storylayer.currentRequirement();
             },
+            //style: {width: "50px", height: "50px"},
         },
     },
 
@@ -4108,28 +4223,50 @@ addLayer("storylayer", {
         fullDisplay(){
             return "<b>Restart World Research</b><br>The speed of World Step gain in Restriction Challenge now <b>based on</b> your Fragments instead of <b>determinded by</b> your Fragments.<br><br>Cost:750 World Steps"
         },
-        canAfford(){return player.storylayer.storycounter==0&&player.storylayer.storyTimer>=60&&player.world.points.gte(750)},
+        canAfford(){return player.storylayer.storycounter==0&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.world.points.gte(750)},
         pay(){
             player.world.points = player.world.points.sub(750);
         },
-        unlocked() { return (player.storylayer.storycounter==0&&player.storylayer.storyTimer>=60)||hasUpgrade('storylayer',11)},
+        unlocked() { return (player.storylayer.storycounter==0&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',11)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
         12:{ title: "Bouquet",
         fullDisplay(){
             return "<b>Bouquet</b><br>Glowing Roses now boosts your Fragments generation and Memories gain.<br><br>Cost:2,500 Glowing Roses"
         },
-        canAfford(){return player.storylayer.storycounter==1&&player.storylayer.storyTimer>=60&&player.rei.roses.gte(2500)},
+        canAfford(){return player.storylayer.storycounter==1&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.rei.roses.gte(2500)},
         pay(){
             player.rei.roses = player.rei.roses.sub(2500);
         },
-        unlocked() { return (player.storylayer.storycounter==1&&player.storylayer.storyTimer>=60)||hasUpgrade('storylayer',12)},
+        unlocked() { return (player.storylayer.storycounter==1&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',12)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         effect(){
             let eff = new Decimal(1);
             if (hasUpgrade('storylayer',12)) eff = player.rei.roses.plus(1).log(8).times(2);
             return eff;
         },
+        },
+        13:{ title: "World-View Adjustment",
+        fullDisplay(){
+            return "<b>World-View Adjustment</b><br>The speed of Random&Fixed World Steps will be set to max.<br><br>Cost:900 World Steps"
+        },
+        canAfford(){return player.storylayer.storycounter==2&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.world.points.gte(900)},
+        pay(){
+            player.world.points = player.world.points.sub(900);
+        },
+        unlocked() { return (player.storylayer.storycounter==2&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',13)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        14:{ title: "Spiral Steps",
+        fullDisplay(){
+            return "<b>Spiral Steps</b><br>You Endure Restriction Challenge automatically and you no longer endure its negative buff.<br><br>Cost:900 World Steps"
+        },
+        canAfford(){return player.storylayer.storycounter==3&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.world.points.gte(900)},
+        pay(){
+            player.world.points = player.world.points.sub(900);
+        },
+        unlocked() { return (player.storylayer.storycounter==3&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',14)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     },
 })
@@ -4383,7 +4520,9 @@ addLayer("a", {
             done() { return player.rei.roses.gte(100)},
             tooltip: "Gain 100 Glowing Roses.<br>Rewards:Glowing Roses now boosts The Speed of World Steps gain.",
             effect(){
-                return player.rei.roses.plus(1).log10().plus(1);
+                let eff = player.rei.roses.plus(1).log10().plus(1);
+                if (hasAchievement('a',85)) eff = player.rei.roses.plus(1).log(7.5).plus(1);
+                return eff;
             },
         },
         71: {
@@ -4423,6 +4562,26 @@ addLayer("a", {
             name: "Lossy Move",
             done() { return player.yugamu.timesmoved.gte(100)},
             tooltip: "Move more than 100 times in the Maze<br>Rewards:You can choose among three directions in Maze.",
+        },
+        83: {
+            name: "Restrictions™",
+            done() { return layers.world.restrictReward().gte(30)},
+            tooltip: "Let Restriction Steps' reward ≥30.00x<br>Rewards:Restriction Steps' reward's softcap starts at 25.00x",
+        },
+        84: {
+            name: "There is No Limit!",
+            done() { return player.mem.points.gte("1.79e308")},
+            tooltip: "Gain 1.79e308 Memories.",
+        },
+        85: {
+            name: "Thats Not Intended",
+            done() { return hasUpgrade('storylayer',14)&&inChallenge('rei',11)&&player.world.restrictChallenge},
+            tooltip: "Endure Zero Sky & Restriction Challenge at the same time.<br>Rewards:Glowing Roses boost The Speed of World Steps gain better.",
+        },
+        91: {
+            name: "Higher And Higher",
+            done() { return player.world.points.gte(1000)},
+            tooltip: "Gain 1000 World Steps.<br>Rewards:You can choose among all four directions in Maze.",
         },
     },
     tabFormat: [
