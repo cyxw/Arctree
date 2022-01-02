@@ -3430,6 +3430,12 @@ addLayer("yugamu", {
             player.yugamu.timesmoved = player.yugamu.timesmoved.plus(1);
             player.yugamu.actionpoint = layers.yugamu.actionpoint();
         };
+        let buyableid = [11,21,22,31];
+        for(var i = 0; i < buyableid.length; i++){
+            if (layers.yugamu.buyables[buyableid[i]].canAfford()&&layers.yugamu.buyables[buyableid[i]].autoed()){
+                layers.yugamu.buyables[buyableid[i]].buy();
+            };
+    }
     },
 
 
@@ -3468,7 +3474,9 @@ addLayer("yugamu", {
     },
 
     actionpoint(){//use tmp && !use Decimal && use layers when call
-        return 1;
+        let ap =1;
+        if (hasUpgrade('storylayer',15)) ap = 4;
+        return ap;
     },
 
     buyables: {
@@ -3500,6 +3508,7 @@ addLayer("yugamu", {
                 eff = eff.times(buyableEffect('yugamu',22));
                 return eff;
             },
+            autoed(){return hasUpgrade('storylayer',15)},
             style: {width: "100px", height: "100px"},
         },
         21: {
@@ -3528,6 +3537,7 @@ addLayer("yugamu", {
                 eff = eff.times(buyableEffect('yugamu',22));
                 return eff;
             },
+            autoed(){return hasUpgrade('storylayer',15)},
             style: {width: "100px", height: "100px"},
         },
         22: {
@@ -3555,6 +3565,7 @@ addLayer("yugamu", {
                 if (hasUpgrade('lab',132)) eff = player.yugamu.buyables[this.id].div(25).plus(1);
                 return eff;
             },
+            autoed(){return hasUpgrade('storylayer',15)},
             style: {width: "100px", height: "100px"},
         },
         31: {
@@ -3583,6 +3594,7 @@ addLayer("yugamu", {
                 eff = eff.times(buyableEffect('yugamu',22));
                 return eff;
             },
+            autoed(){return hasUpgrade('storylayer',15)},
             style: {width: "100px", height: "100px"},
         },
     },
@@ -3993,6 +4005,9 @@ addLayer("storylayer", {
 
     unlocked()  {return hasUpgrade('lab',151)},
     layerShown() { return hasUpgrade('lab',151) },
+    shouldNotify(){
+        return player.storylayer.storyTimer<layers.storylayer.currentRequirement()&&player.tab!='storylayer'
+    },
 
     infoboxes: {
         story: {
@@ -4001,6 +4016,7 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==1) return "LA-2";
                 if (player.storylayer.storycounter==2) return "LC-1";
                 if (player.storylayer.storycounter==3) return "LC-2";
+                if (player.storylayer.storycounter==4) return "LA-3";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -4132,7 +4148,12 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==3){
-                    let story = "Nothing here, really.";
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==4){
+                    let story = "Story in Plan, haven't been written/translated.";
                     return story;
                 };
                 
@@ -4157,6 +4178,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==1) req = 60;
         if (player.storylayer.storycounter==2) req = 75;
         if (player.storylayer.storycounter==3) req = 90;
+        if (player.storylayer.storycounter==4) req = 60;
         return req;
     },
 
@@ -4166,6 +4188,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==1) color = "#00bdf9";
         if (player.storylayer.storycounter==2) color = "#ffe6f6";
         if (player.storylayer.storycounter==3) color = "#ffe6f6";
+        if (player.storylayer.storycounter==4) color = "#00bdf9";
         return color;
     },
 
@@ -4266,6 +4289,17 @@ addLayer("storylayer", {
             player.world.points = player.world.points.sub(900);
         },
         unlocked() { return (player.storylayer.storycounter==3&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',14)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        15:{ title: "Wide Known",
+        fullDisplay(){
+            return "<b>Wide Known</b><br>You can choose all four directions at one move, and move in maze is now automated.<br><br>Cost:9 Flourish Labyrinths<br>Req:Achievement 'Higher And Higher'"
+        },
+        canAfford(){return player.storylayer.storycounter==4&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.yugamu.points.gte(9)&&hasAchievement('a',91)},
+        pay(){
+            player.yugamu.points = player.yugamu.points.sub(9);
+        },
+        unlocked() { return (player.storylayer.storycounter==4&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',15)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     },
@@ -4582,6 +4616,14 @@ addLayer("a", {
             name: "Higher And Higher",
             done() { return player.world.points.gte(1000)},
             tooltip: "Gain 1000 World Steps.<br>Rewards:You can choose among all four directions in Maze.",
+        },
+        92: {
+            name: "Building Group",
+            done() { return player.rei.points.gte(10)&&player.yugamu.points.gte(10)},
+            tooltip: "Gain both 10 Luminous Churches&Flourish Labyrinths.<br>Rewards:Stories you have gone through boost Fragments generation.",
+            effect(){
+                return player.storylayer.points.plus(1);
+            }
         },
     },
     tabFormat: [

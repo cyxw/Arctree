@@ -70,6 +70,7 @@ function getPointGen() {
 	if (hasMilestone('lab',0)) gain = gain.times(player.lab.power.div(10).max(1));
 	if (hasMilestone('lab',1)) gain = gain.times(player.lab.points.max(1));
 	if (hasUpgrade('storylayer',12)) gain = gain.times(upgradeEffect('storylayer',12));
+	if (hasAchievement('a',92)) gain = gain.times(achievementEffect('a',92));
 	
 	//POW
 	if (hasUpgrade('dark', 12))gain = gain.times(tmp.dark.effect.pow(0.5));
