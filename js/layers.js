@@ -332,6 +332,8 @@ addLayer("light", {
         if (hasUpgrade('lethe',41)) mult = mult.div(upgradeEffect('lethe',41));
         if (hasMilestone('lab',3)) mult = mult.div(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',83)) mult = mult.div(buyableEffect('lab',21));
+        if (hasUpgrade('storylayer',21)) mult = mult.div(upgradeEffect('storylayer',21));
+        if (hasUpgrade('storylayer',22)) mult = mult.div(player.rei.points.div(2).max(1));
         return mult;
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -584,6 +586,8 @@ addLayer("dark", {
         if (hasChallenge("kou",31)) mult = mult.div(player.light.points.sub(player[this.layer].points).div(2).max(1));
         if (hasMilestone('lab',4)) mult = mult.div(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',84)) mult = mult.div(buyableEffect('lab',22));
+        if (hasUpgrade('storylayer',21)) mult = mult.div(upgradeEffect('storylayer',21));
+        if (hasUpgrade('storylayer',22)) mult = mult.div(player.yugamu.points.div(2).max(1));
         return mult;
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -2325,7 +2329,7 @@ addLayer("lab", {
         },
         43:{ title: "Darkness extract",
         description: "Dark Transformer requirements /1.5.",
-        fullDisplay(){return "<b>Darkness extract</b><br>Dark Transformer requirements ÷1.5.<br><br>Cost: 57,000 Light Tachyons<br>70,000 Research Power"},
+        fullDisplay(){return "<b>Darkness extract</b><br>Dark Transformer requirements ÷1.5.<br><br>Cost: 57,000 Dark Matters<br>70,000 Research Power"},
         unlocked(){return hasUpgrade('lab',41)},
         canAfford(){
             return player.dark.points.gte(57000)&&player.lab.power.gte(70000);
@@ -3276,6 +3280,7 @@ addLayer("rei", {
                 let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +(inChallenge('rei',11)?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
                 if (hasMilestone('rei',4)) show = show + "<br>Red Dolls & Forgotten Drops gain by "+format(player.rei.roses.plus(1).log10().times(2).max(1)) +"x";
                 if (hasUpgrade('storylayer',12)) show += "<br>Fragments generation & Memories gain by "+format(upgradeEffect('storylayer',12))+"x";
+                if (hasUpgrade('storylayer',21)) show += "<br>Light Tachyons&Dark Matters gain by "+format(upgradeEffect('storylayer',21))+"x";
                 return show;
             },
             style(){
@@ -4018,6 +4023,9 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==2) return "LC-1";
                 if (player.storylayer.storycounter==3) return "LC-2";
                 if (player.storylayer.storycounter==4) return "LA-3";
+                if (player.storylayer.storycounter==5) return "LC-3";
+                if (player.storylayer.storycounter==6) return "V-1";
+                if (player.storylayer.storycounter==7) return "LA-4";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -4192,6 +4200,21 @@ addLayer("storylayer", {
                     return story;
                 };
 
+                if (player.storylayer.storycounter==5){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==6){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==7){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
                 if (player.storylayer.storycounter>=player.storylayer.points.toNumber()){
                     return "You have read all exist stories!"
                 }
@@ -4218,6 +4241,9 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==2) req = 75;
         if (player.storylayer.storycounter==3) req = 90;
         if (player.storylayer.storycounter==4) req = 60;
+        if (player.storylayer.storycounter==5) req = 75;
+        if (player.storylayer.storycounter==6) req = 90;
+        if (player.storylayer.storycounter==7) req = 60;
         return req;
     },
 
@@ -4228,6 +4254,9 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==2) color = "#ffe6f6";
         if (player.storylayer.storycounter==3) color = "#ffe6f6";
         if (player.storylayer.storycounter==4) color = "#00bdf9";
+        if (player.storylayer.storycounter==5) color = "#ffe6f6";
+        if (player.storylayer.storycounter==6) color = "#f1d4c4";
+        if (player.storylayer.storycounter==7) color = "#00bdf9";
         return color;
     },
 
@@ -4341,7 +4370,46 @@ addLayer("storylayer", {
         unlocked() { return (player.storylayer.storycounter==4&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',15)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
-    },
+        21:{ title: "Re-Pick The Past",
+        fullDisplay(){
+            return "<b>Re-Pick The Past</b><br>Glowing Roses now boosts Light Tachyons&Dark Matters gain.<br><br>Cost:75,000 Glowing Roses"
+        },
+        canAfford(){return player.storylayer.storycounter==5&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.rei.roses.gte(75000)},
+        pay(){
+            player.rei.roses = player.rei.roses.sub(75000);
+        },
+        unlocked() { return (player.storylayer.storycounter==5&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',21)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        effect(){
+            let eff = new Decimal(1);
+            if (hasUpgrade('storylayer',21)) eff = player.rei.roses.plus(1).log(5).times(1.5);
+            return eff;
+        }
+        },
+        22:{ title: "Regain The Power",
+        fullDisplay(){
+            return "<b>Regain The Power</b><br>LC itself boosts L's gain, and FL itself boosts D's gain<br><br>Cost:11 Luminous Churches<br>11 Flourish Labyrinths"
+        },
+        canAfford(){return player.storylayer.storycounter==6&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.rei.points.gte(11)&&player.yugamu.points.gte(11)},
+        pay(){
+            player.rei.points = player.rei.points.sub(11);
+            player.yugamu.points = player.yugamu.points.sub(11);
+        },
+        unlocked() { return (player.storylayer.storycounter==6&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',22)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        23:{ title: "Exploration",
+        fullDisplay(){
+            return "<b>Exploration</b><br>Explore to the end of the world(Currently, nothing here.)<br><br>Cost:64,000,000 Research Points"
+        },
+        canAfford(){return player.storylayer.storycounter==7&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(64000000)},
+        pay(){
+            player.lab.points = player.lab.points.sub(64000000);
+        },
+        unlocked() { return (player.storylayer.storycounter==7&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',23)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);showTab('none');},
+        },
+    }
 })
 
 //GHOSTS
