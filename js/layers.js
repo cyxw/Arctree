@@ -3725,11 +3725,12 @@ addLayer("world", {
 
     restrictReward(){
         let softcap = new Decimal(20);
+        let hardcap = new Decimal(150)
         if (hasAchievement('a',83)) softcap = new Decimal(25);
         let softcappower = 0.25;
         let reward = Decimal.pow(1.5,player.world.restrictionnum);
         if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
-        return reward;
+        return reward.min(hardcap);
     },
 
     update(diff){//重头戏
@@ -4148,7 +4149,41 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==3){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "She woke up again from the room at the top of the church. A new day began, one more time.";
+
+                    if (player[this.layer].storyTimer > 10) story += "<br>One more time."
+                    if (player[this.layer].storyTimer > 13) story += "<br>She was still thinking about the impact of the questions had asked by that non-native yesterday."
+                    if (player[this.layer].storyTimer > 16) story += "<br>Wait, \"<i>Yesterday</i>\"?"
+
+                    if (player[this.layer].storyTimer > 20){
+                        story += "<br><br>She felt that she knew the meaning of the word \"Yesterday\" vaguely. She was just not using that word for a long time."
+                        story += "<br>\"Yesterday\" meant the day had already passed. The concept opposite to it was \"Tomorrow\", the day hadn't come yet."
+                        story += "<br>Why could she remember \"Yesterday\"? It seemed to be......different from her and eternity."
+                    }
+
+                    if (player[this.layer].storyTimer > 30){
+                        story += "<br><br>So, what's the \"Yesterday\" of a \"Yesterday\"? It must be a day, in which lots of things could happen. What's the \"Tomorrow\" of a \"Tomorrow\"? It is a day too, in which also could happen lots of things."
+                        story += "<br>Every \"Day\" could be remembered, just like she remembered \"Yesterday\"."
+                        story += "<br>The eternity is not eternal anymore. More colours appeared in a monotonous colour."
+                    }
+
+                    if (player[this.layer].storyTimer > 40){
+                        story += "<br><br>She was in a blur of colours, surrounded by nothing else. Only colours---Dazzling, blurred colours---Constantly changing, filling the space in front of her."
+                        story += "<br>She wanted to use her divine power to break the illusion, but she couldn't."
+                    }
+
+                    if (player[this.layer].storyTimer > 45){
+                        story += "<br>The light of colours became more dazzling. Different colours of light blended together to form the ultimate white, oppressing her."
+                        story += "<br>She wanted to shout, she wanted to call out, but she was forced to be silent, as if a hand had caught her throat."
+                        story += "<br>She could only stay where she was and watch the white light oppress herself and everything."
+                    }
+
+                    if (player[this.layer].storyTimer > 50) story += "<br><br>......"
+                    if (player[this.layer].storyTimer > 60) story += "<br><br>......"
+
+                    if (player[this.layer].storyTimer > 70) story += "<br><br>She woke up again from the room at the top of the church. One more time."
+                    if (player[this.layer].storyTimer > 75) story += "<br>She suddenly realized that this was definitely not the first time she had experienced this feeling."
+
                     return story;
                 };
 
@@ -4156,6 +4191,10 @@ addLayer("storylayer", {
                     let story = "Story in Plan, haven't been written/translated.";
                     return story;
                 };
+
+                if (player.storylayer.storycounter>=player.storylayer.points.toNumber()){
+                    return "You have read all exist stories!"
+                }
                 
             },
         unlocked(){return hasUpgrade('lab',151)},

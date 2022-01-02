@@ -13,12 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.3.0",
-	name: "Glance into The World",
+	num: "0.0.3.2",
+	name: "Currently, nothing here",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0.3,0</h3><br>
+	<h3>v0.0.3.2</h3><br>
+		- Add first branch of stories, now it's time to check my writing skill(lol).<br>
+	<h3>v0.0.3.0</h3><br>
 		- Call row4 done.<br>
 	<h3>v0.0.2.5</h3><br>
 		- All row4 layers added with basic stuff.<br>
