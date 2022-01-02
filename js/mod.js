@@ -13,12 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.3.0",
-	name: "Glance into The World",
+	num: "0.0.3.2",
+	name: "Currently, nothing here",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0.3,0</h3><br>
+	<h3>v0.0.3.2</h3><br>
+		- Add first branch of stories, now it's time to check my writing skill(lol).<br>
+	<h3>v0.0.3.0</h3><br>
 		- Call row4 done.<br>
 	<h3>v0.0.2.5</h3><br>
 		- All row4 layers added with basic stuff.<br>
@@ -53,6 +55,7 @@ function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
+		
 	let gain = new Decimal(1)
 
 	//ADD
@@ -65,9 +68,11 @@ function getPointGen() {
 	if (hasUpgrade('mem', 22)) gain = gain.times(upgradeEffect('mem', 22))	
 	if (player.light.unlocked) gain = gain.times(tmp.light.effect);
 	if (player.lethe.unlocked) gain = gain.times(tmp.lethe.effect);
-	if (player.lethe.buyables[11].unlocked) gain = gian.times(tmp.lethe.buyables[11].effect);
+	if (player.lethe.buyables[11].unlocked) gain = gain.times(buyableEffect('lethe',11));
 	if (hasMilestone('lab',0)) gain = gain.times(player.lab.power.div(10).max(1));
 	if (hasMilestone('lab',1)) gain = gain.times(player.lab.points.max(1));
+	if (hasUpgrade('storylayer',12)) gain = gain.times(upgradeEffect('storylayer',12));
+	if (hasAchievement('a',92)) gain = gain.times(achievementEffect('a',92));
 	
 	//POW
 	if (hasUpgrade('dark', 12))gain = gain.times(tmp.dark.effect.pow(0.5));
@@ -77,9 +82,10 @@ function getPointGen() {
 	if (inChallenge("kou",21)) gain = gain.pow(1.05);
 	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12));
 	if (inChallenge('rei',11)) gain = gain.pow(0.5);
-	if (player.world.restrictChallenge) gain = gain.pow(0.9);
+	if (player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) gain = gain.pow(0.9);
 
 	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
+	if (isNaN(gain.toNumber())) return new Decimal(1);
         return gain
 }
 

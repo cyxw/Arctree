@@ -103,6 +103,64 @@ function loadVue() {
 		`
 	})
 
+	Vue.component('story', {
+		props: ['layer'],
+		computed: {
+			page() { return player[layer].story.page },
+			current() { return tmp[layer].story ? tmp[layer].story[player[layer].story.page] : null }
+		},
+		template: `
+		<div v-if="current" style="max-width:650px;margin:15px;font-size:14px;">
+		    <div v-html="current.content"></div>
+			<div v-if="current.pesterlog && ((plr = ' ') || true)" class="pesterlog">
+				<div v-if="current.pesterlog.channel" class="channel courier">
+					<span class="courier" style="opacity:.5">::</span>
+					#{{current.pesterlog.channel}}
+					<span class="courier" style="opacity:.5">::</span>
+				</div>
+				<div v-for="msg in current.pesterlog.log" style="margin:5px" v-bind:style="{'text-align': msg[0] == 'msg' ? (msg[3] && msg[3].split(' ').includes('right') ? 'right' : 'left') : 'center'}">
+					<div v-if="msg[0] == 'start'" style="color:#00000080">
+						-- 
+						<span class="courier" v-bind:style="{color: players[msg[1]].color}">{{players[msg[1]].full}}</span>
+						began {{players[msg[1]].msgClass && players[msg[1]].msgClass.includes('troll') ? 'trolling' : 'pestering'}} 
+						<span class="courier" v-bind:style="{color: players[msg[2]].color}">{{players[msg[2]].full}}</span>
+						<span v-if="msg[3]">at <span class="courier" v-bind:style="{color: '#000000'}">{{msg[3]}}</span></span>
+						--
+					</div>
+					<div v-if="msg[0] == 'end'" style="color:#00000080">
+						-- 
+						<span class="courier" v-bind:style="{color: players[msg[1]].color}">{{players[msg[1]].full}}</span>
+						ceased {{players[msg[1]].msgClass && players[msg[1]].msgClass.includes('troll') ? 'trolling' : 'pestering'}} 
+						<span class="courier" v-bind:style="{color: players[msg[2]].color}">{{players[msg[2]].full}}</span>
+						<span v-if="msg[3]">at <span class="courier" v-bind:style="{color: '#000000'}">{{msg[3]}}</span></span>
+						--
+					</div>
+					<div v-if="msg[0] == 'join'" style="color:#00000080">
+						-- 
+						<span class="courier" v-bind:style="{color: players[msg[1]].color}">{{players[msg[1]].full}}</span>
+						joined the chat
+						<span v-if="msg[2]">at <span class="courier" v-bind:style="{color: '#000000'}">{{msg[2]}}</span></span>
+						--
+					</div>
+					<div v-if="msg[0] == 'leave'" style="color:#00000080">
+						-- 
+						<span class="courier" v-bind:style="{color: players[msg[1]].color}">{{players[msg[1]].full}}</span>
+						left the chat
+						<span v-if="msg[2]">at <span class="courier" v-bind:style="{color: '#000000'}">{{msg[2]}}</span></span>
+						--
+					</div>
+					<div v-if="msg[0] == 'msg' && msg[1] != plr && ((plr = msg[1]) || true)" v-bind:style="{color: players[msg[1]].color}" :class="[msg[3] ? msg[3].split(' ').concat('handler') : [], 'handler']" v-html="players[msg[1]].full+ '<br/>'">
+					</div>
+					<div v-if="msg[0] == 'msg'" v-bind:style="{color: players[msg[1]].color}" :class="[msg[3] ? msg[3].split(' ').concat('msg') : [], players[msg[1]].msgClass, 'msg']" v-html="msg[2]">
+					</div>
+				</div>
+			</div>
+		    <div v-for="cmd in current.commands" style="text-align:left;font-size:18px;padding-top:30px;padding-bottom:80px;">
+			    &gt; <a v-html="cmd.title" v-on:click="startStoryPage(layer, cmd.page)" class="link" style="display:inline;font-weight:normal;"></a>
+			</div>
+		</div>
+		`
+	})
 
 	// Data = width in px, by default fills the full area
 	Vue.component('h-line', {
