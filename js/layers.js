@@ -415,9 +415,11 @@ addLayer("light", {
         if (hasUpgrade('lethe',13)) eff=eff.times(tmp.kou.effect.pow(1.5));
         if (hasUpgrade('lethe',31)) eff=eff.times(tmp.lethe.effect);
         if (hasUpgrade('lethe',14)) eff=eff.times(upgradeEffect('lethe',14));
+        if (challengeCompletions('saya',11)) eff = eff.times(challengeEffect('saya',11));
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(Math.random());
+        if (inChallenge('saya',11)) eff = eff.pow(layers.saya.challenges[11].debuff());
 
         if (eff.lt(1)) return new Decimal(1);
         return eff;
@@ -497,7 +499,7 @@ addLayer("light", {
         onPurchase(){
             if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
         },
-        cost() {return new Decimal(30).times(tmp["kou"].costMult42l)},
+        cost() {return new Decimal(28).times(tmp["kou"].costMult42l)},
         },
         31:{ title: "Hardware BUS",
         description: "Light Tachyons effect formula now much better.",
@@ -759,7 +761,7 @@ addLayer("dark", {
         onPurchase(){
             if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
         },
-        cost() {return new Decimal(30).times(tmp["kou"].costMult42d)},
+        cost() {return new Decimal(28).times(tmp["kou"].costMult42d)},
         },
         31:{ title: "Memory Organizing",
         description: "Dark Matters effect formula now much better.",
@@ -842,7 +844,7 @@ addLayer("kou", {
         if (hasUpgrade('lethe',23)) mult = mult.div(upgradeEffect('lethe',23));
         if (hasMilestone('lab',5)) mult = mult.div(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',93)) mult = mult.div(buyableEffect('lab',31));
-        if (hasMilestone('rei',4)) mult = mult.div(player.rei.roses.plus(1).log10().times(2).max(1));
+        if (hasMilestone('rei',4)) mult = mult.div(player.rei.roses.plus(1).log10().times(2).max(1).times(hasAchievement('a',93)?tmp.etoluna.starPointeffect:1));
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -1153,7 +1155,7 @@ addLayer("lethe", {
         if (hasChallenge('kou',41)) mult = mult.times(tmp.lethe.buyables[11].effect);
         if (hasMilestone('lab',6)) mult = mult.times(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',94)) mult = mult.times(buyableEffect('lab',32));
-        if (hasMilestone('rei',4)) mult = mult.times(player.rei.roses.plus(1).log10().times(2).max(1));
+        if (hasMilestone('rei',4)) mult = mult.times(player.rei.roses.plus(1).log10().times(2).max(1).times(hasAchievement('a',93)?tmp.etoluna.starPointeffect:1));
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -3302,7 +3304,7 @@ addLayer("rei", {
             },
             fullDisplay(){
                 let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +(inChallenge('rei',11)?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
-                if (hasMilestone('rei',4)) show = show + "<br>Red Dolls & Forgotten Drops gain by "+format(player.rei.roses.plus(1).log10().times(2).max(1)) +"x";
+                if (hasMilestone('rei',4)) show = show + "<br>Red Dolls & Forgotten Drops gain by "+format(player.rei.roses.plus(1).log10().times(2).max(1).times(hasAchievement('a',93)?tmp.etoluna.starPointeffect:1)) +"x";
                 if (hasUpgrade('storylayer',12)) show += "<br>Fragments generation & Memories gain by "+format(upgradeEffect('storylayer',12))+"x";
                 if (hasUpgrade('storylayer',21)) show += "<br>Light Tachyons&Dark Matters gain by "+format(upgradeEffect('storylayer',21))+"x";
                 return show;
@@ -3704,7 +3706,7 @@ addLayer("world", {
 
     doReset(resettingLayer){
         let keep=[];
-        if (hasAchievement('a',93)) {keep.push("fixednum");keep.push("restrictionnum");}
+        if (hasAchievement('a',94)) {keep.push("fixednum");keep.push("restrictionnum");}
         if (layers[resettingLayer].row > this.row) {layerDataReset('world', keep);}
     },
 
@@ -3727,6 +3729,8 @@ addLayer("world", {
     WorldstepHeight(){
         let base = new Decimal(10);
         let step = base.times(player.world.points.plus(1));
+        if (hasAchievement('a',93)) step = step.div(tmp.etoluna.moonPointeffect);
+        if (step.gte(100000)) step = Decimal.pow(step.sub(100000),3).plus(100000);
         return step;
     },
 
@@ -3820,7 +3824,7 @@ addLayer("world", {
         ]
         },
         Atlas:{
-            unlocked(){return hasUpgrade("world",31)||hasAchievement('a',93)},
+            unlocked(){return hasUpgrade("world",31)||hasAchievement('a',94)},
             content:[
                 "blank", 
                 "main-display", 
@@ -4367,7 +4371,7 @@ addLayer("storylayer", {
                 player.storylayer.storycounter -= 1;
                 player.storylayer.storyTimer  = layers.storylayer.currentRequirement();
             },
-            //style: {width: "50px", height: "50px"},
+            style: {"height": "50px", "width": "50px","min-height":"50px",},
         },
         12: {
             title: "",
@@ -4379,7 +4383,7 @@ addLayer("storylayer", {
                 if(player.storylayer.points.eq(player.storylayer.storycounter))  player.storylayer.storyTimer = 0;
                 else player.storylayer.storyTimer  = layers.storylayer.currentRequirement();
             },
-            //style: {width: "50px", height: "50px"},
+            style: {"height": "50px", "width": "50px","min-height":"50px",},
         },
     },
 
@@ -4408,6 +4412,7 @@ addLayer("storylayer", {
         effect(){
             let eff = new Decimal(1);
             if (hasUpgrade('storylayer',12)) eff = player.rei.roses.plus(1).log(8).times(2).max(1);
+            if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
             return eff;
         },
         },
@@ -4457,6 +4462,7 @@ addLayer("storylayer", {
         effect(){
             let eff = new Decimal(1);
             if (hasUpgrade('storylayer',21)) eff = player.rei.roses.plus(1).log(5).times(1.5).max(1);
+            if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
             return eff;
         }
         },
@@ -4474,7 +4480,7 @@ addLayer("storylayer", {
         },
         23:{ title: "Exploration",
         fullDisplay(){
-            return "<b>Exploration</b><br>Explore to the end of the world(Currently, nothing here.)<br><br>Cost:64,000,000 Research Points"
+            return "<b>Exploration</b><br>Explore to the end of the world.<br><br>Cost:64,000,000 Research Points"
         },
         canAfford(){return player.storylayer.storycounter==7&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(64000000)},
         pay(){
@@ -4507,11 +4513,13 @@ addLayer("saya",{
     baseResource: "Forgotten Drops",                 
     baseAmount() {return player.lethe.points},    
 
-    requires: new Decimal(1e220),    
-             
+    requires() {
+        let cost = new Decimal(1e220);
+        if (inChallenge('kou',21)) cost=cost.pow(1.05);
+        return cost},
     
     type: "static",                         
-    exponent: 0.5,
+    exponent: 1.25,
     base:2,                            
 
     gainMult() {//static层                           
@@ -4542,19 +4550,16 @@ addLayer("saya",{
                 "blank",
                 "milestones",]
         },
-        /*"Happiness Challenges": {
-            unlocked() { return hasMilestone('kou',7) },
-            buttonStyle() { return {'background-color': '#bd003c'} },
+        "Memories Adjustment": {
+            unlocked() { return player.saya.unlocked },
             content: [
                 "main-display",
                 "blank",
                 "prestige-button",
                 "blank",
-                ["display-text",
-                    function() {return 'You have ' + formatWhole(player.mem.points)+' Memories.'},
-                        {}],
+                "resource-display",
                 "blank","challenges"]
-        },*/
+        },
     },
 
     milestones:{
@@ -4571,6 +4576,31 @@ addLayer("saya",{
             effectDescription: "Keep the rest of LC&FL milestones.",
         },
     },
+
+    challenges:{
+        cols:2,
+        11:{
+            name: "Enlighting Memories",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "Light Tachyons effect ^"+format(layers[this.layer].challenges[this.id].debuff());
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 0.5-(challengeCompletions(this.layer, this.id)*0.05);
+            },
+            rewardEffect(){
+                return Decimal.pow(2,challengeCompletions(this.layer, this.id));
+            },
+            unlocked() { return player.saya.unlocked},
+            goal() { return new Decimal(1e175).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },//这个过会也要做手脚，看着办
+            currencyDisplayName: "Fragments",
+            currencyInternalName: "points",
+            rewardDescription() {return "Light Tachyons effect x"+format(challengeEffect(this.layer,this.id))},
+        },
+    },
+
 })
 
 addLayer("etoluna",{
@@ -4579,6 +4609,9 @@ addLayer("etoluna",{
 		points: new Decimal(0),
         best:new Decimal(0),
         total:new Decimal(0),
+        starPoint: new Decimal(0),
+		moonPoint: new Decimal(0),
+        allotted: 0.5,
         unlockOrder:0,            
     }},
 
@@ -4607,7 +4640,99 @@ addLayer("etoluna",{
         return new Decimal(1)
     },
 
+    effect(){
+        let eff = player[this.layer].points.div(2).plus(1);
+        return eff;
+    },
+    effectDescription(){
+        return "which are giving you the base speed of gaining Star Points/Moon Points of "+format(tmp.etoluna.effect)+ "/s"
+    },
+
     layerShown() {return hasUpgrade('storylayer',23)},  
+
+    //Tower related
+    gainstarPoints(){
+        let gain = tmp.etoluna.effect.times(Decimal.pow(10,(player.etoluna.allotted*2-1)));
+        if (player.etoluna.allotted<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        return gain;
+    },
+
+    starPointeffect(){//tmp
+        let eff = player.etoluna.starPoint.plus(1).log(7.5).max(1);
+        return eff;
+    },
+
+    gainmoonPoints(){
+        let gain = tmp.etoluna.effect.times(Decimal.pow(10,((1-player.etoluna.allotted)*2-1)));
+        if ((1-player.etoluna.allotted)<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        return gain;
+    },
+
+    moonPointeffect(){//tmp
+        let eff = player.etoluna.starPoint.plus(1).log(5).max(0).div(50).plus(1);
+        return eff;
+    },
+
+    update(diff){
+        if (player.etoluna.unlocked){
+            player.etoluna.moonPoint = player.etoluna.moonPoint.plus(tmp["etoluna"].gainmoonPoints.times(diff));
+            player.etoluna.starPoint = player.etoluna.starPoint.plus(tmp["etoluna"].gainstarPoints.times(diff));
+        }
+    },
+
+    tabFormat: {
+        "Milestones": {
+            content: [
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                "milestones",]
+        },
+        "Gemini Tower":{
+            unlocked() {return player.etoluna.unlocked},
+            content:[
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                ["row",[
+                    ["bar","etoBar"],
+                    ["column",[
+                       ["blank","400px"],
+                       ["clickable",22],
+                       ["clickable",12],
+                    ]],
+                    ["blank",["50px","50px"]],
+                    ["clickable",31],
+                    ["blank",["50px","50px"]],
+                    ["column",[
+                        ["blank","400px"],
+                        ["clickable",21],
+                        ["clickable",11],
+                    ]],
+                    ["bar","lunaBar"],
+                ]],
+                "blank",
+                ["row",[
+                    ["column", [
+                        ["display-text",function() {return "You have <h3 style='color: #bddfff;'>"+formatWhole(player.etoluna.starPoint)+"</h3> Star Points."},{}],
+                        "blank",
+                        ["display-text",function() {return hasAchievement('a',93)?("Which boosts All Glowing Roses effect by <h3>"+format(tmp.etoluna.starPointeffect)+"</h3>x"):""},{}],
+                        "blank",
+                    ],{width:"50%"}],
+                    ["column", [
+                        ["display-text",function() {return "You have <h3 style='color: #d7a9f4;'>"+formatWhole(player.etoluna.moonPoint)+"</h3> Moon Points."},{}],
+                        "blank",
+                        ["display-text",function() {return hasAchievement('a',93)?("Which ÷<h3>"+format(tmp.etoluna.moonPointeffect)+"</h3> World Step Height."):""},{}],
+                        "blank",
+                    ],{width:"50%"}],]
+                    ,{}],
+            ]
+        }
+    },
     
     milestones:{
         0: {
@@ -4623,6 +4748,70 @@ addLayer("etoluna",{
             effectDescription: "Keep the rest of LC&FL milestones.",
         },
     },
+
+    bars: {
+        etoBar: {
+            direction: UP,
+            width: 25,
+            height: 500,
+            progress() { return Math.min(player.etoluna.allotted,0.99999) },
+            barcolor() {
+                return "#bddfff"
+            },
+            fillStyle(){return {'background-color':"#bddfff"}},
+        },
+        lunaBar: {
+            direction: UP,
+            width: 25,
+            height: 500,
+            progress() { return Math.min(1-layers.etoluna.bars.etoBar.progress(),0.99999) },
+            barcolor() {
+                return "#d7a9f4"
+            },
+            fillStyle(){return {'background-color':"#d7a9f4"}},
+        },
+    },
+
+    clickables: {
+        rows: 3,
+        cols: 2,
+        11: {
+            title: "L+",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted>0 },
+            onClick() { player.etoluna.allotted = Math.max(player.etoluna.allotted-0.05, 0) },
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "#d7a9f4"},
+        },
+        12: {
+            title: "E+",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted<1 },
+            onClick() { player.etoluna.allotted = Math.min(player.etoluna.allotted+0.05, 1) },
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "#bddfff"},
+        },
+        21: {
+            title: "Lm",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted>0 },
+            onClick() { player.etoluna.allotted = 0; },
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "#d7a9f4"},
+        },
+        22: {
+            title: "Em",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted<1 },
+            onClick() { player.etoluna.allotted = 1;},
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "#bddfff"},
+        },
+        31: {
+            title: "C",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted!=.5 },
+            onClick() { player.etoluna.allotted = .5 },
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "yellow"},
+        },
+    },
+
 })
 
 //GHOSTS
@@ -4894,6 +5083,7 @@ addLayer("a", {
             effect(){
                 let eff = player.rei.roses.plus(1).log10().plus(1);
                 if (hasAchievement('a',85)) eff = player.rei.roses.plus(1).log(7.5).plus(1);
+                if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
                 return eff;
             },
         },
@@ -4964,6 +5154,14 @@ addLayer("a", {
             }
         },
         93: {
+            name: "\"Oh, No. Another BA.\"",
+            done() { return player.etoluna.starPoint.gte(250)&&player.etoluna.moonPoint.gte(250)},
+            tooltip: "Gain both 250 Star Points&Moon Points.<br>Rewards:Unlock their buffs.",
+            effect(){
+                return player.storylayer.points.plus(1);
+            }
+        },
+        94: {
             name: "Suspicious Spots",
             done() { return player.saya.unlocked&&player.etoluna.unlocked},
             tooltip: "Unlock both Gemini & Knives Layers.<br>Rewards:You keep your World Atlas when reset.",
