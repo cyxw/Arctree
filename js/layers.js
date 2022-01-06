@@ -2993,7 +2993,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return hasUpgrade('lab',44)  },
+				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)  },
 			},
             22: {
 				title: "Dark Transformer",
@@ -3028,7 +3028,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return hasUpgrade('lab',44)  },
+				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)   },
 			},
             31: {
 				title: "Doll Transformer",
@@ -3479,6 +3479,7 @@ addLayer("yugamu", {
         for(var i = 0; i < keepmilestone.length; i++)
             {
                 if (!hasMilestone('yugamu',keepmilestone[i])) player.yugamu.milestones.push(keepmilestone[i]);
+                if (keepmilestone[i]=3) player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.DirectioncanChoose());
             }
         }
     },
@@ -3513,6 +3514,7 @@ addLayer("yugamu", {
         if (hasAchievement('a',71)) mt = mt.plus(5);
         if (hasUpgrade('lab',114)) mt = mt.plus(upgradeEffect('lab',114));
         if (hasUpgrade('lab',142)) mt = mt.plus(upgradeEffect('lab',142));
+        if (hasAchievement('a',94)) mt = mt.times(2);
         mt = mt.round();
         return mt;
     },
@@ -3706,7 +3708,8 @@ addLayer("world", {
 
     doReset(resettingLayer){
         let keep=[];
-        if (hasAchievement('a',94)) {keep.push("fixednum");keep.push("restrictionnum");}
+        if (hasAchievement('a',95)) {keep.push("fixednum");keep.push("restrictionnum");}
+        if (hasAchievement('a',94)) keep.push("upgrades");
         if (layers[resettingLayer].row > this.row) {layerDataReset('world', keep);}
     },
 
@@ -3824,7 +3827,7 @@ addLayer("world", {
         ]
         },
         Atlas:{
-            unlocked(){return hasUpgrade("world",31)||hasAchievement('a',94)},
+            unlocked(){return hasUpgrade("world",31)||hasAchievement('a',95)},
             content:[
                 "blank", 
                 "main-display", 
@@ -4480,11 +4483,11 @@ addLayer("storylayer", {
         },
         23:{ title: "Exploration",
         fullDisplay(){
-            return "<b>Exploration</b><br>Explore to the end of the world.<br><br>Cost:64,000,000 Research Points"
+            return "<b>Exploration</b><br>Explore to the end of the world.<br><br>Cost:60,000,000 Research Points"
         },
-        canAfford(){return player.storylayer.storycounter==7&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(64000000)},
+        canAfford(){return player.storylayer.storycounter==7&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(60000000)},
         pay(){
-            player.lab.points = player.lab.points.sub(64000000);
+            player.lab.points = player.lab.points.sub(60000000);
         },
         unlocked() { return (player.storylayer.storycounter==7&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',23)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);showTab('none');},
@@ -4594,7 +4597,7 @@ addLayer("saya",{
                 return Decimal.pow(2,challengeCompletions(this.layer, this.id));
             },
             unlocked() { return player.saya.unlocked},
-            goal() { return new Decimal(1e175).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },//这个过会也要做手脚，看着办
+            goal() { return new Decimal(1e195).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },//这个过会也要做手脚，看着办
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
             rewardDescription() {return "Light Tachyons effect x"+format(challengeEffect(this.layer,this.id))},
@@ -5113,7 +5116,7 @@ addLayer("a", {
         75: {
             name: "Anthemy",
             done() { return player.rei.roses.gte(1000)},
-            tooltip: "Gain 1000 Glowing Roses.<br>Rewards:Entering Zero Sky no longer reset Glowing Roses, but ÷2 instead.",
+            tooltip: "Gain 1000 Glowing Roses.<br>Rewards:Entering Zero Sky halves your GR instead of resetting them.",
         },
         81: {
             name: "Currently, nothing here",
@@ -5162,6 +5165,11 @@ addLayer("a", {
             }
         },
         94: {
+            name: "Being others",
+            done() { return challengeCompletions('saya',11)>=1},
+            tooltip: "Complete Memory Adjustment Challenge once.<br>Rewards:Keep World upgrades when reset, and you gain moves in maze 2x.",
+        },
+        95: {
             name: "Suspicious Spots",
             done() { return player.saya.unlocked&&player.etoluna.unlocked},
             tooltip: "Unlock both Gemini & Knives Layers.<br>Rewards:You keep your World Atlas when reset.",
@@ -5189,7 +5197,7 @@ addLayer("ab", {
 	tooltip: "Autobuyers",
 	clickables: {
 		//rows: 6,
-		//cols: 4,
+		cols: 4,
 		11: {
 			title: "Light Tachyons",
 			display(){
