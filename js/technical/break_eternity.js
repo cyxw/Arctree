@@ -1864,7 +1864,7 @@
       }
       
       //handle all 4 layer 1+ cases individually
-      if (a.sign > 0 && a.mag > 0)
+      if (a.sign >= 0 && a.mag >= 0)
       {
         return FC(a.sign, a.layer+1, a.mag);
       }

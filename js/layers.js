@@ -332,6 +332,8 @@ addLayer("light", {
         if (hasUpgrade('lethe',41)) mult = mult.div(upgradeEffect('lethe',41));
         if (hasMilestone('lab',3)) mult = mult.div(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',83)) mult = mult.div(buyableEffect('lab',21));
+        if (hasUpgrade('storylayer',21)) mult = mult.div(upgradeEffect('storylayer',21));
+        if (hasUpgrade('storylayer',22)) mult = mult.div(player.rei.points.div(2).max(1));
         return mult;
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -413,9 +415,11 @@ addLayer("light", {
         if (hasUpgrade('lethe',13)) eff=eff.times(tmp.kou.effect.pow(1.5));
         if (hasUpgrade('lethe',31)) eff=eff.times(tmp.lethe.effect);
         if (hasUpgrade('lethe',14)) eff=eff.times(upgradeEffect('lethe',14));
+        if (challengeCompletions('saya',11)) eff = eff.times(challengeEffect('saya',11));
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(Math.random());
+        if (inChallenge('saya',11)) eff = eff.pow(layers.saya.challenges[11].debuff());
 
         if (eff.lt(1)) return new Decimal(1);
         return eff;
@@ -495,7 +499,7 @@ addLayer("light", {
         onPurchase(){
             if (hasMilestone('light',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
         },
-        cost() {return new Decimal(30).times(tmp["kou"].costMult42l)},
+        cost() {return new Decimal(28).times(tmp["kou"].costMult42l)},
         },
         31:{ title: "Hardware BUS",
         description: "Light Tachyons effect formula now much better.",
@@ -584,6 +588,8 @@ addLayer("dark", {
         if (hasChallenge("kou",31)) mult = mult.div(player.light.points.sub(player[this.layer].points).div(2).max(1));
         if (hasMilestone('lab',4)) mult = mult.div(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',84)) mult = mult.div(buyableEffect('lab',22));
+        if (hasUpgrade('storylayer',21)) mult = mult.div(upgradeEffect('storylayer',21));
+        if (hasUpgrade('storylayer',22)) mult = mult.div(player.yugamu.points.div(2).max(1));
         return mult;
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -670,9 +676,11 @@ addLayer("dark", {
         if (hasUpgrade('lethe',52)) eff=eff.times(upgradeEffect('lethe',52));
         if (hasUpgrade('lethe',25)) eff=eff.times(upgradeEffect('lethe',25));
         if (hasUpgrade('lethe',55)) eff=eff.times(upgradeEffect('lethe',55));
+        if (challengeCompletions('saya',12)) eff = eff.times(challengeEffect('saya',12));
 
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(Math.random());
+        if (inChallenge('saya',12)) eff = eff.pow(layers.saya.challenges[12].debuff());
 
         if (eff.lt(1)) return new Decimal(1);
         return eff;
@@ -755,7 +763,7 @@ addLayer("dark", {
         onPurchase(){
             if (hasMilestone('dark',0)) player[this.layer].points = player[this.layer].points.plus(tmp[this.layer].upgrades[this.id].cost.times( new Decimal( 0.5+(player.a.achievements.length-6)/10).min(1) ).floor() );
         },
-        cost() {return new Decimal(30).times(tmp["kou"].costMult42d)},
+        cost() {return new Decimal(28).times(tmp["kou"].costMult42d)},
         },
         31:{ title: "Memory Organizing",
         description: "Dark Matters effect formula now much better.",
@@ -838,12 +846,17 @@ addLayer("kou", {
         if (hasUpgrade('lethe',23)) mult = mult.div(upgradeEffect('lethe',23));
         if (hasMilestone('lab',5)) mult = mult.div(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',93)) mult = mult.div(buyableEffect('lab',31));
-        if (hasMilestone('rei',4)) mult = mult.div(player.rei.roses.plus(1).log10().times(2).max(1));
+        if (hasMilestone('rei',4)) mult = mult.div(tmp["rei"].challenges[11].effecttoRF);
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         exp = new Decimal(1); 
         return exp;
+    },
+    directMult(){
+        let dm = new Decimal(1);
+        if (player.saya.unlocked) dm = dm.times(tmp.saya.effect);
+        return dm;
     },
 
     effectBase:1.5,
@@ -951,7 +964,7 @@ addLayer("kou", {
                 "milestones",]
         },
         "Happiness Challenges": {
-            unlocked() { return hasMilestone('kou',7) },
+            unlocked() { return hasMilestone('kou',7)&&(player.saya.activeChallenge==null) },
             buttonStyle() { return {'background-color': '#bd003c'} },
             content: [
                 "main-display",
@@ -1144,12 +1157,17 @@ addLayer("lethe", {
         if (hasChallenge('kou',41)) mult = mult.times(tmp.lethe.buyables[11].effect);
         if (hasMilestone('lab',6)) mult = mult.times(player.lab.power.div(10).max(1));
         if (hasUpgrade('lab',94)) mult = mult.times(buyableEffect('lab',32));
-        if (hasMilestone('rei',4)) mult = mult.times(player.rei.roses.plus(1).log10().times(2).max(1));
+        if (hasMilestone('rei',4)) mult = mult.times(tmp["rei"].challenges[11].effecttoRF);
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         exp = new Decimal(1); 
         return exp;
+    },
+    directMult(){
+        let dm = new Decimal(1);
+        if (player.saya.unlocked) dm = dm.times(tmp.saya.effect);
+        return dm;
     },
     row: 2, // Row the layer is in on the tree (0 is the first row)
     displayRow: 1,
@@ -2325,7 +2343,7 @@ addLayer("lab", {
         },
         43:{ title: "Darkness extract",
         description: "Dark Transformer requirements /1.5.",
-        fullDisplay(){return "<b>Darkness extract</b><br>Dark Transformer requirements ÷1.5.<br><br>Cost: 57,000 Light Tachyons<br>70,000 Research Power"},
+        fullDisplay(){return "<b>Darkness extract</b><br>Dark Transformer requirements ÷1.5.<br><br>Cost: 57,000 Dark Matters<br>70,000 Research Power"},
         unlocked(){return hasUpgrade('lab',41)},
         canAfford(){
             return player.dark.points.gte(57000)&&player.lab.power.gte(70000);
@@ -2462,7 +2480,7 @@ addLayer("lab", {
         },
         81:{ title: "Doll Adjustment",
         description: "Red Dolls Resets Nothing.",
-        fullDisplay(){return "<b>Doll Adjustment</b><br>Red Dolls Resets Nothing.<br><br>Cost: 5e9 Research Power<br>85 Red Dolls"},
+        fullDisplay(){return "<b>Doll Adjustment</b><br>Red Dolls resets nothing.<br><br>Cost: 5e9 Research Power<br>85 Red Dolls"},
         unlocked(){return hasUpgrade('lab',73)&&hasUpgrade('lab',74)},
         canAfford(){
             return player.lab.power.gte(5e9)&&player.kou.points.gte(85);
@@ -2977,7 +2995,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return hasUpgrade('lab',44)  },
+				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)  },
 			},
             22: {
 				title: "Dark Transformer",
@@ -3012,7 +3030,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return hasUpgrade('lab',44)  },
+				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)   },
 			},
             31: {
 				title: "Doll Transformer",
@@ -3187,6 +3205,9 @@ addLayer("rei", {
     type: "static",
     exponent: 1.5,
 
+    autoPrestige(){return (hasMilestone('etoluna',3)&&player.rei.auto)},
+    canBuyMax() { return hasMilestone('etoluna',4) },
+
     update(diff){
         if (inChallenge('rei',11)){
             player.points = player.points.sub(player.points.div(10).times(diff)).max(1e-10);
@@ -3195,7 +3216,22 @@ addLayer("rei", {
             player.dark.points = player.dark.points.sub(player.dark.points.div(10).times(diff)).max(1e-10);
             player.kou.points = player.kou.points.sub(player.kou.points.div(10).times(diff)).max(1e-10);
             player.lethe.points = player.lethe.points.sub(player.lethe.points.div(10).times(diff)).max(1e-10);
-            player.rei.roses = player.rei.roses.plus(tmp["rei"].challenges[11].amt.times(diff));
+        }
+        if (inChallenge('rei',11)||hasMilestone('etoluna',2))player.rei.roses = player.rei.roses.plus(tmp["rei"].challenges[11].amt.times(diff));
+    },
+
+    doReset(resettingLayer){
+        let keep=[];
+        if (hasMilestone('etoluna',1)||hasMilestone('saya',1)) keep.push("milestones");
+        if (hasMilestone('etoluna',3)) keep.push("auto");
+        if (layers[resettingLayer].row > this.row) {layerDataReset('rei', keep);
+        let keepmilestone = [];
+        if (hasMilestone('saya',0)) {keepmilestone = keepmilestone.concat([0]);player[this.layer].total = player[this.layer].total.plus(3)}
+        if (hasMilestone('etoluna',0)) keepmilestone = keepmilestone.concat([0,1,2,3])
+        for(var i = 0; i < keepmilestone.length; i++)
+            {
+                if (!hasMilestone('rei',keepmilestone[i])) player.rei.milestones.push(keepmilestone[i]);
+            }
         }
     },
 
@@ -3239,7 +3275,7 @@ addLayer("rei", {
         },
         4: {
             requirementDescription: "5 best Luminous Churches",
-            done() { return player.rei.best.gte(5)},
+            done() { return player.rei.best.gte(5)&&hasMilestone('rei',3)},
             unlocked(){return hasMilestone('rei',3)},
             effectDescription: "Glowing Roses also boosts Red Dolls and Forgotten Drops gain.",
         },
@@ -3256,6 +3292,7 @@ addLayer("rei", {
                 if (hasUpgrade('lab',113)) mult = mult.times(upgradeEffect('lab',113));
                 if (hasUpgrade('world',33)) mult = mult.times(upgradeEffect('world',33));
                 if (hasUpgrade('lab',141)) mult = mult.times(upgradeEffect('lab',141));
+                if (hasMilestone('etoluna',2)&&!inChallenge('rei',11)) mult = mult.times(player.rei.roses.plus(1).log(20).div(50).max(0.01).min(0.5));
                 return mult;
             },
             amt(){//gain per sec
@@ -3273,10 +3310,14 @@ addLayer("rei", {
                 doReset("lethe",true);
             },
             fullDisplay(){
-                let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +(inChallenge('rei',11)?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
-                if (hasMilestone('rei',4)) show = show + "<br>Red Dolls & Forgotten Drops gain by "+format(player.rei.roses.plus(1).log10().times(2).max(1)) +"x";
+                let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +((inChallenge('rei',11)||hasMilestone('etoluna',2))?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
+                if (hasMilestone('rei',4)) show = show + "<br>Red Dolls & Forgotten Drops gain by "+format(tmp["rei"].challenges[11].effecttoRF) +"x";
                 if (hasUpgrade('storylayer',12)) show += "<br>Fragments generation & Memories gain by "+format(upgradeEffect('storylayer',12))+"x";
+                if (hasUpgrade('storylayer',21)) show += "<br>Light Tachyons&Dark Matters gain by "+format(upgradeEffect('storylayer',21))+"x";
                 return show;
+            },
+            effecttoRF(){
+                return player.rei.roses.plus(1).log10().times(2).max(1).times(hasAchievement('a',93)?tmp.etoluna.starPointeffect:1);
             },
             style(){
                 return {'background-color': "#ffe6f6",color: "#383838", 'border-radius': "25px", height: "400px", width: "400px"}
@@ -3379,6 +3420,9 @@ addLayer("yugamu", {
     },
 
     layerShown() { return hasAchievement('lab',21)&&hasChallenge('kou',51)||player[this.layer].unlocked }, 
+    autoPrestige(){return (hasMilestone('saya',3)&&player.yugamu.auto)},
+    canBuyMax() { return hasMilestone('saya',4) },
+
     milestones:{
         0: {
             requirementDescription: "1 total Flourish Labyrinth",
@@ -3403,13 +3447,13 @@ addLayer("yugamu", {
             done() { return player.yugamu.total.gte(10)},
             unlocked(){return player.yugamu.unlocked},
             onComplete(){
-                player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(1);
+                player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.DirectioncanChoose());
             },
             effectDescription: "Unlock Maze.",
         },
         4: {
             requirementDescription: "5 best Flourish Labyrinths",
-            done() { return player.yugamu.best.gte(5)},
+            done() { return player.yugamu.best.gte(5)&&hasMilestone('yugamu',3)},
             unlocked(){return hasMilestone('yugamu',3)},
             effectDescription: "Your movetime limit now calculated based on total Flourish Labyrinths you gain instead of best Flourish Labyrinths you have.",
         },
@@ -3425,7 +3469,7 @@ addLayer("yugamu", {
     },
 
     update(diff){
-        if (player.yugamu.actionpoint == 0) {
+        if (player.yugamu.actionpoint <= 0) {
             player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.DirectioncanChoose());
             player.yugamu.timesmoved = player.yugamu.timesmoved.plus(1);
             player.yugamu.actionpoint = layers.yugamu.actionpoint();
@@ -3438,6 +3482,21 @@ addLayer("yugamu", {
     }
     },
 
+    doReset(resettingLayer){
+        let keep=[];
+        if (hasMilestone('etoluna',1)||hasMilestone('saya',1)) keep.push("milestones");
+        if (hasMilestone('saya',3)) keep.push("auto");
+        if (layers[resettingLayer].row > this.row) {layerDataReset('yugamu', keep);
+        let keepmilestone = [];
+        if (hasMilestone('etoluna',0)) {keepmilestone = keepmilestone.concat([0]);player[this.layer].total = player[this.layer].total.plus(3)}
+        if (hasMilestone('saya',0)) keepmilestone = keepmilestone.concat([0,1,2,3])
+        for(var i = 0; i < keepmilestone.length; i++)
+            {
+                if (!hasMilestone('yugamu',keepmilestone[i])) player.yugamu.milestones.push(keepmilestone[i]);
+                if (keepmilestone[i]=3) player.yugamu.canclickingclickables = layers.yugamu.canclickingclickables(layers.yugamu.DirectioncanChoose());
+            }
+        }
+    },
 
     //maze releated
     canclickingclickables(n){//use layers
@@ -3469,6 +3528,9 @@ addLayer("yugamu", {
         if (hasAchievement('a',71)) mt = mt.plus(5);
         if (hasUpgrade('lab',114)) mt = mt.plus(upgradeEffect('lab',114));
         if (hasUpgrade('lab',142)) mt = mt.plus(upgradeEffect('lab',142));
+        if (hasMilestone('saya',2)) mt = mt.plus(10);
+
+        if (hasAchievement('a',94)) mt = mt.times(2);
         mt = mt.round();
         return mt;
     },
@@ -3662,6 +3724,8 @@ addLayer("world", {
 
     doReset(resettingLayer){
         let keep=[];
+        if (hasAchievement('a',95)) {keep.push("fixednum");keep.push("restrictionnum");}
+        if (hasAchievement('a',94)) keep.push("upgrades");
         if (layers[resettingLayer].row > this.row) {layerDataReset('world', keep);}
     },
 
@@ -3684,6 +3748,9 @@ addLayer("world", {
     WorldstepHeight(){
         let base = new Decimal(10);
         let step = base.times(player.world.points.plus(1));
+        let sc = new Decimal(100000);
+        if (hasAchievement('a',93)) step = step.div(tmp.etoluna.moonPointeffect);
+        if (step.gte(sc)) step = Decimal.pow(step.sub(sc),3).plus(sc);
         return step;
     },
 
@@ -3738,9 +3805,9 @@ addLayer("world", {
         player.world.Worldtimer = player.world.Worldtimer.plus(tmp["world"].StepgrowthSpeed.times(diff));
         if (player.world.Worldtimer.gte(tmp["world"].WorldstepHeight)) {
 
-            if (player.world.currentStepType<99&&player.world.currentStepType>=87) player.world.fixednum = player.world.fixednum.plus(1);
-            if (player.world.currentStepType>=99) {player.world.restrictionnum = player.world.restrictionnum.plus(1);player.world.restrictChallenge = false;};
-            player[this.layer].points = player[this.layer].points.plus(1);
+            if (player.world.currentStepType<99&&player.world.currentStepType>=87) player.world.fixednum = player.world.fixednum.plus(Decimal.times(1,upgradeEffect('storylayer',24)));
+            if (player.world.currentStepType>=99) {player.world.restrictionnum = player.world.restrictionnum.plus(Decimal.times(1,upgradeEffect('storylayer',24)));player.world.restrictChallenge = false;};
+            player[this.layer].points = player[this.layer].points.plus(Decimal.times(1,upgradeEffect('storylayer',24)));
             player.world.Worldtimer = new Decimal(0);
             if (hasUpgrade('world',31)) player.world.currentStepType = Math.floor(Math.random()*(100));//0~99
             player.world.Worldrandomnum = Math.random();
@@ -3777,7 +3844,7 @@ addLayer("world", {
         ]
         },
         Atlas:{
-            unlocked(){return hasUpgrade("world",31)},
+            unlocked(){return hasUpgrade("world",31)||hasAchievement('a',95)},
             content:[
                 "blank", 
                 "main-display", 
@@ -3983,369 +4050,434 @@ addLayer("world", {
 
 })
 
-addLayer("storylayer", {
-    startData() { return {                  // startData is a function that returns default data for a layer. 
-        unlocked: false,                     // You can add more variables here to add them to your layer.
-        points: new Decimal(0),             // "points" is the internal name for the main resource of the layer.
+
+addLayer("saya",{
+    startData() { return {                  
+        unlocked: false,
+		points: new Decimal(0),
         best:new Decimal(0),
-        storyTimer: 0,
-        currentRequirement:0,
-        currentColor:"#98f898",
-        storycounter: 0,//我寻思我也不会写 1.79e308篇故事//但是没准职能会被points取代//好吧还是有点作用的
+        total:new Decimal(0),
+        unlockOrder:0,            
     }},
 
-    name: "Story", // This is optional, only used in a few places, If absent it just uses the layer id.
-    symbol: "S",
-    color: "#98f898",                       // The color for this layer, which affects many elements.
-    type: "none",//不被重置
-    resource: "Stories",
-    branches: ["world"],
-    row: 0,
+    name: "Everflashing Knives",
+    symbol: "K",
+    color: "#16a951",                       
+    resource: "Everflashing Knives",            
+    row: 4,
     displayRow:0,
-    position:3,
+    position:5,
+    hotkeys: [
+        {key: "k", description: "K: Everflashing Knives", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    branches: ["lethe"],                            
 
-    unlocked()  {return hasUpgrade('lab',151)},
-    layerShown() { return hasUpgrade('lab',151) },
-    shouldNotify(){
-        return player.storylayer.storyTimer<layers.storylayer.currentRequirement()&&player.tab!='storylayer'
+    baseResource: "Forgotten Drops",                 
+    baseAmount() {return player.lethe.points},    
+
+    requires() {
+        let cost = new Decimal(1e220);
+        if (inChallenge('kou',21)) cost=cost.pow(1.05);
+        return cost},
+    
+    type: "static",                         
+    exponent: 1.5,
+    base:2,                            
+
+    gainMult() {//static层                           
+        return new Decimal(1)               
+    },
+    gainExp() {                             
+        return new Decimal(1)
     },
 
-    infoboxes: {
-        story: {
-            title() {
-                if (player.storylayer.storycounter==0) return "LA-1";
-                if (player.storylayer.storycounter==1) return "LA-2";
-                if (player.storylayer.storycounter==2) return "LC-1";
-                if (player.storylayer.storycounter==3) return "LC-2";
-                if (player.storylayer.storycounter==4) return "LA-3";
-                return "Stories";
-            },
-            body() { //insert stories here //这不利于维护
-                if (player.storylayer.storycounter==0){
-                    let story = "Christmas, a rare holiday. You were preparing for the celebration of your lab\'s first anniversary.<br>Just for the first time and just for only one time, you told yourself. There shouldn\'t be other businesses to bother your research.<br>Snowflakes slowly fell down at dusk, matching the christmas trees far away, just lighted out."
-                    if (player[this.layer].storyTimer > 10) {
-                        story += "<br><br>After placing the last batch of decoration, you suddenly felt cold. You made up your decision to buy a cup of coffee at the Starbucks nearby. You had been used to drinking coffee for the year just passed by. After all, you know, inspiration may come at any moment."
-                        story += "<br>\"Director?\" A voice came to interrupt your thinking. You turned around and found out that was the college girl who were studying for a Ph.D. of Philosophy, who loved digging into occultism."
-                        story += "<br>\"Oh, Joana, what\'s up?\" You were used to asking her like this, just as she was used to reporting directly to you just now."
-                    };
-                    if (player[this.layer].storyTimer > 15){
-                        story +="<br>\"Well, the thing is...... Wait a second, I need to organize my words. This idea came to me last night......\" She was hesitating. It wasn't like her, always crisp academic style."
-                        story +="<br>\"OK, take your time.\" You had to wait."
-                        story +="<br>\"......well, almost ready. But what I want to say is little more. It's not convenient here.\" Another unexpected answer."
-                        story +="<br>\"OK, I'm just going to Starbucks for a drink. Why don't you come too?\" You had a kind of premonition. This kind of curiousity may be the same important as the glass fragment you saw at the very beginning, but more fatal."
-                    };
-                    if (player[this.layer].storyTimer > 20){
-                        story +="<br><br>The Starbucks were bustling. You were suprised that you could find two seats here during Christmas holidays."
-                        story +="<br>After the waiter bringing coffee and snacks, you asked: \"What's in your mind?\""
-                        story +="<br>\"Things are that we have been researching the world fragments pointing to, right?\" Joana began her speaking, speed of voice returning to her usual style, \"I know, you were very satisfied to discover the existence of somebody there two month ago, and so did I.\""
-                        story +="<br>\"Yeah, an exciting moment. Unfortunately, we can't publish our findings tp the public yet. There're still lots of things unclear.\""
-                        story +="<br>\"And then we begun sociological study of that world, studying cities, studying religions, from books and cultures, from architectural styles, from ordinary people's lifestyle...... One outcome after another, most are unimportant though, but it's a big sum in the results of our laboratory.\""
-                        story +="<br>\"And that's why I am preparing for our lab's first anniversary. Isn't that a good thing?\" You became more and more confused."
-                    };
-                    if (player[this.layer].storyTimer > 30){
-                        story +="<br>\"That's what I'm going to say. Good is good, but all those involved in the research were dazzled by the sudden results at the beginning. It suddenly occurred to me that the report of the world advance team did not mention the data of the life detector last night.\""
-                        story +="<br>\"Huh? It doesn't matter? We have already seen a society made up by people here, functioning normally.\""
-                        story +="<br>\"That's the point, Director. I retrieved the report of the world advance team this morning, and found out that the life detector had not detect life at all!\" Joana almost shouted out, but she obviously  didn't want to shout in public, \"That means...\""
-                    };
-                    if (player[this.layer].storyTimer > 40) story += "<br>\"Is that mean what we saw in that world is not 'people'?\""
-                    if (player[this.layer].storyTimer >= 45)story += "<br><br>The cup of coffee in your hand was still hot, but you felt it was snowing more heavily outside."
-                    return story;
-                };
+    layerShown() {return hasUpgrade('storylayer',23)},  
+    
+    effect(){
+        let eff = new Decimal(1);
+        eff = eff.plus(player[this.layer].points.div(10));
+        return eff;
+    },
+    effectDescription() {
+        return "which are directly boosting Red Dolls and Forgotten Drops gain by "+format(tmp.saya.effect)+"x"
+    },
 
-                if (player.storylayer.storycounter==1){
-                    let story = "You never expected that you would not sleep for days. At least you slept for a while this day."
-                    story += "<br>As she mentioned, the result of discovering life forms in that world got nowhere. The life detector had no response, as if dead."
-                    story += "<br>By riskily and indirectly asking people there about the concept of life and death, you had to doubt that you found a new form of life---or a new definition of it...... Because they never thought they were dead."
-
-                    if (player[this.layer].storyTimer > 10){
-                        story += "<br><br>While to other researchers, it was just an episode caused by negligence. After all, <i>they</i> think, this was nothing more than another achievement of forgetting to consider, and would not affect the following and existing research."
-                        story += "<br>Both Joana and you thought that was definitely not the case, however. \"Trust intuition.\" you said, \"Ignorance may be fatal.\""
-                    };
-
-                    if (player[this.layer].storyTimer > 15){
-                        story += "<br>\"You don't seem to have a good rest recently, director......I'm here for the report on sociological research. We think we could publish this preliminary report after one month of hard work.\" The researcher in charge of sociological research said with concern---or he didn't listened to what you had said. "
-                        story += "<br>\"So?\" You wondered what this has to do with the report."
-                    };
-
-                    if (player[this.layer].storyTimer > 20){
-                        story += "<br>\"Some of the advance team went into the church not long ago. The Archbishop recognized them coming from another world at once, so our team members asked lots of questions about that world. I have to say that It have gained a lot......It's just a pity that we haven't won the chance to meet the High Priest in person.\" He spoke in cadence, as if he were telling a story. Sociologists like to tell stories, no matter they're true or false."
-                    };
-
-                    if (player[this.layer].storyTimer > 30){
-                        story += "<br><br>\"But I heard from the team members that the High Priest will preside over sacrifices and ceremonies personally , and that are not very rare.\" You wondered still."
-                    };
-                    if (player[this.layer].storyTimer > 35){
-                        story += "<br>\"How can you compare that with meeting her in person? It's once in a lifetime get an opportunity to ask questions directly to god! Just like the God allows you to phone him.\" The more he said, the face of him beamed with more joyful. You didn't know what he was aspiring for. He continued, \"Bad luck though, a ceremony had just ended when the team went into the city, which won't happen again for a while. So in fact we don't know the appearance of the High Priest.\""
-                    };
-                    if (player[this.layer].storyTimer > 40){
-                        story += "<br>\"In other words, do you think your report is incomplete before you meet the 'High Priest' in person?\" Sociologists really like to tell stories, you muttered in your heart."
-                        story += "<br>\"Yes, otherwise our report would always be 'preliminary'.\" He didn't seem to get what you really meant."
-                    }
-                    return story;
-                };
-
-                if (player.storylayer.storycounter==2){
-                    let story = "She woke up again from the room at the top of the church. A new day began, one more time.";
-                    story += "<br>But was there any difference between the new day and the old day? Except occasional few days, the Archbishop came to remind about the ceremony---But so what, it was just a part of the eternity. Time is the product of eternity, flowing like water, and herself is the eternity."
-                    story += "<br>She simply managed herself in bed. She didn't know why she did it every day---Why needed to know? She didn't need to know the troubles of the world, she didn't need to know the feelings of mortals---She didn't even need to know yesterday and tomorrow."
-                    
-                    if (player[this.layer].storyTimer > 10){
-                        story +="<br><br>There was a steady knock on the door. It was the Archbishop. \"Please come in.\" She said, as always."
-                    }
-
-                    if (player[this.layer].storyTimer > 12){
-                        story += "<br>The Archbishop pushed the door, following him was a stranger."
-                    }
-
-                    if (player[this.layer].storyTimer > 15){
-                        story += "<br>\"My High Priest, here's a non-native coming and requesting an interview in person. He is not resident from Pure White City, even......\" The Archbishop paused, \"even not from our world.\""
-                    }
-
-                    if (player[this.layer].storyTimer > 20){
-                        story += "<br>\"Ah, that's not a big deal. He must be here, coming to see me to understand the world. No need to doubt, it doesn't surprise me.\" She replyed the Archbishop in her typical tone still---A solemn but not superior tone, \"You can do your own business first.\""
-                        story += "<br>\"Yes. I'll back after your talk is over.\" And then, the Archbishop went out."
-                        story += "<br><br>There were only her and the non-native in the room."
-                    }
-
-                    if (player[this.layer].storyTimer > 25){
-                        story += "<br>A little surprise to her, the stranger spoke first before her:"
-                        story += "<br>\"Sorry to bother you, High Priest, but we know few about this world.\" He was not deterred by majesty. Indeed, not a man in this world."
-                    }
-
-                    if (player[this.layer].storyTimer > 30){
-                        story += "<br>\"I will answer what I could answer. Just ask.\""
-                        story += "<br>The non-native took a board out of his clothes quickly. It looked like a clipboard. He must be prepared in advance."
-                        story += "<br>He asked a lot about this world, of course including questions about the Pure White City. She answered, one by one---Naturally, she had known these things from the beginning of her existence. As for when she began to exist in this world, she didn't know."
-                    }
-
-                    if (player[this.layer].storyTimer > 40){
-                        story +="<br><br>\"OK, I really benefit a lot from the conversation. Before I leave, I'd like to ask one last question.\" The stranger put back his clipboard, \"Is the position of the High Priest......eternal? If not, how does it designate a successor?\""
-                        story +="<br>\"The position of the High Priest......\" She paused."
-                    }
-                    
-                    if (player[this.layer].storyTimer > 50){
-                        story +="<br>Was existence eternal? It was certain that she existed since the beginning of the world. The High Priest build the Pure White City, as the extension of her power. It was she who makd the people live and work in peace and contentment, and she who bathed the world in light and glory......"
-                    }
-
-                    if (player[this.layer].storyTimer > 55){
-                        story += "<br>......?"
-                    }
-
-                    if (player[this.layer].storyTimer > 60){
-                        story += "<br>\"High Priest?\" The non-native asked again."
-                        story += "<br>\"Ah, yes. The position of the High Priest is eternal.\" At this moment did she recover from thinking."
-                        story += "<br>\"Alright, express my thanks again. It's a honour to talk to you.\" The stranger got up and saluted to leave. The Archbishop went in, taking him out of the door."
-                    }
-
-                    if (player[this.layer].storyTimer > 65){
-                        story += "<br><br>Now only herself alone, in her room high above. The sun had hung high in the gray sky."
-                    }
-
-                    if (player[this.layer].storyTimer > 70){
-                        story += "<br>\"Is that......true?\""
-                    }
-
-                    return story;
-                };
-
-                if (player.storylayer.storycounter==3){
-                    let story = "She woke up again from the room at the top of the church. A new day began, one more time.";
-
-                    if (player[this.layer].storyTimer > 10) story += "<br>One more time."
-                    if (player[this.layer].storyTimer > 13) story += "<br>She was still thinking about the impact of the questions had asked by that non-native yesterday."
-                    if (player[this.layer].storyTimer > 16) story += "<br>Wait, \"<i>Yesterday</i>\"?"
-
-                    if (player[this.layer].storyTimer > 20){
-                        story += "<br><br>She felt that she knew the meaning of the word \"Yesterday\" vaguely. She was just not using that word for a long time."
-                        story += "<br>\"Yesterday\" meant the day had already passed. The concept opposite to it was \"Tomorrow\", the day hadn't come yet."
-                        story += "<br>Why could she remember \"Yesterday\"? It seemed to be......different from her and eternity."
-                    }
-
-                    if (player[this.layer].storyTimer > 30){
-                        story += "<br><br>So, what's the \"Yesterday\" of a \"Yesterday\"? It must be a day, in which lots of things could happen. What's the \"Tomorrow\" of a \"Tomorrow\"? It is a day too, in which also could happen lots of things."
-                        story += "<br>Every \"Day\" could be remembered, just like she remembered \"Yesterday\"."
-                        story += "<br>The eternity is not eternal anymore. More colours appeared in a monotonous colour."
-                    }
-
-                    if (player[this.layer].storyTimer > 40){
-                        story += "<br><br>She was in a blur of colours, surrounded by nothing else. Only colours---Dazzling, blurred colours---Constantly changing, filling the space in front of her."
-                        story += "<br>She wanted to use her divine power to break the illusion, but she couldn't."
-                    }
-
-                    if (player[this.layer].storyTimer > 45){
-                        story += "<br>The light of colours became more dazzling. Different colours of light blended together to form the ultimate white, oppressing her."
-                        story += "<br>She wanted to shout, she wanted to call out, but she was forced to be silent, as if a hand had caught her throat."
-                        story += "<br>She could only stay where she was and watch the white light oppress herself and everything."
-                    }
-
-                    if (player[this.layer].storyTimer > 50) story += "<br><br>......"
-                    if (player[this.layer].storyTimer > 60) story += "<br><br>......"
-
-                    if (player[this.layer].storyTimer > 70) story += "<br><br>She woke up again from the room at the top of the church. One more time."
-                    if (player[this.layer].storyTimer > 75) story += "<br>She suddenly realized that this was definitely not the first time she had experienced this feeling."
-
-                    return story;
-                };
-
-                if (player.storylayer.storycounter==4){
-                    let story = "Story in Plan, haven't been written/translated.";
-                    return story;
-                };
-
-                if (player.storylayer.storycounter>=player.storylayer.points.toNumber()){
-                    return "You have read all exist stories!"
-                }
-                
-            },
-        unlocked(){return hasUpgrade('lab',151)},
-        titleStyle(){return {'background-color':layers.storylayer.currentColor()} },
-        bodyStyle: {'text-align':'left'},
+    tabFormat: {
+        "Milestones": {
+            content: [
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                "milestones",]
+        },
+        "Memories Adjustment": {
+            unlocked() { return player.saya.unlocked },
+            content: [
+                "main-display",
+                "blank",
+                "prestige-button",
+                "blank",
+                "resource-display",
+                "blank","challenges"]
         },
     },
 
-    update(diff){
-        if (!player[this.layer].unlocked) player[this.layer].storyTimer = 0;
-        else if(player[this.layer].storyTimer<layers.storylayer.currentRequirement()&&player.tab=='storylayer') player[this.layer].storyTimer += diff;
+    milestones:{
+        0: {
+            requirementDescription: "1 Everflashing Knife",
+            done() { return player.saya.best.gte(1)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "Keep All but last milestones of FL layer & 1st milestone of LC layer.<br>And you are considered have made a total of 3 Luminous Churches.",
+        },
+        1: {
+            requirementDescription: "2 Everflashing Knives",
+            done() { return player.saya.best.gte(2)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "Keep the rest of LC&FL milestones.",
+        },
+        2: {
+            requirementDescription: "3 Everflashing Knives",
+            done() { return player.saya.best.gte(3)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "Give 10 more base move times in Maze.",
+        },
+        3: {
+            requirementDescription: "5 Everflashing Knives",
+            done() { return player.saya.best.gte(5)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "Unlock Flourish Labyrinths Autobuyer.",
+        },
+        4: {
+            requirementDescription: "10 Everflashing Knives",
+            done() { return player.saya.best.gte(10)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "You can buy max Flourish Labyrinths.",
+        },
     },
 
-    doReset(resettingLayer){},
-
-    currentRequirement(){//use layers
-        let req = 0;
-        //在这里插入每个故事走到头要多长时间
-        if (player.storylayer.storycounter==0) req = 60;
-        if (player.storylayer.storycounter==1) req = 60;
-        if (player.storylayer.storycounter==2) req = 75;
-        if (player.storylayer.storycounter==3) req = 90;
-        if (player.storylayer.storycounter==4) req = 60;
-        return req;
+    challenges:{
+        cols:2,
+        11:{
+            name: "Enlighting Memories",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "Light Tachyons effect ^"+format(layers[this.layer].challenges[this.id].debuff());
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 0.5-(challengeCompletions(this.layer, this.id)*0.05);
+            },
+            rewardEffect(){
+                return Decimal.pow(2,challengeCompletions(this.layer, this.id));
+            },
+            unlocked() { return player.saya.unlocked},
+            goal() { return new Decimal(1e195).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },
+            currencyDisplayName: "Fragments",
+            currencyInternalName: "points",
+            rewardDescription() {return "Light Tachyons effect x"+format(challengeEffect(this.layer,this.id))},
+        },
+        12:{
+            name: "Insane Moment",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "Dark Matters effect ^"+format(layers[this.layer].challenges[this.id].debuff());
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 0.5-(challengeCompletions(this.layer, this.id)*0.05);
+            },
+            rewardEffect(){
+                return Decimal.pow(3,challengeCompletions(this.layer, this.id));
+            },
+            unlocked() { return player[this.layer].best.gte(2)},
+            goal() { return new Decimal(1e195).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },
+            currencyDisplayName: "Fragments",
+            currencyInternalName: "points",
+            rewardDescription() {return "Dark Matters effect x"+format(challengeEffect(this.layer,this.id))},
+        },
+        21:{
+            name: "Searching For Essence",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "Fragment generation ^^"+format(layers[this.layer].challenges[this.id].debuff());
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 0.9-(challengeCompletions(this.layer, this.id)*0.1);
+            },
+            rewardEffect(){
+                return new Decimal(1).plus(0.01*challengeCompletions(this.layer, this.id));
+            },
+            unlocked() { return player[this.layer].best.gte(5)},
+            goal() { return new Decimal(1e220).times(Decimal.pow(1e10,challengeCompletions(this.layer, this.id))) },
+            currencyDisplayName: "Fragments",
+            currencyInternalName: "points",
+            rewardDescription() {return "Fragment generation ^"+format(challengeEffect(this.layer,this.id))},
+        },
     },
 
-    currentColor(){
-        let color = "#98f898";
-        if (player.storylayer.storycounter==0) color = "#00bdf9";
-        if (player.storylayer.storycounter==1) color = "#00bdf9";
-        if (player.storylayer.storycounter==2) color = "#ffe6f6";
-        if (player.storylayer.storycounter==3) color = "#ffe6f6";
-        if (player.storylayer.storycounter==4) color = "#00bdf9";
-        return color;
-    },
+})
 
-    tabFormat: [
-        "blank", 
-        ["infobox","story",{'border-color':function(){return layers.storylayer.currentColor()}}],
-        "clickables",
-        ["bar","storybar"],
-        "upgrades",
+addLayer("etoluna",{
+    startData() { return {                  
+        unlocked: false,
+		points: new Decimal(0),
+        best:new Decimal(0),
+        total:new Decimal(0),
+        starPoint: new Decimal(0),
+		moonPoint: new Decimal(0),
+        allotted: 0.5,
+        unlockOrder:0,            
+    }},
+
+    name: "Gemini Bounds",
+    symbol: "G",
+    color: "#d7a9f4",                       
+    resource: "Gemini Bounds",            
+    row: 4,
+    displayRow:0,
+    position:1,
+    hotkeys: [
+        {key: "g", description: "G: Reset for Gemini Bounds", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
+    branches: ["kou"],                            
+
+    baseResource: "World Steps",                 
+    baseAmount() {return player.world.points},    
+
+    requires: new Decimal(6000),            
+                                            
+    
+    type: "normal",                         
+    exponent: 0.5,                      
+
+    gainMult() {                           
+        return new Decimal(1)               
+    },
+    gainExp() {                             
+        return new Decimal(1)
+    },
+
+    effect(){
+        let eff = player[this.layer].points.div(2).plus(1);
+        return eff;
+    },
+    effectDescription(){
+        return "which are giving you the base speed of gaining Star Points/Moon Points of "+format(tmp.etoluna.effect)+ "/s"
+    },
+
+    layerShown() {return hasUpgrade('storylayer',23)},  
+
+    //Tower related
+    gainstarPoints(){
+        let gain = tmp.etoluna.effect.times(Decimal.pow(10,(player.etoluna.allotted*2-1)));
+        //if (player.etoluna.allotted<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        if (hasUpgrade('storylayer',25)) gain = gain.times(player.etoluna.moonPoint.div(player.etoluna.starPoint.max(1)).max(1));
+
+        return gain;
+    },
+
+    starPointeffect(){//tmp
+        let eff = player.etoluna.starPoint.plus(1).log(7.5).max(1);
+        return eff;
+    },
+
+    gainmoonPoints(){
+        let gain = tmp.etoluna.effect.times(Decimal.pow(10,((1-player.etoluna.allotted)*2-1)));
+        //if ((1-player.etoluna.allotted)<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        if (hasUpgrade('storylayer',25)) gain = gain.times(player.etoluna.starPoint.div(player.etoluna.moonPoint.max(1)).max(1));
+        return gain;
+    },
+
+    moonPointeffect(){//tmp
+        let eff = player.etoluna.starPoint.plus(1).log(5).max(0).div(50).plus(1);
+        return eff;
+    },
+
+    update(diff){
+        if (player.etoluna.unlocked){
+            player.etoluna.moonPoint = player.etoluna.moonPoint.plus(tmp["etoluna"].gainmoonPoints.times(diff));
+            player.etoluna.starPoint = player.etoluna.starPoint.plus(tmp["etoluna"].gainstarPoints.times(diff));
+        }
+    },
+
+    tabFormat: {
+        "Milestones": {
+            content: [
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                "milestones",]
+        },
+        "Gemini Tower":{
+            unlocked() {return player.etoluna.unlocked},
+            content:[
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                ["row",[
+                    ["bar","etoBar"],
+                    ["column",[
+                       ["blank","400px"],
+                       ["clickable",22],
+                       ["clickable",12],
+                    ]],
+                    ["blank",["50px","50px"]],
+                    ["clickable",31],
+                    ["blank",["50px","50px"]],
+                    ["column",[
+                        ["blank","400px"],
+                        ["clickable",21],
+                        ["clickable",11],
+                    ]],
+                    ["bar","lunaBar"],
+                ]],
+                "blank",
+                ["row",[
+                    ["column", [
+                        ["display-text",function() {return "You have <h3 style='color: #bddfff;'>"+formatWhole(player.etoluna.starPoint)+"</h3> Star Points."},{}],
+                        "blank",
+                        ["display-text",function() {return hasAchievement('a',93)?("Which boosts All Glowing Roses effect by <h3>"+format(tmp.etoluna.starPointeffect)+"</h3>x"):""},{}],
+                        "blank",
+                    ],{width:"50%"}],
+                    ["column", [
+                        ["display-text",function() {return "You have <h3 style='color: #d7a9f4;'>"+formatWhole(player.etoluna.moonPoint)+"</h3> Moon Points."},{}],
+                        "blank",
+                        ["display-text",function() {return hasAchievement('a',93)?("Which ÷<h3>"+format(tmp.etoluna.moonPointeffect)+"</h3> World Step Height."):""},{}],
+                        "blank",
+                    ],{width:"50%"}],]
+                    ,{}],
+            ]
+        }
+    },
+    
+    milestones:{
+        0: {
+            requirementDescription: "1 Gemini Bound",
+            done() { return player.etoluna.best.gte(1)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "Keep All but last milestones of LC layer & 1st milestone of FL layer.<br>And you are considered have made a total of 3 Flourish Labyrinths.",
+        },
+        1: {
+            requirementDescription: "2 Gemini Bounds",
+            done() { return player.etoluna.best.gte(2)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "Keep the rest of LC&FL milestones.",
+        },
+        2: {
+            requirementDescription: "3 Gemini Bounds",
+            done() { return player.etoluna.best.gte(3)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "You can gain Glowing Roses outside Zero Sky at a much reduced rate.",
+        },
+        3: {
+            requirementDescription: "5 Gemini Bounds",
+            done() { return player.etoluna.best.gte(5)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "Unlock Luminous Churches Autobuyer.",
+        },
+        4: {
+            requirementDescription: "10 Gemini Bounds",
+            done() { return player.etoluna.best.gte(10)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "You can buy max Luminous Churches.",
+        },
+    },
 
     bars: {
-        storybar: {
-            direction: RIGHT,
-            width: 500,
-            height: 10,
-            progress() { return player.storylayer.storyTimer/(layers.storylayer.currentRequirement()) },
+        etoBar: {
+            direction: UP,
+            width: 25,
+            height: 500,
+            progress() { return Math.min(player.etoluna.allotted,0.99999) },
             barcolor() {
-                return layers.storylayer.currentColor();
+                return "#bddfff"
             },
-            fillStyle(){return {'background-color':layers[this.layer].bars.storybar.barcolor()}},
+            fillStyle(){return {'background-color':"#bddfff"}},
+        },
+        lunaBar: {
+            direction: UP,
+            width: 25,
+            height: 500,
+            progress() { return Math.min(1-layers.etoluna.bars.etoBar.progress(),0.99999) },
+            barcolor() {
+                return "#d7a9f4"
+            },
+            fillStyle(){return {'background-color':"#d7a9f4"}},
         },
     },
 
     clickables: {
-        rows: 1,
+        rows: 3,
         cols: 2,
         11: {
-            title: "",
-            display: "←",
-            unlocked() { return player.storylayer.unlocked },
-            canClick() { return player.storylayer.storycounter>0 },
-            onClick() { 
-                player.storylayer.storycounter -= 1;
-                player.storylayer.storyTimer  = layers.storylayer.currentRequirement();
-            },
-            //style: {width: "50px", height: "50px"},
+            title: "L+",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted>0 },
+            onClick() { player.etoluna.allotted = Math.max(player.etoluna.allotted-0.05, 0) },
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "#d7a9f4"},
         },
         12: {
-            title: "",
-            display: "→",
-            unlocked() { return player.storylayer.unlocked },
-            canClick() { return player.storylayer.points.gt(player.storylayer.storycounter) },
-            onClick() { 
-                player.storylayer.storycounter += 1;
-                if(player.storylayer.points.eq(player.storylayer.storycounter))  player.storylayer.storyTimer = 0;
-                else player.storylayer.storyTimer  = layers.storylayer.currentRequirement();
-            },
-            //style: {width: "50px", height: "50px"},
+            title: "E+",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted<1 },
+            onClick() { player.etoluna.allotted = Math.min(player.etoluna.allotted+0.05, 1) },
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "#bddfff"},
+        },
+        21: {
+            title: "Lm",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted>0 },
+            onClick() { player.etoluna.allotted = 0; },
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "#d7a9f4"},
+        },
+        22: {
+            title: "Em",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted<1 },
+            onClick() { player.etoluna.allotted = 1;},
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "#bddfff"},
+        },
+        31: {
+            title: "C",
+            unlocked() { return player.etoluna.unlocked },
+            canClick() { return player.etoluna.allotted!=.5 },
+            onClick() { player.etoluna.allotted = .5 },
+            style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "yellow"},
         },
     },
 
-    upgrades: {
-        11:{ title: "Restart World Research",
-        fullDisplay(){
-            return "<b>Restart World Research</b><br>The speed of World Step gain in Restriction Challenge now <b>based on</b> your Fragments instead of <b>determinded by</b> your Fragments.<br><br>Cost:750 World Steps"
-        },
-        canAfford(){return player.storylayer.storycounter==0&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.world.points.gte(750)},
-        pay(){
-            player.world.points = player.world.points.sub(750);
-        },
-        unlocked() { return (player.storylayer.storycounter==0&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',11)},
-        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
-        },
-        12:{ title: "Bouquet",
-        fullDisplay(){
-            return "<b>Bouquet</b><br>Glowing Roses now boosts your Fragments generation and Memories gain.<br><br>Cost:2,500 Glowing Roses"
-        },
-        canAfford(){return player.storylayer.storycounter==1&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.rei.roses.gte(2500)},
-        pay(){
-            player.rei.roses = player.rei.roses.sub(2500);
-        },
-        unlocked() { return (player.storylayer.storycounter==1&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',12)},
-        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
-        effect(){
-            let eff = new Decimal(1);
-            if (hasUpgrade('storylayer',12)) eff = player.rei.roses.plus(1).log(8).times(2);
-            return eff;
-        },
-        },
-        13:{ title: "World-View Adjustment",
-        fullDisplay(){
-            return "<b>World-View Adjustment</b><br>The speed of Random&Fixed World Steps will be set to max.<br><br>Cost:900 World Steps"
-        },
-        canAfford(){return player.storylayer.storycounter==2&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.world.points.gte(900)},
-        pay(){
-            player.world.points = player.world.points.sub(900);
-        },
-        unlocked() { return (player.storylayer.storycounter==2&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',13)},
-        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
-        },
-        14:{ title: "Spiral Steps",
-        fullDisplay(){
-            return "<b>Spiral Steps</b><br>You Endure Restriction Challenge automatically and you no longer endure its negative buff.<br><br>Cost:900 World Steps"
-        },
-        canAfford(){return player.storylayer.storycounter==3&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.world.points.gte(900)},
-        pay(){
-            player.world.points = player.world.points.sub(900);
-        },
-        unlocked() { return (player.storylayer.storycounter==3&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',14)},
-        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
-        },
-        15:{ title: "Wide Known",
-        fullDisplay(){
-            return "<b>Wide Known</b><br>You can choose all four directions at one move, and move in maze is now automated.<br><br>Cost:9 Flourish Labyrinths<br>Req:Achievement 'Higher And Higher'"
-        },
-        canAfford(){return player.storylayer.storycounter==4&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.yugamu.points.gte(9)&&hasAchievement('a',91)},
-        pay(){
-            player.yugamu.points = player.yugamu.points.sub(9);
-        },
-        unlocked() { return (player.storylayer.storycounter==4&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',15)},
-        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
-        },
-    },
 })
 
 //GHOSTS
 
+addNode("ghost0-2", {
+    name: "ghost0-2", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "G0", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 2, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    canclick(){return false},
+    row: 0,
+    color: "#000000",
+    layerShown() {return "ghost";}
+})
+addNode("ghost0-4", {
+    name: "ghost0-4", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "G0", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    canclick(){return false},
+    row: 0,
+    color: "#000000",
+    layerShown() {return "ghost";}
+})
 addNode("ghost1", {
     name: "ghost1", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "G1", // This appears on the layer's node. Default is the id with the first letter capitalized
@@ -4595,6 +4727,7 @@ addLayer("a", {
             effect(){
                 let eff = player.rei.roses.plus(1).log10().plus(1);
                 if (hasAchievement('a',85)) eff = player.rei.roses.plus(1).log(7.5).plus(1);
+                if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
                 return eff;
             },
         },
@@ -4624,7 +4757,7 @@ addLayer("a", {
         75: {
             name: "Anthemy",
             done() { return player.rei.roses.gte(1000)},
-            tooltip: "Gain 1000 Glowing Roses.<br>Rewards:Entering Zero Sky no longer reset Glowing Roses, but ÷2 instead.",
+            tooltip: "Gain 1000 Glowing Roses.<br>Rewards:Entering Zero Sky halves your GR instead of resetting them.",
         },
         81: {
             name: "Currently, nothing here",
@@ -4643,7 +4776,7 @@ addLayer("a", {
         },
         84: {
             name: "There is No Limit!",
-            done() { return player.mem.points.gte("1.79e308")},
+            done() { return player.mem.points.gte(Number.MAX_VALUE)},
             tooltip: "Gain 1.79e308 Memories.",
         },
         85: {
@@ -4660,6 +4793,27 @@ addLayer("a", {
             name: "Building Group",
             done() { return player.rei.points.gte(10)&&player.yugamu.points.gte(10)},
             tooltip: "Gain both 10 Luminous Churches&Flourish Labyrinths.<br>Rewards:Stories you have gone through boost Fragments generation.",
+            effect(){
+                return player.storylayer.points.plus(1);
+            }
+        },
+        93: {
+            name: "\"Oh, No. Another BA.\"",
+            done() { return player.etoluna.starPoint.gte(250)&&player.etoluna.moonPoint.gte(250)},
+            tooltip: "Gain both 250 Star Points&Moon Points.<br>Rewards:Unlock their buffs.",
+            effect(){
+                return player.storylayer.points.plus(1);
+            }
+        },
+        94: {
+            name: "Being others",
+            done() { return challengeCompletions('saya',11)>=1},
+            tooltip: "Complete Memory Adjustment Challenge once.<br>Rewards:Keep World upgrades when reset, and you gain moves in maze 2x.",
+        },
+        95: {
+            name: "Suspicious Spots",
+            done() { return player.saya.unlocked&&player.etoluna.unlocked},
+            tooltip: "Unlock both Gemini & Knives Layers.<br>Rewards:You keep your World Atlas when reset.",
             effect(){
                 return player.storylayer.points.plus(1);
             }
@@ -4684,7 +4838,7 @@ addLayer("ab", {
 	tooltip: "Autobuyers",
 	clickables: {
 		//rows: 6,
-		//cols: 4,
+		cols: 4,
 		11: {
 			title: "Light Tachyons",
 			display(){
@@ -4725,5 +4879,25 @@ addLayer("ab", {
 			onClick() { player.lab.generatorauto = !player.lab.generatorauto },
 			style: {"background-color"() { return player.lab.generatorauto?"#00bdf9":"#666666" }},
 		    }, 
+        21: {
+			title: "Luminous Churches",
+			display(){
+				return (hasMilestone('etoluna',3))?(player.rei.auto?"On":"Off"):"Locked"
+			},
+			unlocked() { return tmp["rei"].layerShown&&player.etoluna.unlocked },
+			canClick() { return hasMilestone('etoluna',3) },
+			onClick() { player.rei.auto = !player.rei.auto },
+			style: {"background-color"() { return player.rei.auto?"#ffe6f6":"#666666" }},
+		    },
+        22: {
+			title: "Flourish Labyrinths",
+			display(){
+				return (hasMilestone('saya',3))?(player.yugamu.auto?"On":"Off"):"Locked"
+			},
+			unlocked() { return tmp["yugamu"].layerShown&&player.saya.unlocked },
+			canClick() { return hasMilestone('saya',3) },
+			onClick() { player.yugamu.auto = !player.yugamu.auto },
+			style: {"background-color"() { return player.yugamu.auto?"#716f5e":"#666666" }},
+		    },
 	},
 })
