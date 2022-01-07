@@ -504,7 +504,7 @@ addLayer("storylayer", {
         },
         24:{ title: "Comm-Channel",
         fullDisplay(){
-            return "<b>Comm-Channel</b><br>Gain 10 World Steps once you can gain it.<br><br>Req:Unlock Both G&K layers"
+            return "<b>Comm-Channel</b><br>Gain 10 World Steps in a bulk.<br><br>Req:Unlock Both G&K layers"
         },
         canAfford(){return player.storylayer.storycounter==8&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.etoluna.unlocked&&player.saya.unlocked},
         pay(){

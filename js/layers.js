@@ -26,6 +26,7 @@ addLayer("mem", {
         if (hasUpgrade('lethe',22)) sc = sc.times(player.light.points.div(20).max(1));
         if (hasChallenge('kou',22)) sc = sc.times(100).times(tmp.kou.effect.max(1));
         if (hasAchievement('a',44)) sc = sc.times(Math.sqrt(player.mem.resetTime+1));
+        if (challengeCompletions('saya',22)) sc=sc.times(challengeEffect('saya',22));
 
         return sc;
     },
@@ -56,6 +57,8 @@ addLayer("mem", {
         if (inChallenge("kou",11)) mult = mult.pow(0.75);
         if (inChallenge('rei',11)) mult = mult.pow(0.5);
         if (player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) mult = mult.pow(0.9);
+
+        if (inChallenge('saya',22)) mult = mult.tetrate(layers.saya.challenges[22].debuff())
 
         return mult
     },
@@ -861,6 +864,10 @@ addLayer("kou", {
 
     effectBase:1.5,
 
+    update(diff){
+        if (!layers.kou.tabFormat["Happiness Challenges"].unlocked() && player.subtabs.kou.mainTabs == "Happiness Challenges")player.subtabs.kou.mainTabs = "Milestones"
+    },
+
     effect(){
         if (player[this.layer].points.lte(0)) return new Decimal(1);
         let eff=new Decimal(player[this.layer].points.times(0.1).plus(1));
@@ -868,10 +875,12 @@ addLayer("kou", {
         if (hasUpgrade('lethe',15)) eff=eff.times(upgradeEffect('lethe',15));
         if (hasUpgrade('lethe',12)) eff=eff.times(upgradeEffect('lethe',12));
         if (hasUpgrade('lethe',45)) eff=eff.times(upgradeEffect('lethe',45));
+        if (challengeCompletions('saya',31)) eff=eff.times(challengeEffect('saya',31));
         
         //pow
         if (inChallenge('kou',32)) eff=eff.pow(1+Math.random()*0.1);
         if (hasChallenge('kou',32)) eff=eff.pow(1+((!hasMilestone('rei',2))?(Math.random()*0.05):0.05));
+        if (inChallenge('saya',31)) eff=eff.pow(layers.saya.challenges[31].debuff())
 
         //↓这个永远放在最后
         if (hasChallenge('kou',22)) eff=eff.plus((!hasMilestone('rei',2))?(Math.random()*0.5):0.5);
@@ -1035,6 +1044,12 @@ addLayer("kou", {
             challengeDescription: "Fragments gain^1.05, but L&D increases each other's requirement",
             unlocked() { return hasChallenge('kou',12)},
             goal() { return new Decimal(5e54) },
+            onExit(){
+                player.points = new Decimal(0);
+                doReset("lethe",true);
+                player.lethe.points = new Decimal(0);
+                player.lethe.buyables[11] = new Decimal(0);
+            },
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
             rewardDescription: "Fragments gain^1.025",
@@ -3207,6 +3222,7 @@ addLayer("rei", {
 
     autoPrestige(){return (hasMilestone('etoluna',3)&&player.rei.auto)},
     canBuyMax() { return hasMilestone('etoluna',4) },
+    resetsNothing(){return hasMilestone('etoluna',5)},
 
     update(diff){
         if (inChallenge('rei',11)){
@@ -3422,6 +3438,7 @@ addLayer("yugamu", {
     layerShown() { return hasAchievement('lab',21)&&hasChallenge('kou',51)||player[this.layer].unlocked }, 
     autoPrestige(){return (hasMilestone('saya',3)&&player.yugamu.auto)},
     canBuyMax() { return hasMilestone('saya',4) },
+    resetsNothing(){return hasMilestone('saya',5)},
 
     milestones:{
         0: {
@@ -3724,9 +3741,12 @@ addLayer("world", {
 
     doReset(resettingLayer){
         let keep=[];
+        let temppoints = player[this.layer].points;
         if (hasAchievement('a',95)) {keep.push("fixednum");keep.push("restrictionnum");}
         if (hasAchievement('a',94)) keep.push("upgrades");
-        if (layers[resettingLayer].row > this.row) {layerDataReset('world', keep);}
+        if (layers[resettingLayer].row > this.row) {layerDataReset('world', keep);
+        if (hasMilestone('saya',6)) player[this.layer].points = temppoints.div(2);
+    }
     },
 
     bars: {
@@ -3749,6 +3769,7 @@ addLayer("world", {
         let base = new Decimal(10);
         let step = base.times(player.world.points.plus(1));
         let sc = new Decimal(100000);
+        if (hasUpgrade('etoluna',12)) sc = sc.times(tmp.etoluna.moonPointeffect)
         if (hasAchievement('a',93)) step = step.div(tmp.etoluna.moonPointeffect);
         if (step.gte(sc)) step = Decimal.pow(step.sub(sc),3).plus(sc);
         return step;
@@ -3769,6 +3790,8 @@ addLayer("world", {
         if (hasAchievement('a',74)) speed = speed.times(achievementEffect('a',74));
         if (hasUpgrade('lab',123)) speed = speed.times(upgradeEffect('lab',123));
         if (hasUpgrade('lab',124)) speed = speed.times(upgradeEffect('lab',124));
+        if (hasMilestone('saya',7)) speed = speed.times(tmp.saya.effect);
+        if (hasUpgrade('etoluna',11)) speed = speed.times(upgradeEffect('etoluna',11));
         if (player.world.currentStepType<87&&player.world.currentStepType>=75) {
             if (hasUpgrade('storylayer',13)) speed = speed.times(2);
             else speed = speed.times(1+player.world.Worldrandomnum);
@@ -3805,9 +3828,9 @@ addLayer("world", {
         player.world.Worldtimer = player.world.Worldtimer.plus(tmp["world"].StepgrowthSpeed.times(diff));
         if (player.world.Worldtimer.gte(tmp["world"].WorldstepHeight)) {
 
-            if (player.world.currentStepType<99&&player.world.currentStepType>=87) player.world.fixednum = player.world.fixednum.plus(Decimal.times(1,upgradeEffect('storylayer',24)));
-            if (player.world.currentStepType>=99) {player.world.restrictionnum = player.world.restrictionnum.plus(Decimal.times(1,upgradeEffect('storylayer',24)));player.world.restrictChallenge = false;};
-            player[this.layer].points = player[this.layer].points.plus(Decimal.times(1,upgradeEffect('storylayer',24)));
+            if (player.world.currentStepType<99&&player.world.currentStepType>=87) player.world.fixednum = player.world.fixednum.plus(Decimal.times(1,upgradeEffect('storylayer',24)).times(hasMilestone('etoluna',6)?(player.world.Worldtimer.div(tmp["world"].WorldstepHeight).max(1)):1));
+            if (player.world.currentStepType>=99) {player.world.restrictionnum = player.world.restrictionnum.plus(Decimal.times(1,upgradeEffect('storylayer',24)).times(hasMilestone('etoluna',6)?(player.world.Worldtimer.div(tmp["world"].WorldstepHeight).max(1)):1));player.world.restrictChallenge = false;};
+            player[this.layer].points = player[this.layer].points.plus(Decimal.times(1,upgradeEffect('storylayer',24)).times(hasMilestone('etoluna',6)?(player.world.Worldtimer.div(tmp["world"].WorldstepHeight).max(1)):1));
             player.world.Worldtimer = new Decimal(0);
             if (hasUpgrade('world',31)) player.world.currentStepType = Math.floor(Math.random()*(100));//0~99
             player.world.Worldrandomnum = Math.random();
@@ -4155,6 +4178,24 @@ addLayer("saya",{
             unlocked(){return player.saya.unlocked},
             effectDescription: "You can buy max Flourish Labyrinths.",
         },
+        5: {
+            requirementDescription: "15 Everflashing Knives",
+            done() { return player.saya.best.gte(15)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "Flourish Labyrinth layer resets nothing.",
+        },
+        6: {
+            requirementDescription: "25 Everflashing Knives",
+            done() { return player.saya.best.gte(25)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "Keep half of your World Steps when reset.",
+        },
+        7: {
+            requirementDescription: "30 Everflashing Knives",
+            done() { return player.saya.best.gte(30)},
+            unlocked(){return hasMilestone('saya',6)},
+            effectDescription: "Everflashing Knives also effects the Speed of World Step gain.",
+        },
     },
 
     challenges:{
@@ -4218,6 +4259,48 @@ addLayer("saya",{
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
             rewardDescription() {return "Fragment generation ^"+format(challengeEffect(this.layer,this.id))},
+        },
+        22:{
+            name: "Rationalism",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "Memory gain ^^"+format(layers[this.layer].challenges[this.id].debuff());
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 0.9-(challengeCompletions(this.layer, this.id)*0.1);
+            },
+            rewardEffect(){
+                return Decimal.pow(10,challengeCompletions(this.layer, this.id));
+            },
+            unlocked() { return player[this.layer].best.gte(10)},
+            goal() { return new Decimal(1e300).times(Decimal.pow(1e10,challengeCompletions(this.layer, this.id))) },
+            currencyDisplayName: "Memories",
+            currencyInternalName: "points",
+            currencyLayer: "mem",
+            rewardDescription() {return "Memory softcap starts x"+format(challengeEffect(this.layer,this.id))+" later"},
+        },
+        31:{
+            name: "Endless Festival",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "Red Dolls effect ^"+format(layers[this.layer].challenges[this.id].debuff());
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 0.5-(challengeCompletions(this.layer, this.id)*0.05);
+            },
+            rewardEffect(){
+                return Decimal.pow(1.1,challengeCompletions(this.layer, this.id));
+            },
+            unlocked() { return player.saya.unlocked},
+            goal() { return new Decimal(395).plus(Decimal.times(10,challengeCompletions(this.layer, this.id))) },
+            currencyDisplayName: "Red Rolls",
+            currencyInternalName: "points",
+            currencyLayer: "kou",
+            rewardDescription() {return "Red Dolls effect x"+format(challengeEffect(this.layer,this.id))},
         },
     },
 
@@ -4356,6 +4439,8 @@ addLayer("etoluna",{
                         "blank",
                     ],{width:"50%"}],]
                     ,{}],
+                "blank",
+                ["row",[["upgrade","11"],["upgrade","12"]]],
             ]
         }
     },
@@ -4390,6 +4475,24 @@ addLayer("etoluna",{
             done() { return player.etoluna.best.gte(10)},
             unlocked(){return player.etoluna.unlocked},
             effectDescription: "You can buy max Luminous Churches.",
+        },
+        5: {
+            requirementDescription: "15 Gemini Bounds",
+            done() { return player.etoluna.best.gte(15)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "Luminous Church layer resets nothing.",
+        },
+        6: {
+            requirementDescription: "25 Gemini Bounds",
+            done() { return player.etoluna.best.gte(25)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "You still could gain World Steps as fast as tick goes, but overflowing World Height progress will transfer into more World Steps.",
+        },
+        7: {
+            requirementDescription: "30 Gemini Bounds",
+            done() { return player.etoluna.best.gte(30)},
+            unlocked(){return hasMilestone('etoluna',6)},
+            effectDescription: "Unlock Gemini upgrades.",
         },
     },
 
@@ -4453,6 +4556,36 @@ addLayer("etoluna",{
             canClick() { return player.etoluna.allotted!=.5 },
             onClick() { player.etoluna.allotted = .5 },
             style: {"height": "50px", "width": "50px","min-height":"50px", "background-color": "yellow"},
+        },
+    },
+
+    upgrades:{
+        11:{ title: "Among Stars",
+        description: "The speed of World Steps gain is boosted by current progress of World Step gain.",
+        fullDisplay: "<b>Among Stars</b><br>The speed of World Steps gain is boosted by current progress of World Step gain.<br>Cost: 25,000 Star Points",
+        unlocked() { return hasMilestone('etoluna',7) },
+        canAfford(){
+            return player[this.layer].starPoint.gte(25000);
+        },
+        pay(){
+            player[this.layer].starPoint = player[this.layer].starPoint.sub(25000);
+        },
+        effect(){
+            let eff = player.world.Worldtimer.plus(1).log(10).div(10).plus(1);
+            return eff;
+        },
+        style:{"background-color"() { if (!hasUpgrade("etoluna",11)) return canAffordUpgrade("etoluna",11)?"#bddfff":"rgb(191,143,143)";else return "rgb(119,191,95)" }},
+        },
+        12:{ title: "Under The Moon",
+        description: "Moon Points also boosts World Step Height softcap starts later.",
+        fullDisplay: "<b>Under The Moon</b><br>Moon Points also boosts World Step Height softcap starts later.<br>Cost: 25,000 Moon Points",
+        unlocked() { return hasMilestone('etoluna',7) },
+        canAfford(){
+            return player[this.layer].moonPoint.gte(25000);
+        },
+        pay(){
+            player[this.layer].moonPoint = player[this.layer].moonPoint.sub(25000);
+        },
         },
     },
 
