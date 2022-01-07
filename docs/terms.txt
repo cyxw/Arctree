@@ -22,3 +22,7 @@ W:World Steps
 
 //row5
 S:Stories
+G:Gemini Bounds
+G.starPoint:Star Points
+G.moonPoint:Moon Points
+K:Everflashing Knives

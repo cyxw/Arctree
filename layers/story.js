@@ -403,7 +403,7 @@ addLayer("storylayer", {
     upgrades: {
         11:{ title: "Restart World Research",
         fullDisplay(){
-            return "<b>Restart World Research</b><br>The speed of World Step gain in Restriction Challenge now <b>based on</b> your Fragments instead of <b>determineded by</b> your Fragments.<br><br>Cost:750 World Steps"
+            return "<b>Restart World Research</b><br>The speed of World Step gain in Restriction Challenge now <b>based on</b> your Fragments instead of <b>determined by</b> your Fragments.<br><br>Cost:750 World Steps"
         },
         canAfford(){return player.storylayer.storycounter==0&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.world.points.gte(750)},
         pay(){
@@ -516,6 +516,16 @@ addLayer("storylayer", {
             if (hasUpgrade('storylayer',24)) eff = new Decimal(10);
             return eff;
         }
+        },
+        25:{ title: "Spiritual Bounds",
+        fullDisplay(){
+            return "<b>Spiritual Bounds</b><br>Star Points&Moon Points gain is boosted when fallen behind by another.<br><br>Req:1,500 on both Star Points&Moon Points"
+        },
+        canAfford(){return player.storylayer.storycounter==9&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.etoluna.starPoint.gte(1500)&&player.etoluna.moonPoint.gte(1500)},
+        pay(){
+        },
+        unlocked() { return (player.storylayer.storycounter==9&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',25)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }
 })

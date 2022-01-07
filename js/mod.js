@@ -13,11 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.3.2",
-	name: "Currently, nothing here",
+	num: "0.0.3.5",
+	name: "Suspicious Spots",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.3.5</h3><br>
+		- All row5 layers added with basic stuff.<br>
+		- Not all row4 QoL added.<br>
 	<h3>v0.0.3.2</h3><br>
 		- Add first branch of stories, now it's time to check my writing skill(lol).<br>
 	<h3>v0.0.3.0</h3><br>
@@ -83,6 +86,10 @@ function getPointGen() {
 	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12));
 	if (inChallenge('rei',11)) gain = gain.pow(0.5);
 	if (player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) gain = gain.pow(0.9);
+	if (challengeCompletions('saya',21)) gain=gain.pow(challengeEffect('saya',21))
+
+	//tetrate
+	if (inChallenge('saya',21)) gain = gain.tetrate(layers.saya.challenges[21].debuff())
 
 	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
 	if (isNaN(gain.toNumber())) return new Decimal(1);

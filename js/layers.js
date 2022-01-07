@@ -964,7 +964,7 @@ addLayer("kou", {
                 "milestones",]
         },
         "Happiness Challenges": {
-            unlocked() { return hasMilestone('kou',7) },
+            unlocked() { return hasMilestone('kou',7)&&(player.saya.activeChallenge==null) },
             buttonStyle() { return {'background-color': '#bd003c'} },
             content: [
                 "main-display",
@@ -2480,7 +2480,7 @@ addLayer("lab", {
         },
         81:{ title: "Doll Adjustment",
         description: "Red Dolls Resets Nothing.",
-        fullDisplay(){return "<b>Doll Adjustment</b><br>Red Dolls Resets Nothing.<br><br>Cost: 5e9 Research Power<br>85 Red Dolls"},
+        fullDisplay(){return "<b>Doll Adjustment</b><br>Red Dolls resets nothing.<br><br>Cost: 5e9 Research Power<br>85 Red Dolls"},
         unlocked(){return hasUpgrade('lab',73)&&hasUpgrade('lab',74)},
         canAfford(){
             return player.lab.power.gte(5e9)&&player.kou.points.gte(85);
@@ -3205,6 +3205,9 @@ addLayer("rei", {
     type: "static",
     exponent: 1.5,
 
+    autoPrestige(){return (hasMilestone('etoluna',3)&&player.rei.auto)},
+    canBuyMax() { return hasMilestone('etoluna',4) },
+
     update(diff){
         if (inChallenge('rei',11)){
             player.points = player.points.sub(player.points.div(10).times(diff)).max(1e-10);
@@ -3213,13 +3216,14 @@ addLayer("rei", {
             player.dark.points = player.dark.points.sub(player.dark.points.div(10).times(diff)).max(1e-10);
             player.kou.points = player.kou.points.sub(player.kou.points.div(10).times(diff)).max(1e-10);
             player.lethe.points = player.lethe.points.sub(player.lethe.points.div(10).times(diff)).max(1e-10);
-            player.rei.roses = player.rei.roses.plus(tmp["rei"].challenges[11].amt.times(diff));
         }
+        if (inChallenge('rei',11)||hasMilestone('etoluna',2))player.rei.roses = player.rei.roses.plus(tmp["rei"].challenges[11].amt.times(diff));
     },
 
     doReset(resettingLayer){
         let keep=[];
         if (hasMilestone('etoluna',1)||hasMilestone('saya',1)) keep.push("milestones");
+        if (hasMilestone('etoluna',3)) keep.push("auto");
         if (layers[resettingLayer].row > this.row) {layerDataReset('rei', keep);
         let keepmilestone = [];
         if (hasMilestone('saya',0)) {keepmilestone = keepmilestone.concat([0]);player[this.layer].total = player[this.layer].total.plus(3)}
@@ -3288,6 +3292,7 @@ addLayer("rei", {
                 if (hasUpgrade('lab',113)) mult = mult.times(upgradeEffect('lab',113));
                 if (hasUpgrade('world',33)) mult = mult.times(upgradeEffect('world',33));
                 if (hasUpgrade('lab',141)) mult = mult.times(upgradeEffect('lab',141));
+                if (hasMilestone('etoluna',2)&&!inChallenge('rei',11)) mult = mult.times(player.rei.roses.plus(1).log(20).div(50).max(0.01).min(0.5));
                 return mult;
             },
             amt(){//gain per sec
@@ -3305,7 +3310,7 @@ addLayer("rei", {
                 doReset("lethe",true);
             },
             fullDisplay(){
-                let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +(inChallenge('rei',11)?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
+                let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +((inChallenge('rei',11)||hasMilestone('etoluna',2))?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
                 if (hasMilestone('rei',4)) show = show + "<br>Red Dolls & Forgotten Drops gain by "+format(tmp["rei"].challenges[11].effecttoRF) +"x";
                 if (hasUpgrade('storylayer',12)) show += "<br>Fragments generation & Memories gain by "+format(upgradeEffect('storylayer',12))+"x";
                 if (hasUpgrade('storylayer',21)) show += "<br>Light Tachyons&Dark Matters gain by "+format(upgradeEffect('storylayer',21))+"x";
@@ -3415,6 +3420,9 @@ addLayer("yugamu", {
     },
 
     layerShown() { return hasAchievement('lab',21)&&hasChallenge('kou',51)||player[this.layer].unlocked }, 
+    autoPrestige(){return (hasMilestone('saya',3)&&player.yugamu.auto)},
+    canBuyMax() { return hasMilestone('saya',4) },
+
     milestones:{
         0: {
             requirementDescription: "1 total Flourish Labyrinth",
@@ -3477,6 +3485,7 @@ addLayer("yugamu", {
     doReset(resettingLayer){
         let keep=[];
         if (hasMilestone('etoluna',1)||hasMilestone('saya',1)) keep.push("milestones");
+        if (hasMilestone('saya',3)) keep.push("auto");
         if (layers[resettingLayer].row > this.row) {layerDataReset('yugamu', keep);
         let keepmilestone = [];
         if (hasMilestone('etoluna',0)) {keepmilestone = keepmilestone.concat([0]);player[this.layer].total = player[this.layer].total.plus(3)}
@@ -3519,6 +3528,8 @@ addLayer("yugamu", {
         if (hasAchievement('a',71)) mt = mt.plus(5);
         if (hasUpgrade('lab',114)) mt = mt.plus(upgradeEffect('lab',114));
         if (hasUpgrade('lab',142)) mt = mt.plus(upgradeEffect('lab',142));
+        if (hasMilestone('saya',2)) mt = mt.plus(10);
+
         if (hasAchievement('a',94)) mt = mt.times(2);
         mt = mt.round();
         return mt;
@@ -3737,8 +3748,9 @@ addLayer("world", {
     WorldstepHeight(){
         let base = new Decimal(10);
         let step = base.times(player.world.points.plus(1));
+        let sc = new Decimal(100000);
         if (hasAchievement('a',93)) step = step.div(tmp.etoluna.moonPointeffect);
-        if (step.gte(100000)) step = Decimal.pow(step.sub(100000),3).plus(100000);
+        if (step.gte(sc)) step = Decimal.pow(step.sub(sc),3).plus(sc);
         return step;
     },
 
@@ -4069,7 +4081,7 @@ addLayer("saya",{
         return cost},
     
     type: "static",                         
-    exponent: 1.25,
+    exponent: 1.5,
     base:2,                            
 
     gainMult() {//static层                           
@@ -4125,6 +4137,24 @@ addLayer("saya",{
             unlocked(){return player.saya.unlocked},
             effectDescription: "Keep the rest of LC&FL milestones.",
         },
+        2: {
+            requirementDescription: "3 Everflashing Knives",
+            done() { return player.saya.best.gte(3)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "Give 10 more base move times in Maze.",
+        },
+        3: {
+            requirementDescription: "5 Everflashing Knives",
+            done() { return player.saya.best.gte(5)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "Unlock Flourish Labyrinths Autobuyer.",
+        },
+        4: {
+            requirementDescription: "10 Everflashing Knives",
+            done() { return player.saya.best.gte(10)},
+            unlocked(){return player.saya.unlocked},
+            effectDescription: "You can buy max Flourish Labyrinths.",
+        },
     },
 
     challenges:{
@@ -4144,7 +4174,7 @@ addLayer("saya",{
                 return Decimal.pow(2,challengeCompletions(this.layer, this.id));
             },
             unlocked() { return player.saya.unlocked},
-            goal() { return new Decimal(1e195).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },//这个过会也要做手脚，看着办
+            goal() { return new Decimal(1e195).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
             rewardDescription() {return "Light Tachyons effect x"+format(challengeEffect(this.layer,this.id))},
@@ -4164,10 +4194,30 @@ addLayer("saya",{
                 return Decimal.pow(3,challengeCompletions(this.layer, this.id));
             },
             unlocked() { return player[this.layer].best.gte(2)},
-            goal() { return new Decimal(1e195).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },//这个过会也要做手脚，看着办
+            goal() { return new Decimal(1e195).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
             rewardDescription() {return "Dark Matters effect x"+format(challengeEffect(this.layer,this.id))},
+        },
+        21:{
+            name: "Searching For Essence",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "Fragment generation ^^"+format(layers[this.layer].challenges[this.id].debuff());
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 0.9-(challengeCompletions(this.layer, this.id)*0.1);
+            },
+            rewardEffect(){
+                return new Decimal(1).plus(0.01*challengeCompletions(this.layer, this.id));
+            },
+            unlocked() { return player[this.layer].best.gte(5)},
+            goal() { return new Decimal(1e220).times(Decimal.pow(1e10,challengeCompletions(this.layer, this.id))) },
+            currencyDisplayName: "Fragments",
+            currencyInternalName: "points",
+            rewardDescription() {return "Fragment generation ^"+format(challengeEffect(this.layer,this.id))},
         },
     },
 
@@ -4226,7 +4276,9 @@ addLayer("etoluna",{
     //Tower related
     gainstarPoints(){
         let gain = tmp.etoluna.effect.times(Decimal.pow(10,(player.etoluna.allotted*2-1)));
-        if (player.etoluna.allotted<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        //if (player.etoluna.allotted<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        if (hasUpgrade('storylayer',25)) gain = gain.times(player.etoluna.moonPoint.div(player.etoluna.starPoint.max(1)).max(1));
+
         return gain;
     },
 
@@ -4237,7 +4289,8 @@ addLayer("etoluna",{
 
     gainmoonPoints(){
         let gain = tmp.etoluna.effect.times(Decimal.pow(10,((1-player.etoluna.allotted)*2-1)));
-        if ((1-player.etoluna.allotted)<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        //if ((1-player.etoluna.allotted)<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        if (hasUpgrade('storylayer',25)) gain = gain.times(player.etoluna.starPoint.div(player.etoluna.moonPoint.max(1)).max(1));
         return gain;
     },
 
@@ -4319,6 +4372,24 @@ addLayer("etoluna",{
             done() { return player.etoluna.best.gte(2)},
             unlocked(){return player.etoluna.unlocked},
             effectDescription: "Keep the rest of LC&FL milestones.",
+        },
+        2: {
+            requirementDescription: "3 Gemini Bounds",
+            done() { return player.etoluna.best.gte(3)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "You can gain Glowing Roses outside Zero Sky at a much reduced rate.",
+        },
+        3: {
+            requirementDescription: "5 Gemini Bounds",
+            done() { return player.etoluna.best.gte(5)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "Unlock Luminous Churches Autobuyer.",
+        },
+        4: {
+            requirementDescription: "10 Gemini Bounds",
+            done() { return player.etoluna.best.gte(10)},
+            unlocked(){return player.etoluna.unlocked},
+            effectDescription: "You can buy max Luminous Churches.",
         },
     },
 
@@ -4808,5 +4879,25 @@ addLayer("ab", {
 			onClick() { player.lab.generatorauto = !player.lab.generatorauto },
 			style: {"background-color"() { return player.lab.generatorauto?"#00bdf9":"#666666" }},
 		    }, 
+        21: {
+			title: "Luminous Churches",
+			display(){
+				return (hasMilestone('etoluna',3))?(player.rei.auto?"On":"Off"):"Locked"
+			},
+			unlocked() { return tmp["rei"].layerShown&&player.etoluna.unlocked },
+			canClick() { return hasMilestone('etoluna',3) },
+			onClick() { player.rei.auto = !player.rei.auto },
+			style: {"background-color"() { return player.rei.auto?"#ffe6f6":"#666666" }},
+		    },
+        22: {
+			title: "Flourish Labyrinths",
+			display(){
+				return (hasMilestone('saya',3))?(player.yugamu.auto?"On":"Off"):"Locked"
+			},
+			unlocked() { return tmp["yugamu"].layerShown&&player.saya.unlocked },
+			canClick() { return hasMilestone('saya',3) },
+			onClick() { player.yugamu.auto = !player.yugamu.auto },
+			style: {"background-color"() { return player.yugamu.auto?"#716f5e":"#666666" }},
+		    },
 	},
 })
