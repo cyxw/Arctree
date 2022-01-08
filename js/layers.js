@@ -1380,7 +1380,11 @@ addLayer("lethe", {
         return "which are directly boosting Fragments generation and Memories gain by "+format(tmp.lethe.effect)+"x"
     },
 
-    nodeSlots(){return player.lethe.buyables[11].floor().min(hasChallenge('kou',42)?25:17).toNumber()},
+    nodeSlots(){
+        let node = player.lethe.buyables[11].floor().min(hasChallenge('kou',42)?25:17);
+        if (inChallenge('saya',32)) node = node.min(layers.saya.challenges[32].debuff());
+        return node.toNumber()
+    },
     upgrades:{
         rows: 5,
 		cols: 5,
@@ -2988,14 +2992,14 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.light.points)+" / "+formatWhole(cost.fo)+" Light Tachyons"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',83)?("<br>Also boosts Light Tachyons gain by x"+format(buyableEffect('lab',21))):"")+((inChallenge('kou',12)||inChallenge('kou',42))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
+                    let display = formatWhole(player.light.points)+" / "+formatWhole(cost.fo)+" Light Tachyons"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',83)?("<br>Also boosts Light Tachyons gain by x"+format(buyableEffect('lab',21))):"")+((inChallenge('kou',12)||inChallenge('kou',42)||inChallenge('saya',41))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',31); }, 
                 canAfford() {
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
-                    return player[this.layer].unlocked && player.light.points.gte(cost.fo)&&!inChallenge('kou',12);
+                    return player[this.layer].unlocked && player.light.points.gte(cost.fo)&&!inChallenge('kou',12)&&!inChallenge('kou',42)&&!inChallenge('saya',41);
 				},
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
@@ -3010,7 +3014,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)  },
+				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)&&!inChallenge('kou',42)&&!inChallenge('saya',41)},
 			},
             22: {
 				title: "Dark Transformer",
@@ -3023,14 +3027,14 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.dark.points)+" / "+formatWhole(cost.fo)+" Dark Matters"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',84)?("<br>Also boosts Dark Matters gain by x"+format(buyableEffect('lab',22))):"")+((inChallenge('kou',12)||inChallenge('kou',42))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
+                    let display = formatWhole(player.dark.points)+" / "+formatWhole(cost.fo)+" Dark Matters"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',84)?("<br>Also boosts Dark Matters gain by x"+format(buyableEffect('lab',22))):"")+((inChallenge('kou',12)||inChallenge('kou',42)||inChallenge('saya',41))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',31); }, 
                 canAfford() {
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
-                    return player[this.layer].unlocked && player.dark.points.gte(cost.fo)&&!inChallenge('kou',12);
+                    return player[this.layer].unlocked && player.dark.points.gte(cost.fo)&&!inChallenge('kou',12)&&!inChallenge('kou',42)&&!inChallenge('saya',41);
 				},
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
@@ -3045,7 +3049,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)   },
+				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)&&!inChallenge('kou',42)&&!inChallenge('saya',41)   },
 			},
             31: {
 				title: "Doll Transformer",
@@ -3257,6 +3261,7 @@ addLayer("rei", {
         if (hasUpgrade('world',23)) mult = mult.div(upgradeEffect('world',23));
         if (hasUpgrade('world',31)) mult = mult.div(layers.world.fixedReward());
         if (hasUpgrade('lab',143)) mult = mult.div(upgradeEffect('lab',143));
+        if (hasUpgrade('storylayer',32)) mult = mult.div(upgradeEffect('storylayer',32));
         return mult;
     },
     gainExp() {  
@@ -3314,6 +3319,7 @@ addLayer("rei", {
             amt(){//gain per sec
                 let gain = player.points.plus(1).log10().div(50).max(0).sqrt();
                 gain =gain.times(tmp["rei"].challenges[11].gainMult);
+                gain =gain.times(challengeEffect('saya',41));
                 return gain;
             },
             onEnter(){
@@ -3333,7 +3339,7 @@ addLayer("rei", {
                 return show;
             },
             effecttoRF(){
-                return player.rei.roses.plus(1).log10().times(2).max(1).times(hasAchievement('a',93)?tmp.etoluna.starPointeffect:1);
+                return player.rei.roses.plus(1).log10().times(2).max(1).times(hasAchievement('a',93)?tmp.etoluna.starPointeffect:1).times(challengeEffect('saya',41));
             },
             style(){
                 return {'background-color': "#ffe6f6",color: "#383838", 'border-radius': "25px", height: "400px", width: "400px"}
@@ -3429,6 +3435,7 @@ addLayer("yugamu", {
         if (hasUpgrade('world',24)) mult = mult.div(upgradeEffect('world',24));
         if (hasUpgrade('world',31)) mult = mult.div(layers.world.fixedReward());
         if (hasUpgrade('lab',144)) mult = mult.div(upgradeEffect('lab',144));
+        if (hasUpgrade('storylayer',32)) mult = mult.div(upgradeEffect('storylayer',32));
         return mult;
     },
     gainExp() {  
@@ -3768,11 +3775,21 @@ addLayer("world", {
     WorldstepHeight(){
         let base = new Decimal(10);
         let step = base.times(player.world.points.plus(1));
-        let sc = new Decimal(100000);
-        if (hasUpgrade('etoluna',12)) sc = sc.times(tmp.etoluna.moonPointeffect)
         if (hasAchievement('a',93)) step = step.div(tmp.etoluna.moonPointeffect);
-        if (step.gte(sc)) step = Decimal.pow(step.sub(sc),3).plus(sc);
+        if (step.gte(layers.world.WorldstepHeightsc())) step = Decimal.pow(step.sub(layers.world.WorldstepHeightsc()),layers.world.WorldstepHeightscexp()).plus(layers.world.WorldstepHeightsc());
         return step;
+    },
+
+    WorldstepHeightsc(){
+        let sc = new Decimal(100000);
+        if (hasUpgrade('etoluna',12)) sc = sc.times(tmp.etoluna.moonPointeffect);
+        return sc;
+    },
+
+    WorldstepHeightscexp(){
+    let exp = new Decimal(3);
+    if (hasUpgrade('storylayer',31)) exp = new Decimal(2);
+    return exp;
     },
 
     StepgrowthSpeed(){
@@ -3807,6 +3824,7 @@ addLayer("world", {
 
     fixedReward(){
         let softcap = new Decimal(500);
+        if (hasUpgrade('etoluna',13)) softcap = softcap.times(upgradeEffect('etoluna',13))
         let softcappower = 0.25;
         let reward = player.world.fixednum.div(2).plus(1);
         if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
@@ -3816,6 +3834,7 @@ addLayer("world", {
     restrictReward(){
         let softcap = new Decimal(20);
         let hardcap = new Decimal(150)
+        if (hasUpgrade('etoluna',14)) hardcap = hardcap.times(tmp["etoluna"].moonPointeffect);
         if (hasAchievement('a',83)) softcap = new Decimal(25);
         let softcappower = 0.25;
         let reward = Decimal.pow(1.5,player.world.restrictionnum);
@@ -3850,6 +3869,7 @@ addLayer("world", {
         "blank",
         ["bar","WorldProgressBar"],
         ["display-text",function() {return formatWhole(player.world.Worldtimer)+" / "+formatWhole(tmp["world"].WorldstepHeight)+" Step Height"},{}],
+        ["display-text",function() {if(tmp["world"].WorldstepHeight.gte(layers.world.WorldstepHeightsc())) return "You have reached World Step Height softcap and exceeding height ^"+format(layers.world.WorldstepHeightscexp())},{}],
         ["display-text",
         function(){
             if (player.world.currentStepType<75) return "";
@@ -4080,6 +4100,7 @@ addLayer("saya",{
 		points: new Decimal(0),
         best:new Decimal(0),
         total:new Decimal(0),
+        Timer41: new Decimal(0),
         unlockOrder:0,            
     }},
 
@@ -4123,6 +4144,22 @@ addLayer("saya",{
     },
     effectDescription() {
         return "which are directly boosting Red Dolls and Forgotten Drops gain by "+format(tmp.saya.effect)+"x"
+    },
+
+    update(diff){
+        if (inChallenge('saya',41)){
+            player.saya.Timer41 = player.saya.Timer41.plus(diff);
+            if (player.saya.Timer41.gte(layers.saya.challenges[41].debuff())) {
+                player.points = new Decimal(0);
+                player.mem.points = new Decimal(0);
+                player.light.points = new Decimal(0);
+                player.dark.points = new Decimal(0);
+                player.kou.points = new Decimal(0);
+                player.lethe.points = new Decimal(0);
+                player.rei.roses = new Decimal(0);
+                player.saya.Timer41 = new Decimal(0);}
+        }
+        else player.saya.Timer41 = new Decimal(0);
     },
 
     tabFormat: {
@@ -4249,7 +4286,7 @@ addLayer("saya",{
                 return des
             },
             debuff(){//layers
-                return 0.9-(challengeCompletions(this.layer, this.id)*0.1);
+                return 0.9-(challengeCompletions(this.layer, this.id)*0.05);
             },
             rewardEffect(){
                 return new Decimal(1).plus(0.01*challengeCompletions(this.layer, this.id));
@@ -4269,7 +4306,7 @@ addLayer("saya",{
                 return des
             },
             debuff(){//layers
-                return 0.9-(challengeCompletions(this.layer, this.id)*0.1);
+                return 0.9-(challengeCompletions(this.layer, this.id)*0.05);
             },
             rewardEffect(){
                 return Decimal.pow(10,challengeCompletions(this.layer, this.id));
@@ -4293,17 +4330,63 @@ addLayer("saya",{
                 return 0.5-(challengeCompletions(this.layer, this.id)*0.05);
             },
             rewardEffect(){
-                return Decimal.pow(1.1,challengeCompletions(this.layer, this.id));
+                return Decimal.pow(1.25,challengeCompletions(this.layer, this.id));
             },
-            unlocked() { return player.saya.unlocked},
-            goal() { return new Decimal(395).plus(Decimal.times(10,challengeCompletions(this.layer, this.id))) },
+            unlocked() { return player[this.layer].best.gte(15)},
+            goal() { return new Decimal(350).plus(Decimal.times(50,challengeCompletions(this.layer, this.id)+(Math.max(challengeCompletions(this.layer, this.id)-1)*0.25))) },
             currencyDisplayName: "Red Rolls",
             currencyInternalName: "points",
             currencyLayer: "kou",
             rewardDescription() {return "Red Dolls effect x"+format(challengeEffect(this.layer,this.id))},
         },
+        32:{
+            name: "Overhandling Rift",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "Remove all your Guilding Beacons, and you can have "+formatWhole(layers[this.layer].challenges[this.id].debuff())+" Guilding Beacons at most.";
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 22-(challengeCompletions(this.layer, this.id)*3);
+            },
+            rewardEffect(){
+                return Decimal.pow(1.1,challengeCompletions(this.layer, this.id));
+            },
+            onEnter(){
+                player.lethe.upgrades = [];
+            },
+            unlocked() { return player[this.layer].best.gte(25)},
+            goal() { return new Decimal(1e240).times(Decimal.pow(1e5,challengeCompletions(this.layer, this.id))) },
+            currencyDisplayName: "Forgotten Drops",
+            currencyInternalName: "points",
+            currencyLayer: "lethe",
+            rewardDescription() {return "Forgotten Drops effect x"+format(challengeEffect(this.layer,this.id))},
+        },
+        41:{
+            name: "Otherside of Godess",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "All Currency below row4 & Glowing roses are set to 0 every "+format(layers[this.layer].challenges[this.id].debuff())+" seconds";
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 10-(challengeCompletions(this.layer, this.id)*2);
+            },
+            rewardEffect(){
+                return Decimal.pow(2,challengeCompletions(this.layer, this.id));
+            },
+            unlocked() { return player[this.layer].best.gte(35)&&hasUpgrade('storylayer',31)},
+            goal() { return new Decimal(35000).times(Decimal.pow(2,challengeCompletions(this.layer, this.id))) },
+            currencyDisplayName: "Glowing Roses",
+            currencyInternalName: "roses",
+            currencyLayer: "rei",
+            rewardDescription() {return "Glowing Roses gain&effect x"+format(challengeEffect(this.layer,this.id))},
+        },
+    
     },
-
+    
 })
 
 addLayer("etoluna",{
@@ -4359,7 +4442,7 @@ addLayer("etoluna",{
     //Tower related
     gainstarPoints(){
         let gain = tmp.etoluna.effect.times(Decimal.pow(10,(player.etoluna.allotted*2-1)));
-        //if (player.etoluna.allotted<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        if (player.etoluna.allotted<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
         if (hasUpgrade('storylayer',25)) gain = gain.times(player.etoluna.moonPoint.div(player.etoluna.starPoint.max(1)).max(1));
 
         return gain;
@@ -4372,7 +4455,7 @@ addLayer("etoluna",{
 
     gainmoonPoints(){
         let gain = tmp.etoluna.effect.times(Decimal.pow(10,((1-player.etoluna.allotted)*2-1)));
-        //if ((1-player.etoluna.allotted)<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
+        if ((1-player.etoluna.allotted)<=0) gain = tmp.etoluna.effect.times(0.1);//break_eternity.js issue, can be solved by updating
         if (hasUpgrade('storylayer',25)) gain = gain.times(player.etoluna.starPoint.div(player.etoluna.moonPoint.max(1)).max(1));
         return gain;
     },
@@ -4440,7 +4523,7 @@ addLayer("etoluna",{
                     ],{width:"50%"}],]
                     ,{}],
                 "blank",
-                ["row",[["upgrade","11"],["upgrade","12"]]],
+                ["row",[["upgrade","11"],["upgrade","13"],["blank",["50px","50px"]],["upgrade","14"],["upgrade","12"]]],
             ]
         }
     },
@@ -4585,6 +4668,33 @@ addLayer("etoluna",{
         },
         pay(){
             player[this.layer].moonPoint = player[this.layer].moonPoint.sub(25000);
+        },
+        },
+        13:{ title: "Sticky Steps",
+        description: "Star Point effect also makes fixed World Step softcap starts later at a reduced rate.",
+        fullDisplay: "<b>Sticky Steps</b><br>Star Point effect also makes fixed World Step softcap starts later at a reduced rate.<br>Cost: 50,000 Star Points",
+        unlocked() { return hasUpgrade('etoluna',11) },
+        canAfford(){
+            return player[this.layer].starPoint.gte(50000);
+        },
+        pay(){
+            player[this.layer].starPoint = player[this.layer].starPoint.sub(50000);
+        },
+        effect(){
+            let eff = tmp["etoluna"].starPointeffect.sqrt();
+            return eff;
+        },
+        style:{"background-color"() { if (!hasUpgrade("etoluna",13)) return canAffordUpgrade("etoluna",13)?"#bddfff":"rgb(191,143,143)";else return "rgb(119,191,95)" }},
+        },
+        14:{ title: "Outside The Sky",
+        description: "Moon Points also enlarges restricted World Step effect's hardcap.",
+        fullDisplay: "<b>Outside The Sky</b><br>Moon Points also enlarges restricted World Step effect's hardcap.<br>Cost: 50,000 Moon Points",
+        unlocked() { return hasUpgrade('etoluna',12)},
+        canAfford(){
+            return player[this.layer].moonPoint.gte(50000);
+        },
+        pay(){
+            player[this.layer].moonPoint = player[this.layer].moonPoint.sub(50000);
         },
         },
     },
@@ -4950,6 +5060,11 @@ addLayer("a", {
             effect(){
                 return player.storylayer.points.plus(1);
             }
+        },
+        101: {
+            name: "sizeof(double)",
+            done() { return player.points.gte(Number.MAX_VALUE)},
+            tooltip: "Gain 1.79e308 Fragments.",
         },
     },
     tabFormat: [

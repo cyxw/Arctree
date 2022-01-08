@@ -38,6 +38,8 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==7) return "LA-4";
                 if (player.storylayer.storycounter==8) return "K-1";
                 if (player.storylayer.storycounter==9) return "G-1";
+                if (player.storylayer.storycounter==10) return "K-2";
+                if (player.storylayer.storycounter==11) return "G-2";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -302,6 +304,16 @@ addLayer("storylayer", {
                     return story;
                 };
 
+                if (player.storylayer.storycounter==10){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==11){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
                 if (player.storylayer.storycounter>=player.storylayer.points.toNumber()){
                     return "You have read all existing stories!"
                 }
@@ -333,6 +345,8 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==7) req = 60;
         if (player.storylayer.storycounter==8) req = 60;
         if (player.storylayer.storycounter==9) req = 60;
+        if (player.storylayer.storycounter==10) req = 60;
+        if (player.storylayer.storycounter==11) req = 60;
         return req;
     },
 
@@ -348,6 +362,8 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==7) color = "#00bdf9";
         if (player.storylayer.storycounter==8) color = "#16a951";
         if (player.storylayer.storycounter==9) color = "#d7a9f4";
+        if (player.storylayer.storycounter==10) color = "#16a951";
+        if (player.storylayer.storycounter==11) color = "#d7a9f4";
         return color;
     },
 
@@ -426,6 +442,7 @@ addLayer("storylayer", {
             let eff = new Decimal(1);
             if (hasUpgrade('storylayer',12)) eff = player.rei.roses.plus(1).log(8).times(2).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
+            eff=eff.times(challengeEffect('saya',41));
             return eff;
         },
         },
@@ -476,6 +493,7 @@ addLayer("storylayer", {
             let eff = new Decimal(1);
             if (hasUpgrade('storylayer',21)) eff = player.rei.roses.plus(1).log(5).times(1.5).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
+            eff = eff.times(challengeEffect('saya',41));
             return eff;
         }
         },
@@ -525,6 +543,30 @@ addLayer("storylayer", {
         pay(){
         },
         unlocked() { return (player.storylayer.storycounter==9&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',25)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        31:{ title: "Fragmented Fusion",
+        fullDisplay(){
+            return "<b>Fragmented Fusion</b><br>World Step Height softcap exponent ^3 → ^2.<br><br>Req:35 Everflashing Knives"
+        },
+        canAfford(){return player.storylayer.storycounter==10&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.saya.points.gte(35)},
+        pay(){
+        },
+        unlocked() { return (player.storylayer.storycounter==10&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',31)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        32:{ title: "Unrecorded History",
+        fullDisplay(){
+            return "<b>Unrecorded History</b><br>Star Points&Moon Points boosts Luminous Churches&Flourish Labyrinths gain.<br><br>Req:40 Gemini Bounds"
+        },
+        effect(){
+            let eff = player.etoluna.starPoint.plus(player.etoluna.moonPoint).plus(1).log(7.5).sqrt();
+            return eff;
+        },
+        canAfford(){return player.storylayer.storycounter==11&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.etoluna.points.gte(40)},
+        pay(){
+        },
+        unlocked() { return (player.storylayer.storycounter==11&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',32)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }
