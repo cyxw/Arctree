@@ -3320,6 +3320,7 @@ addLayer("rei", {
                 let gain = player.points.plus(1).log10().div(50).max(0).sqrt();
                 gain =gain.times(tmp["rei"].challenges[11].gainMult);
                 gain =gain.times(challengeEffect('saya',41));
+                if (hasAchievement('a',102)) gain = gain.times(tmp["saya"].effect);
                 return gain;
             },
             onEnter(){
@@ -3330,6 +3331,9 @@ addLayer("rei", {
                 doReset("dark",true);
                 doReset("kou",true);
                 doReset("lethe",true);
+            },
+            onExit(){
+                if (inChallenge('saya',41)) player.rei.roses = new Decimal(0);
             },
             fullDisplay(){
                 let show = "Fragments generation & Memories gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: "+format(player.rei.roses) +" (" +((inChallenge('rei',11)||hasMilestone('etoluna',2))?formatWhole(tmp["rei"].challenges[11].amt):0) +"/s)"+ (hasAchievement('a',65)?("<br>Which are boosting The Speed of World steps gain by "+format(achievementEffect('a',65))+"x"):"");
@@ -4150,14 +4154,10 @@ addLayer("saya",{
         if (inChallenge('saya',41)){
             player.saya.Timer41 = player.saya.Timer41.plus(diff);
             if (player.saya.Timer41.gte(layers.saya.challenges[41].debuff())) {
-                player.points = new Decimal(0);
-                player.mem.points = new Decimal(0);
-                player.light.points = new Decimal(0);
-                player.dark.points = new Decimal(0);
-                player.kou.points = new Decimal(0);
-                player.lethe.points = new Decimal(0);
-                player.rei.roses = new Decimal(0);
-                player.saya.Timer41 = new Decimal(0);}
+                doReset("saya",true);
+
+                player.saya.Timer41 = new Decimal(0);
+            }
         }
         else player.saya.Timer41 = new Decimal(0);
     },
@@ -4367,7 +4367,7 @@ addLayer("saya",{
             name: "Otherside of Godess",
             completionLimit: 5,
             challengeDescription() {
-                let des = "All Currency below row4 & Glowing roses are set to 0 every "+format(layers[this.layer].challenges[this.id].debuff())+" seconds";
+                let des = "Force a row5 reset every "+format(layers[this.layer].challenges[this.id].debuff())+" seconds";
                     des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
                 return des
             },
@@ -4378,10 +4378,12 @@ addLayer("saya",{
                 return Decimal.pow(2,challengeCompletions(this.layer, this.id));
             },
             unlocked() { return player[this.layer].best.gte(35)&&hasUpgrade('storylayer',31)},
-            goal() { return new Decimal(35000).times(Decimal.pow(2,challengeCompletions(this.layer, this.id))) },
-            currencyDisplayName: "Glowing Roses",
-            currencyInternalName: "roses",
-            currencyLayer: "rei",
+            goal() { return new Decimal(500).times(Decimal.pow(2.5,challengeCompletions(this.layer, this.id))) },
+            canComplete(){
+                let goal = this.goal();
+                return player.rei.roses.gte(goal)&&!inChallenge('rei',11)
+            },
+            goalDescription() {return format(this.goal()) + " Glowing Roses without entering Zero Sky."},
             rewardDescription() {return "Glowing Roses gain&effect x"+format(challengeEffect(this.layer,this.id))},
         },
     
@@ -5065,6 +5067,11 @@ addLayer("a", {
             name: "sizeof(double)",
             done() { return player.points.gte(Number.MAX_VALUE)},
             tooltip: "Gain 1.79e308 Fragments.",
+        },
+        102: {
+            name: "\"I told you it's useless\"",
+            done() { return inChallenge('saya',41)&&inChallenge('rei',11)},
+            tooltip: "Enter Zero Sky while in Otherside of Godess Challenge.<br>Rewards:Everflashing Knives also effect Glowing roses Gain.",
         },
     },
     tabFormat: [
