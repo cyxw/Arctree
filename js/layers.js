@@ -337,6 +337,8 @@ addLayer("light", {
         if (hasUpgrade('lab',83)) mult = mult.div(buyableEffect('lab',21));
         if (hasUpgrade('storylayer',21)) mult = mult.div(upgradeEffect('storylayer',21));
         if (hasUpgrade('storylayer',22)) mult = mult.div(player.rei.points.div(2).max(1));
+        if (inChallenge('saya',42)) mult = mult.times(tmp["dark"].effect.log(layers.saya.challenges[42].debuff()));
+
         return mult;
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -351,6 +353,7 @@ addLayer("light", {
         if (hasAchievement('a',43)) dm=dm.times(player.dark.points.div(player.light.points.max(1)).max(1).min(5));
         if (inChallenge("kou",31)&&player.dark.points.lt(player[this.layer].points)) dm = dm.times(0.1);
         if (inChallenge('kou',42)) dm = dm.times(2);
+        if (inChallenge('saya',42)) dm = dm.div(tmp["dark"].effect.log(layers.saya.challenges[42].debuff()));
         return dm;
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
@@ -593,6 +596,7 @@ addLayer("dark", {
         if (hasUpgrade('lab',84)) mult = mult.div(buyableEffect('lab',22));
         if (hasUpgrade('storylayer',21)) mult = mult.div(upgradeEffect('storylayer',21));
         if (hasUpgrade('storylayer',22)) mult = mult.div(player.yugamu.points.div(2).max(1));
+        if (challengeCompletions('saya',42)) mult = mult.div(challengeEffect('saya',42));
         return mult;
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -2985,7 +2989,7 @@ addLayer("lab", {
 				title: "Light Transformer",
 				cost(x=player[this.layer].buyables[this.id]) {
 					return {
-						fo: new Decimal(50000).plus(new Decimal(5000).times(x)).div(hasUpgrade('lab',34)?Decimal.log10(player.light.resetTime+1).div(1.5).max(1):1).div(hasUpgrade('lab',42)?1.5:1),
+						fo: new Decimal(50000).plus(new Decimal(5000).times(x)).div(hasUpgrade('lab',34)?Decimal.log10(player.light.resetTime+1).div(1.5).max(1):1).div(hasUpgrade('lab',42)?1.5:1).pow((x.gte(40000))?1.5:1)
 					};
 				},
 				display() { // Everything else displayed in the buyable button after the title
@@ -3020,7 +3024,7 @@ addLayer("lab", {
 				title: "Dark Transformer",
 				cost(x=player[this.layer].buyables[this.id]) {
 					return {
-						fo: new Decimal(45000).plus(new Decimal(5000).times(x)).div(hasUpgrade('lab',34)?Decimal.log10(player.dark.resetTime+1).div(1.5).max(1):1).div(hasUpgrade('lab',43)?1.5:1),
+						fo: new Decimal(45000).plus(new Decimal(5000).times(x)).div(hasUpgrade('lab',34)?Decimal.log10(player.dark.resetTime+1).div(1.5).max(1):1).div(hasUpgrade('lab',43)?1.5:1).pow((x.gt(40000))?1.5:1),
 					};
 				},
 				display() { // Everything else displayed in the buyable button after the title
@@ -3830,6 +3834,8 @@ addLayer("world", {
         let softcap = new Decimal(500);
         if (hasUpgrade('etoluna',13)) softcap = softcap.times(upgradeEffect('etoluna',13))
         let softcappower = 0.25;
+        if (hasUpgrade('etoluna',22)) softcappower *= tmp["etoluna"].moonPointeffect.toNumber();
+        if (softcappower >0.75) softcappower = 0.75;
         let reward = player.world.fixednum.div(2).plus(1);
         if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
         return reward;
@@ -3839,6 +3845,7 @@ addLayer("world", {
         let softcap = new Decimal(20);
         let hardcap = new Decimal(150)
         if (hasUpgrade('etoluna',14)) hardcap = hardcap.times(tmp["etoluna"].moonPointeffect);
+        if (hasUpgrade('etoluna',21)) hardcap = hardcap.times(upgradeEffect('etoluna',21));
         if (hasAchievement('a',83)) softcap = new Decimal(25);
         let softcappower = 0.25;
         let reward = Decimal.pow(1.5,player.world.restrictionnum);
@@ -4160,6 +4167,11 @@ addLayer("saya",{
             }
         }
         else player.saya.Timer41 = new Decimal(0);
+
+        if (inChallenge('saya',42)){
+            if (!player.light.auto) player.light.auto = true;
+            if (!player.dark.auto) player.dark.auto = true;
+        }
     },
 
     tabFormat: {
@@ -4386,6 +4398,28 @@ addLayer("saya",{
             goalDescription() {return format(this.goal()) + " Glowing Roses without entering Zero Sky."},
             rewardDescription() {return "Glowing Roses gain&effect x"+format(challengeEffect(this.layer,this.id))},
         },
+        42:{
+            name: "Endless Chase",
+            completionLimit: 5,
+            challengeDescription() {
+                let des = "Dark Matter effect reduces Light Tachyons gain&direct gain by log"+format(layers[this.layer].challenges[this.id].debuff())+" and force open L&D's autobuyer.";
+                    des += "<br>Completion times: "+challengeCompletions(this.layer,this.id)+"/"+this.completionLimit
+                return des
+            },
+            debuff(){//layers
+                return 10-(challengeCompletions(this.layer, this.id)*2);
+            },
+            rewardEffect(){
+                let LaheadD = player.light.points.div(player.dark.points.max(1));
+                return Decimal.pow(challengeCompletions(this.layer, this.id)+1,LaheadD).max(1);
+            },
+            unlocked() { return player[this.layer].best.gte(40)&&hasUpgrade('storylayer',31)},
+            goal() { return new Decimal(15000000).plus(Decimal.times(1000000,challengeCompletions(this.layer, this.id))) },
+            currencyDisplayName: "Light Tachyons",
+            currencyInternalName: "points",
+            currencyLayer: "light",
+            rewardDescription() {return "Dark Matters gain x"+format(challengeEffect(this.layer,this.id))+", which are based on how much Light Tachyons are ahead of Dark Matters."},
+        },
     
     },
     
@@ -4526,6 +4560,7 @@ addLayer("etoluna",{
                     ,{}],
                 "blank",
                 ["row",[["upgrade","11"],["upgrade","13"],["blank",["50px","50px"]],["upgrade","14"],["upgrade","12"]]],
+                ["row",[["upgrade","21"],["blank",["50px","50px"]],["upgrade","22"]]],
             ]
         }
     },
@@ -4697,6 +4732,33 @@ addLayer("etoluna",{
         },
         pay(){
             player[this.layer].moonPoint = player[this.layer].moonPoint.sub(50000);
+        },
+        },
+        21:{ title: "Desire for Victory",
+        description: "Star Point effect also enlarges restricted World Step effect's hardcap.",
+        fullDisplay: "<b>Desire for Victory</b><br>Star Point effect also enlarges restricted World Step effect's hardcap.<br>Cost: 900,000 Star Points",
+        unlocked() { return hasUpgrade('etoluna',13) },
+        canAfford(){
+            return player[this.layer].starPoint.gte(900000);
+        },
+        pay(){
+            player[this.layer].starPoint = player[this.layer].starPoint.sub(900000);
+        },
+        effect(){
+            let eff = tmp["etoluna"].starPointeffect.sqrt().div(1.5);
+            return eff;
+        },
+        style:{"background-color"() { if (!hasUpgrade("etoluna",21)) return canAffordUpgrade("etoluna",21)?"#bddfff":"rgb(191,143,143)";else return "rgb(119,191,95)" }},
+        },
+        22:{ title: "Mind Flow",
+        description: "Moon Points also enlarges fixed World Step effect's exponent.",
+        fullDisplay: "<b>Mind Flow</b><br>Moon Points also enlarges fixed World Step effect's softcap exponent.<br>Cost: 900,000 Moon Points",
+        unlocked() { return hasUpgrade('etoluna',14)},
+        canAfford(){
+            return player[this.layer].moonPoint.gte(900000);
+        },
+        pay(){
+            player[this.layer].moonPoint = player[this.layer].moonPoint.sub(900000);
         },
         },
     },
