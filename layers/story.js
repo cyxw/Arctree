@@ -40,6 +40,7 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==9) return "G-1";
                 if (player.storylayer.storycounter==10) return "K-2";
                 if (player.storylayer.storycounter==11) return "G-2";
+                if (player.storylayer.storycounter==12) return "LA-5";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -285,7 +286,68 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==6){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "The Archbishop was not surprised by her arrival. In fact, when the High Priest asked that question, he knew that the question could only be dealt by the girl in front of her.";
+                    if (player[this.layer].storyTimer > 5){
+                        story +="<br><br>It was too far fetched to call this one \"a girl\". The Archbishop knew, in fact, the girl in front of her, same as the High Priest, are both the embodiments of the character of the world. In the eyes of mortals, embodiments' abilities were like gods. Although the Archbishop had high power and had extraordinary longevity and magic ability, he still came from mortals, and would become mortal after the successor was appointed, and died."
+                    };
+
+                    if (player[this.layer].storyTimer > 10){
+                        story +="<br>\"I can take you to her if I'm present for your conversation.\" He made a majestic gesture, which he seldom did."
+                        story +="\"That's fine. I think---\" A shadow of a smile touched the girl's mouth, \"you want to know the reasons of it, too.\""
+                    }
+                    if (player[this.layer].storyTimer > 15){
+                        story +="<br>\"Nope. I know all of the reasons. It's clearly written in the book.\" The Archbishop despised it. It seemed that the girl underestimated his erudition. \"I just want to know what you bring this time and make sure this meeting won't collapse the church.\""
+                        story +="<br>\"Hah, that can't happen. You think too highly of me.\" She gave a laugh, \"Lead the way.\""
+                    }
+
+                    if (player[this.layer].storyTimer > 25){
+                        story += "<br><br>There was a steady knock on the door. It was the Archbishop. \"Please come in.\" The High Priest said."
+                    }
+
+                    if (player[this.layer].storyTimer > 28){
+                        story += "<br>\"Hope that you are well, my High Priest......\" The Archbishop came in, \"......Today I bring someone......who is your friend.\""
+                    }
+
+                    if (player[this.layer].storyTimer > 31)story += "<br>\"Friend?\" The high priest was slightly stunned."
+                    if (player[this.layer].storyTimer > 33)story += "<br>\"That's true. You can't remember, because she belongs to your missing memory.\" The Archbishop explained,"
+                    if (player[this.layer].storyTimer > 36)story += "\"I want to stay aside in the next conversation if possible.\""
+                    if (player[this.layer].storyTimer > 40)story += "<br>\"......You can.\" The High Priest answered, looking at the so-called \"her friend\" brought by the Archbishop: Black hair, black dress, and a black umbrella in her hand."
+                    if (player[this.layer].storyTimer > 45)story += "<br>She could make sure, She didn't know this \"friend\"."
+
+                    if (player[this.layer].storyTimer > 55)story += "<br><br>\"Why do you come to see me?\" The High Priest asked with no interest. The girl's eyes were aggressive and annoying, she thought."
+                    if (player[this.layer].storyTimer > 58)story +="<br>\"I come to find you, 'cause I found the thing which could recover your memory.\" The girl with black hair gave a wee smile and took a fragment from behind."
+                    if (player[this.layer].storyTimer > 63)story +="<br>This fragment, was not pure like the High Priest had saw before. It was lackluster, emitting a dark red glow."
+                    if (player[this.layer].storyTimer > 66)story +="<br>\"......That is it?\" The High Priest asked disdainfully, failed to notice that the Archbishop's breath had already been rapid."
+
+                    if (player[this.layer].storyTimer > 72)story +="<br><br>\"My High Priest, what this fragment contains......is yourself, is the part of memory you deliberately got rid of.\" The Archbishop hurried into the two side of this conversation. "
+                    if (player[this.layer].storyTimer > 75)story +="\"It could explain your memory loss problem, but, I think you should use it from <b>ANY</b> reason. Because......It gives me a premonition of pain.\""
+                    if (player[this.layer].storyTimer > 80)story +="<br>\"What?\" The High Priest was obviously stunned by the Archbishop's words, but soon her attention was attracted by the black haired girl's laughter."
+                    if (player[this.layer].storyTimer > 85)story +="<br>\"Hahaha......You really don't remember anything. Is your memory so completely abandoned?\" Her tone became more and more aggressive, but somehow it had a kind of temptation."
+                    if (player[this.layer].storyTimer > 90)story +="<br>The High Priest knew this sound."
+                    if (player[this.layer].storyTimer > 95)story +="<br>She didn't know this \"friend\", but she knew this sound."
+
+                    if (player[this.layer].storyTimer > 105)story += "<br><br>\"Give it to me.\" The High Priese said to that girl."
+                    if (player[this.layer].storyTimer > 108)story += "<br>\"What are you doing, my High Priest?!\" The Archbishop still tried to dissuade."
+                    if (player[this.layer].storyTimer > 111)story += "<br>\"Give that fragment to me, no matter what.\""
+                    if (player[this.layer].storyTimer > 114)story += "<br>Only then did the Archbishop forcibly withdraw his hand and slowly step away from the two sides of the meeting."
+                    if (player[this.layer].storyTimer > 120)story += "<br>\"Take it, you will remember who you are, really.\" The black hair girl said. Her tone was not that aggressive."
+                    if (player[this.layer].storyTimer > 125)story += "<br>The High Priest extended his hand, stumbled briefly, and took that bloody fragment."
+
+                    if (player[this.layer].storyTimer > 130)story +="<br>";
+                    if (player[this.layer].storyTimer > 135)story +="<br>";
+                    if (player[this.layer].storyTimer > 140)story +="<br>";
+
+                    if (player[this.layer].storyTimer > 145)story +="<br>It all happened very suddenly, but the Archbishop was sure that it was not a scene he would like to see. At least for now, it was worse than the collapse of the church."
+                    if (player[this.layer].storyTimer > 150)story +="<br>\"My High Priest......\" He wanted to speak, but he couldn't."
+                    if (player[this.layer].storyTimer > 155)story +="<br>He couldn't blame the black haired girl. When she took out that fragment---no, when she appeared in front of him, all this was doomed."
+                    if (player[this.layer].storyTimer > 160)story +="<br>That \"her\", had come back. He could not stop this even if he wanted. Although he persuaded himself not to stop, but......"
+                    if (player[this.layer].storyTimer > 165)story +="<br>\"The High Priest\", no, that \"Her\", knelt down on the ground, crying."
+                    if (player[this.layer].storyTimer > 170)story +="<br>\"Hahahahaha......\" That girl's laughter, again, \"In the countless of world cycles, you and I had fought for thousands of times. You beat me every time, but that's because I don't think it was a fair fight. So I lost, every time."
+                    if (player[this.layer].storyTimer > 180)story +="<br>\"You never thought about how I felt, because you have never really experienced the world. You have never carefully observe the memories corresponding to the fragments you collected. You couldn't bear them, every time, and lost yourself at last, gain power from fragements."
+                    if (player[this.layer].storyTimer > 190)story +="<br>\"I really enjoyed my time with you, before you collected those fragements, before you lost yourself.\" She bent down, lifting the High Priest---No, \"her\"--- face gently with her hand, \"You were a very interesting and kind girl, that time.\""
+                    if (player[this.layer].storyTimer > 195)story +="<br>"
+                    if (player[this.layer].storyTimer > 200)story +="<br>\"Welcom back, 「Hikari」.\""
+
                     return story;
                 };
 
@@ -310,6 +372,11 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==11){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==12){
                     let story = "Story in Plan, haven't been written/translated.";
                     return story;
                 };
@@ -341,12 +408,13 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==3) req = 90;
         if (player.storylayer.storycounter==4) req = 75;
         if (player.storylayer.storycounter==5) req = 75;
-        if (player.storylayer.storycounter==6) req = 90;
+        if (player.storylayer.storycounter==6) req = 210;
         if (player.storylayer.storycounter==7) req = 60;
         if (player.storylayer.storycounter==8) req = 60;
         if (player.storylayer.storycounter==9) req = 60;
         if (player.storylayer.storycounter==10) req = 60;
         if (player.storylayer.storycounter==11) req = 60;
+        if (player.storylayer.storycounter==12) req = 60;
         return req;
     },
 
@@ -364,6 +432,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==9) color = "#d7a9f4";
         if (player.storylayer.storycounter==10) color = "#16a951";
         if (player.storylayer.storycounter==11) color = "#d7a9f4";
+        if (player.storylayer.storycounter==12) color = "#00bdf9";
         return color;
     },
 
@@ -567,6 +636,17 @@ addLayer("storylayer", {
         pay(){
         },
         unlocked() { return (player.storylayer.storycounter==11&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',32)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        33:{ title: "Rediscover Fragments",
+        fullDisplay(){
+            return "<b>Rediscover Fragments</b><br>Unlock Fragment researches.<br><br>Cost:400,000,000 Research Points"
+        },
+        canAfford(){return player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(400000000)},
+        pay(){
+            player.lab.points = player.lab.points.sub(400000000);
+        },
+        unlocked() { return (player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',33)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }
