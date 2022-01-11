@@ -3934,7 +3934,9 @@ addLayer("a", {
             tooltip: "Gain both 250 Star Points&Moon Points.<br>Rewards:Unlock their buffs.",
             effect(){
                 return player.storylayer.points.plus(1);
-            }
+            },
+            image:"img/acv/93.png",
+            //style:{'background-position':'center'}
         },
         94: {
             name: "Being others",
@@ -3953,6 +3955,7 @@ addLayer("a", {
             name: "sizeof(double)",
             done() { return player.points.gte(Number.MAX_VALUE)},
             tooltip: "Gain 1.79e308 Fragments.",
+            image:"img/acv/101.png",
         },
         102: {
             name: "\"I told you it's useless\"",
