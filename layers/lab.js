@@ -1335,7 +1335,7 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.world.points)+" / "+formatWhole(cost.fo)+" World Steps"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+"<br>Also divedes World Steps height by ÷"+format(buyableEffect('lab',43));
+                    let display = formatWhole(player.world.points)+" / "+formatWhole(cost.fo)+" World Steps"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+"<br>Also dividing World Steps height by ÷"+format(buyableEffect('lab',43));
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',163); }, 

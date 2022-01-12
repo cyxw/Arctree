@@ -1101,7 +1101,7 @@ addLayer("kou", {
             },
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
-            rewardDescription: "Guiding Scythes Effect fomula is better and it will effect Forgotten Drops gain.",
+            rewardDescription: "Guiding Scythes Effect formula is better and it will effect Forgotten Drops gain.",
         },
         42:{
             name: "The Desert of clay",
@@ -2916,7 +2916,7 @@ addLayer("saya",{
     displayRow:0,
     position:5,
     hotkeys: [
-        {key: "k", description: "K: Everflashing Knives", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "k", description: "K: Reset for Everflashing Knives", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     branches: ["lethe"],                            
 
@@ -3296,8 +3296,8 @@ addLayer("etoluna",{
     },
 
     moonPointeffect(){//tmp
-        let eff = player.etoluna.starPoint.plus(1).log(5).max(0).div(50).plus(1);
-        if (hasUpgrade('etoluna',24)) eff = player.etoluna.starPoint.pow(1/3).times(1.5).div(50).max(0).plus(1);
+        let eff = player.etoluna.moonPoint.plus(1).log(5).max(0).div(50).plus(1);
+        if (hasUpgrade('etoluna',24)) eff = player.etoluna.moonPoint.pow(1/3).times(1.5).div(50).max(0).plus(1);
         return eff;
     },
 
@@ -3562,8 +3562,8 @@ addLayer("etoluna",{
         },
         },
     23:{ title: "Memory of rhythm",
-        description: "Star Point effect fomula becomes better.",
-        fullDisplay: "<b>Memory of rhythm</b><br>Star Point effect fomula becomes better.<br>Cost: 1,200,000 Star Points",
+        description: "Star Point effect formula becomes better.",
+        fullDisplay: "<b>Memory of rhythm</b><br>Star Point effect formula becomes better.<br>Cost: 1,200,000 Star Points",
         unlocked() { return hasUpgrade('etoluna',21) },
         canAfford(){
             return player[this.layer].starPoint.gte(1200000);
@@ -3574,8 +3574,8 @@ addLayer("etoluna",{
         style:{"background-color"() { if (!hasUpgrade("etoluna",23)) return canAffordUpgrade("etoluna",23)?"#bddfff":"rgb(191,143,143)";else return "rgb(119,191,95)" }},
     },
     24:{ title: "Memory of roles",
-        description: "Moon Points effect fomula becomes better.",
-        fullDisplay: "<b>Memory of roles</b><br>Moon Points effect fomula becomes better.<br>Cost: 1,200,000 Moon Points",
+        description: "Moon Points effect formula becomes better.",
+        fullDisplay: "<b>Memory of roles</b><br>Moon Points effect formula becomes better.<br>Cost: 1,200,000 Moon Points",
         unlocked() { return hasUpgrade('etoluna',22)},
         canAfford(){
             return player[this.layer].moonPoint.gte(1200000);
