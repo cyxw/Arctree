@@ -3967,6 +3967,12 @@ addLayer("a", {
             done() { return player.etoluna.points.gte(100)},
             tooltip: "Gain 100 Gemini Bounds.<br>Rewards:Gemini Bounds give more speed on Star/Moon Points gaining.",
         },
+        104: {
+            name: "\"Did I just see an NaN?\"",
+            done() { return (challengeCompletions('saya',42)>=5) && inChallenge('saya',42)&&player.tab=='light'},
+            tooltip: "See an NaN which won't break the game.",
+            image:"img/acv/104.png",
+        },
     },
     tabFormat: [
         "blank", 

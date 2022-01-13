@@ -352,12 +352,63 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==7){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "Somebody knocked your door, \"Please come in.\" You said.";
+                    if (player[this.layer].storyTimer > 5) story += "<br>The door opened, it was the leader of world advance team. After the success of \"Pure White Action\", you specially approved the world advance team for half a month's vacation. Today was his first work day after vacation. \"What's up?\" You asked."
+                    if (player[this.layer].storyTimer > 10) story += "<br>\"Things are that I think it's time for our world advance team continuing to explore the world.\" The team leader said, \"The Pure White City, wonderful though, shouldn't be our end.\""
+                    if (player[this.layer].storyTimer > 15) story += "<br>\"Oh? That's true. Do you have any idea?\" You asked."
+                    if (player[this.layer].storyTimer > 18) story += "<br>\"I think we should think further. Our goal should be the end of the world.\" He patted his chest with pride."
+
+                    if (player[this.layer].storyTimer > 25) story += "<br><br>You broke out a laughter, \"This step is too far, huh?\""
+                    if (player[this.layer].storyTimer > 28) story += "<br>\"Nope. According to the investigation about the world view of the residents of Pure White City, many people there don't know if there were cities outside their city. A few scholars have given a positive answer though, but they don't know the exact position.\" He seemed very confident in his ideas, \"We can roughly determine several directions based on the map we found in city library.\""
+                    if (player[this.layer].storyTimer > 35) story += "<br>\"But your previous report have shown that the mainstream view is that only Pure White City is inhabited?\" You were still persuading him to give up the idea."
+                    if (player[this.layer].storyTimer > 40) story += "<br>\"How could you know without going to see it?\" His confidence still."
+
+                    if (player[this.layer].storyTimer > 45) story += "<br><br>Yes, don't dwell too much on specific aspects.  \"So I'll arrange people who will stay at Pure White City. Write a preliminary plan on paper today. If convenient, speak your plan to me briefly.\""
+                    if (player[this.layer].storyTimer > 50) story += "<br>\"Alright. According to the destination and terrain, I think there are two suspicious spots we could approach easily. One in the west of Pure White City, another in the south-east.\" He said. \"Both of them are not far away from the city. If we take some days to prepare,  exploration report will be on your desk in at most two weeks.\""
+
+                    if (player[this.layer].storyTimer > 60) story += "<br>\"OK, let's do this.\" You approved his plan, like making a new risky move in chess."
                     return story;
                 };
 
                 if (player.storylayer.storycounter==8){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "To her, everyday was a grand banquet.";
+                    story += "<br>A banquet without guests."
+
+                    if (player[this.layer].storyTimer > 5) {
+                        story += "<br><br>She built this architecture in strict accordance with her own experience and memories: A exquisite Western style manor."
+                        story += "<br>If someone arrived, he must have been impressed by the exquisite layout and decoration."
+                }
+
+                if (player[this.layer].storyTimer > 10){
+                    story += "<br>But, no one had arrived."
+                    story += "<br>And, no one would arrive."
+                }
+
+                if (player[this.layer].storyTimer > 20){
+                    story += "<br><br>After finding out that she didn't need to eat like people in fragments' memories, she devoted all her energy to piecing together and visiting memories. She saw I lot. She felt bored."
+                    story += "<br>Wandering in her own manor, is remembering her first time in the world, is remembering her first memory."
+                }
+
+                if (player[this.layer].storyTimer > 25){
+                    story += "<br><br>But what she didn't know is today would be different."
+                    story += "<br>In fact, she didn't know what this difference could bring."
+                    story += "<br>Even if she had knew, she would not be scared, though."
+                }
+
+                if (player[this.layer].storyTimer > 35)story += "<br><br>\"There seems to be something......in the hall.\" She muttered to herself and hid carefully behind the wall in the corridor."
+                if (player[this.layer].storyTimer > 38)story += "<br>Somebody here. Looked like not guests."
+                if (player[this.layer].storyTimer > 41)story += "<br>\"Be cautious. Don't touch any suspicious things. Photo every thing we want to know.\" Said the leading man, commanding the others."
+                if (player[this.layer].storyTimer > 46)story += "<br>What in their hands......seemed to have more than just cameras."
+                if (player[this.layer].storyTimer > 50)story += "<br>She went back to kitchen, picked up the bread knife she knew."
+                if (player[this.layer].storyTimer > 53)story += "<br>From her eyes, she didn't know what these men wanted to do, just as she wouldn't know the whole memory in the beginning."
+                if (player[this.layer].storyTimer > 58)story += "<br>She was just doing what she knows."
+                if (player[this.layer].storyTimer > 61)story += "<br>Go around outside the hall and behind them, reasonable."
+
+                if (player[this.layer].storyTimer > 70){
+                    story += "<br><br>With a quick throw, the bread knife flew out of her hand and ran directly to the throat of the leading man."
+                    story += "<br>But then came the sound of violent metal collision. The knife was blocked by the shield. It fell to the ground and made a crisp noise."
+                }
+
                     return story;
                 };
 
@@ -409,8 +460,8 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==4) req = 75;
         if (player.storylayer.storycounter==5) req = 75;
         if (player.storylayer.storycounter==6) req = 210;
-        if (player.storylayer.storycounter==7) req = 60;
-        if (player.storylayer.storycounter==8) req = 60;
+        if (player.storylayer.storycounter==7) req = 75;
+        if (player.storylayer.storycounter==8) req = 75;
         if (player.storylayer.storycounter==9) req = 60;
         if (player.storylayer.storycounter==10) req = 60;
         if (player.storylayer.storycounter==11) req = 60;
