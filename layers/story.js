@@ -418,7 +418,36 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==10){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "\"And that's all. I think that's all I can tell you.\" The girl said on the alert to the team leader.";
+                    if (player[this.layer].storyTimer > 5) story += "<br>\"Thank you very much. We don't mean to offend. Your answer is very important for us to understand the world.\" The leader replied, turned around and prepared to let the team return to the camp."
+                    if (player[this.layer].storyTimer > 10) story +="<br>\"Hey, hey, leader, how can we just leave?\" A voice sounded."
+                    if (player[this.layer].storyTimer > 13) story +="<br>The leader took a look. It was the team scientist, the annoying guy."
+                    if (player[this.layer].storyTimer > 16) story +="<br>\"What else do you want to ask? We can't disturb others.\" The leader's words implied an order."
+
+                    if (player[this.layer].storyTimer > 20) story +="<br><br>\"So, that, miss,\" The scientist asked. \"You have mentioned that your main life is to explore and experience......memories in fragments? How could you make it? We only have the ability to judge whether they have energy.\""
+                    if (player[this.layer].storyTimer > 30) story +="<br>That girl answered with a smile, \"Hah, only this question? Easy for me, you just need to step into the memory. Maybe you will become somebody in the memory, but that's fine for me......Maybe I can show them to you and you could see those memories.\""
+                    if (player[this.layer].storyTimer > 40) story +="<br>\"That's great!\" The scientist lighted up with pleasure. The leader shook his head slightly. Seems that the whole team needs to be silly with this \"mad guy\" again."
+
+                    if (player[this.layer].storyTimer > 45) story +="<br><br>The girl led the group in front of a door. It was a big gate. Obviously, the room behind it couldn't be small. Maybe another hall."
+                    if (player[this.layer].storyTimer > 47) story +="<br>She pushed the door slightly. What in front of their eyes was a florescent cloud, made by fragments, floating in the hall."
+                    if (player[this.layer].storyTimer > 50) story +="<br>No one didn't show surprise, but all soldiers were trained to be silent."
+                    if (player[this.layer].storyTimer > 53) story +="<br>Except the scientisit."
+
+                    if (player[this.layer].storyTimer > 60) story += "<br>\"Wow, so many fragments 'alive' here......I think there must be more than one memory in these fragments. How could you pick up what you want to see among them?\""
+                    if (player[this.layer].storyTimer > 65) story += "<br>\"It's not hard. You could see parts of memories through fragments. The whole memory will be shown once you step in.\""
+                    if (player[this.layer].storyTimer > 70) story += "<br>She stopped for a while, and reached her hand to the scientisit."
+                    if (player[this.layer].storyTimer > 73) story += "<br>\"I'm afraid you don't know how first time.\" She explained."
+                    if (player[this.layer].storyTimer > 76) story += "<br>\"OK, OK, It's for science!\" To her surprise, the scientist held her hand directly and tightly, without any hesitation."
+                    if (player[this.layer].storyTimer > 80) story += "<br>\"That's fine. Let's go.\" She turned her head and extended her other hand to the nearest fragment."
+
+                    if (player[this.layer].storyTimer > 90) story += "<br><br>Scientists watched the girl's fingers gradually turn into fragments, flying towards the direction she had pointed before. The fragments of her had a blue-green fluorescence, beautiful."
+                    if (player[this.layer].storyTimer > 95) story += "<br>First the fingers, then the hands, and finally the whole arm and body, she became the thing she had wanted to get in."
+                    if (player[this.layer].storyTimer > 100) story += "<br>The fragments she had turned to had no no wire connection between each other, but others could see that this was a whole. The green fragments moved into a cloud of fragments, flickering."
+                    if (player[this.layer].storyTimer > 105) story += "<br>No one didn't show surprise, but all soldiers were trained to be silent."
+                    if (player[this.layer].storyTimer > 108) story += "<br>Except the scientisit."
+
+                    if (player[this.layer].storyTimer > 115) story += "<br>\"Wow......This......This is so <i>fascinating</i>!\""
+
                     return story;
                 };
 
@@ -463,7 +492,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==7) req = 75;
         if (player.storylayer.storycounter==8) req = 75;
         if (player.storylayer.storycounter==9) req = 60;
-        if (player.storylayer.storycounter==10) req = 60;
+        if (player.storylayer.storycounter==10) req = 135;
         if (player.storylayer.storycounter==11) req = 60;
         if (player.storylayer.storycounter==12) req = 60;
         return req;
@@ -691,7 +720,7 @@ addLayer("storylayer", {
         },
         33:{ title: "Rediscover Fragments",
         fullDisplay(){
-            return "<b>Rediscover Fragments</b><br>Unlock Fragment researches.<br><br>Cost:400,000,000 Research Points"
+            return "<b>Rediscover Fragments</b><br>Unlock Fragmental researches.<br><br>Cost:400,000,000 Research Points"
         },
         canAfford(){return player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(400000000)},
         pay(){

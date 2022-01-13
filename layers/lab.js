@@ -133,7 +133,7 @@ addLayer("lab", {
             ["row",[["upgrade","151"] ]]
         ]
     },
-        "Fragment Researches":{
+        "Fragmental Researches":{
         unlocked(){return hasUpgrade('storylayer',33)},
         content:[
         "blank",
@@ -943,7 +943,7 @@ addLayer("lab", {
             name: "\"Let's back to work\"",
             unlocked(){return hasAchievement('lab',21)},
             done() { return hasUpgrade('storylayer',33) },
-            tooltip: "Unlock Fragment Researches after you are about to forget the Lab.",
+            tooltip: "Unlock Fragmental Researches after you are about to forget the Lab.",
         },
     },
     buyables:{//Research Transformers

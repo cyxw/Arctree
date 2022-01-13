@@ -1207,6 +1207,7 @@ addLayer("lethe", {
      },
 
     doReset(resettingLayer){
+        let tempupgrades = player[this.layer].upgrades;
         let keep=[];
         if (layers[resettingLayer].row > this.row) {layerDataReset("lethe", keep);
         if(hasMilestone('yugamu',0)) player.lethe.milestones = player.lethe.milestones.concat([0,1,2,3,4,5,6]);
@@ -1221,7 +1222,9 @@ addLayer("lethe", {
             {
                 if (!hasUpgrade('lethe',auto[i])) player.lethe.upgrades.push(auto[i]);
             }
-        };}
+        };
+        if (inChallenge('saya',32)) player[this.layer].upgrades = tempupgrades;
+    }
     },
 
     milestones: {
@@ -3699,16 +3702,19 @@ addLayer("a", {
             name: "An Essence of the Broken World",
             done() { return player.mem.points.gte(100) },
             tooltip: "Gain 100 Memories.<br>Rewards:Fragments generation is a little faster.",
+            image:"img/acv/11.png",
         },
         12: {
             name: "A Stack",
             done() { return player.points.gte(9999) },
             tooltip: "Gain 9999 Fragments.",
+            image:"img/acv/12.png",
         },
         13: {
             name: "Two Stacks for Sure",
             done() { return player.points.gte(19998)&&hasUpgrade("mem",33)},
             tooltip: "Gain 19998 Fragments With Directly Transfer.Rewards:You start at 5 Memories when reset.",
+            image:"img/acv/13.png",
         },
         14: {
             name: "Define Aspects",
