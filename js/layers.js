@@ -2287,7 +2287,7 @@ addLayer("yugamu", {
     shouldNotify(){
         let buyableid = [11,21,22,31];
         for(var i = 0; i < buyableid.length; i++){
-            if (layers.yugamu.buyables[buyableid[i]].canAfford()){
+            if (tmp.yugamu.buyables[buyableid[i]].canAfford){
                 return true;
             };
     }
@@ -2299,12 +2299,22 @@ addLayer("yugamu", {
             player.yugamu.timesmoved = player.yugamu.timesmoved.plus(1);
             player.yugamu.actionpoint = layers.yugamu.actionpoint();
         };
+
+
         let buyableid = [11,21,22,31];
         for(var i = 0; i < buyableid.length; i++){
-            if (layers.yugamu.buyables[buyableid[i]].canAfford()&&layers.yugamu.buyables[buyableid[i]].autoed()){
+            if (tmp.yugamu.buyables[buyableid[i]].canAfford&&tmp.yugamu.buyables[buyableid[i]].autoed){
                 layers.yugamu.buyables[buyableid[i]].buy();
             };
     }
+
+
+    if (layers.yugamu.movetimes().gt(tmp.yugamu.timesmoved)&&hasUpgrade('lab',171)){
+        let buyableid = [11,21,22,31];
+        for(var i = 0; i < buyableid.length; i++)player.yugamu.buyables[buyableid[i]] = layers.yugamu.movetimes();
+        player.yugamu.timesmoved = layers.yugamu.movetimes();
+    };
+
     },
 
     doReset(resettingLayer){

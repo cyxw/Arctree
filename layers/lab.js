@@ -74,7 +74,10 @@ addLayer("lab", {
         if (hasUpgrade('lab',122)) auto =auto.concat([41,42]);
         for(var i = 0; i < auto.length; i++){
             if (layers.lab.buyables[auto[i]].canAfford()&&layers.lab.buyables[auto[i]].autoed()){
+                if (i!=43)
                 layers.lab.buyables[auto[i]].buy()
+                else if(!hasUpgrade('lab',172)) layers.lab.buyables[43].buy()
+                     else player.lab.buyables[43] = player.lab.buyables[43].plus(upgradeEffect('lab',172));
             };
         }
 
@@ -138,6 +141,7 @@ addLayer("lab", {
         content:[
         "blank",
         ["row",[["upgrade","161"],["upgrade","162"],["upgrade","163"],["upgrade","164"]]],
+        ["row",[["upgrade","171"],["upgrade","172"],["upgrade","173"],["upgrade","174"]]],
     ]
 },
         }
@@ -867,6 +871,32 @@ addLayer("lab", {
             if (!player.light.auto) player.light.auto = true;
             if (!player.dark.auto) player.dark.auto = true;
             if (!player.kou.auto) player.kou.auto = true;
+        },
+        },
+        171:{ title: "Wide-Seen",
+        description: "The autobuyer of Maze now behave in a more effective way.",
+        fullDisplay(){return "<b>Wide-Seen</b><br>The autobuyer of Maze now behave in a more effective way.<br><br>Cost: 350,000,000 Research Points<br>Req:14 Flourish Labyrinths"},
+        unlocked(){return hasUpgrade('lab',164)},
+        canAfford(){
+            return player.lab.points.gte(350000000)&&player.yugamu.points.gte(14);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(350000000);
+        },
+        },
+        172:{ title: "HyperStacks",
+        description: "The autobuyer of Step Transformer now behave in a more effective way.",
+        fullDisplay(){return "<b>HyperStacks</b><br>The autobuyer of Step Transformer now behave in a more effective way.<br><br>Cost: 350,000,000 Research Points<br>Req:150,000 World Steps"},
+        unlocked(){return hasUpgrade('lab',164)},
+        canAfford(){
+            return player.lab.points.gte(350000000)&&player.world.points.gte(150000);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(350000000);
+        },
+        effect(){
+            let bulk = player.world.points.plus(1).log(10).sub(layers.lab.buyables[43].cost().fo.plus(1).log10()).floor();
+            return Decimal.pow(10,bulk).max(1);
         },
         },
     },

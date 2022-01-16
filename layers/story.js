@@ -740,11 +740,11 @@ addLayer("storylayer", {
         },
         33:{ title: "Rediscover Fragments",
         fullDisplay(){
-            return "<b>Rediscover Fragments</b><br>Unlock Fragmental researches.<br><br>Cost:400,000,000 Research Points"
+            return "<b>Rediscover Fragments</b><br>Unlock Fragmental researches.<br><br>Cost:350,000,000 Research Points"
         },
         canAfford(){return player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(400000000)},
         pay(){
-            player.lab.points = player.lab.points.sub(400000000);
+            player.lab.points = player.lab.points.sub(350000000);
         },
         unlocked() { return (player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',33)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
