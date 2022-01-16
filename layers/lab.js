@@ -77,7 +77,7 @@ addLayer("lab", {
                 if (i!=43)
                 layers.lab.buyables[auto[i]].buy()
                 else if(!hasUpgrade('lab',172)) layers.lab.buyables[43].buy()
-                     else player.lab.buyables[43] = player.lab.buyables[43].plus(upgradeEffect('lab',172));
+                     else {player.lab.buyables[43] = player.lab.buyables[43].plus(upgradeEffect('lab',172));player.lab.points = player.lab.points.plus(upgradeEffect('lab',172))};
             };
         }
 
