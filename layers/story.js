@@ -385,7 +385,7 @@ addLayer("storylayer", {
                 }
 
                 if (player[this.layer].storyTimer > 20){
-                    story += "<br><br>After finding out that she didn't need to eat like people in fragments' memories, she devoted all her energy to piecing together and visiting memories. She saw I lot. She felt bored."
+                    story += "<br><br>After finding out that she didn't need to eat like people in fragments' memories, she devoted all her energy to piecing together and visiting memories. She saw a lot. She felt bored."
                     story += "<br>Wandering in her own manor, is remembering her first time in the world, is remembering her first memory."
                 }
 
@@ -413,7 +413,27 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==9){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "If you said, this is sea, then sorry, \"This must be not the sea in our worlds.\"";
+                    if (player[this.layer].storyTimer > 5)story += "<br>But, it did a sea. As the book in the Pure White City said, \"There is really a lot of water stored here.\""
+                    if (player[this.layer].storyTimer > 10)story += "<br>\"Hey, forget it. If this thing could drink, I will drink a whole bucket of drinking water in front of everyone.\" A member made a joke. His jokes did express the doubts of the whole team."
+                    if (player[this.layer].storyTimer > 15)story += "<br>\"But since we have been at the sea, we must be not far away from our destination. But it's going dark. You want to camp here or further towards the goal?\" Obviously, the leader wanted the later answer."
+                    if (player[this.layer].storyTimer > 20)story += "<br>\"Camp here. We don't know whether it's at the seaside or in the sea. Who knows what could happen if we walk along the coastline in total darkness.\""
+                    
+                    if (player[this.layer].storyTimer > 25)story += "<br><br>A couple of simple but professional tents had been set up along the seaside. The faint light of the campfire brought warmth to the whole camp."
+                    if (player[this.layer].storyTimer > 30)story += "<br>Now it was deep night. Most team members were asleep, except those who took care of the campfire and the team scientist wandering with a flashlight in his hand."
+                    if (player[this.layer].storyTimer > 35)story += "<br>\"......Fine, this should be recorded, too. 'There are a large number of shells composed of fragments on the coast. It can be confirmed that......'\""
+                    if (player[this.layer].storyTimer > 40)story += "<br>\"'......this coast is trying to imitate the impression of a person with average knowledge of the coast', OK, that's fine.\" He put back his ball pen and prepare to return to the camp not far away to rest---Before the campfire watchers found him leaving too far without permission."
+                    if (player[this.layer].storyTimer > 45)story += "<br>The moonlight shone on his notebook, emitting a light blue background."
+
+                    if (player[this.layer].storyTimer > 50)story += "<br><br>But, \"Wait, it's not moonlight.\""
+                    if (player[this.layer].storyTimer > 55)story += "<br>Scientists' intuition was always accurate. He glimpsed a tall building in the distance---Maybe a tower, maybe not."
+                    if (player[this.layer].storyTimer > 60)story += "<br>And on the top of that building, blue and purple lights were converging."
+                    if (player[this.layer].storyTimer > 65)story += "<br>The penetration of those lights was so strong that scientists thought it was moonlight at first."
+                    
+                    if (player[this.layer].storyTimer > 70)story += "<br><br>He rushed back to the camp and said to the team member watching the campfire:"
+                    if (player[this.layer].storyTimer > 75)story += "<br>\"Wake the leader up! I think I know where's the destination!\""
+
+
                     return story;
                 };
 
