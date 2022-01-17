@@ -58,6 +58,7 @@ addLayer("lab", {
         if (hasUpgrade('lab',111)) gain = gain.times(buyableEffect('lab',11));
         if (hasUpgrade('world',31)) gain = gain.times(layers.world.restrictReward());
         if (hasUpgrade('lab',121)) gain = gain.times(1.5);
+        if (hasUpgrade('lab',173)) gain = gain.times(upgradeEffect('lab',173));
 
         return gain;
     },
@@ -895,6 +896,14 @@ addLayer("lab", {
             if(!hasUpgrade('lab',172)) return new Decimal(1);
             let bulk = player.world.points.plus(1).log(10).sub(layers.lab.buyables[43].cost().fo.plus(1).log10()).floor();
             return Decimal.pow(10,bulk).max(1);
+        },
+        },
+        173:{ title: "Over Proud",
+        description: "Research Point gain is boosted by achievements.",
+        unlocked(){return hasUpgrade('lab',171)&&hasUpgrade('lab',172)},
+        cost:new Decimal(5e9),
+        effect(){
+            return Math.max(1,(player.a.achievements.length/5));
         },
         },
         174:{ title: "Memory Seeker",
