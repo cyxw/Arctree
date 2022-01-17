@@ -20,7 +20,7 @@ addLayer("mem", {
         if (inChallenge('kou',12)) return sc;
         if (hasUpgrade('dark',21)) sc=sc.times(50);
         if (hasUpgrade('dark',32)) sc=sc.times(upgradeEffect('dark', 32));
-        if (hasUpgrade('mem',34)&&hasAchievement('a',23))sc = sc.times((50-Math.sqrt(player.mem.resetTime)<5)?5:50-Math.sqrt(player.mem.resetTime));
+        if (hasUpgrade('mem',34)&&hasAchievement('a',23))sc = sc.times(upgradeEffect('mem',34));
         if (hasMilestone('dark',2))sc = sc.times(tmp.dark.effect);
         if (hasAchievement('a',25)) sc = sc.times(player.points.plus(1).log10().plus(1));
         if (hasUpgrade('lethe',22)) sc = sc.times(player.light.points.div(20).max(1));
@@ -257,6 +257,13 @@ addLayer("mem", {
         cost() {return new Decimal(10000000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42)},
         unlocked() { return (hasUpgrade("mem", 33)||hasUpgrade("dark",23))},
         onPurchase(){player.points=new Decimal(1);player[this.layer].points = new Decimal(1);},
+        effect(){//not decimal
+            if (!hasAchievement('a',23)) return 1;
+            return (50-Math.sqrt(player.mem.resetTime)<5)?5:50-Math.sqrt(player.mem.resetTime);
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: Memory softcap starts "+format(upgradeEffect('mem',34))+"x later"
+        },
         },
         41:{ title: "Build Up The Core.",
         fullDisplay(){
