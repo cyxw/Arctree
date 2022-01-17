@@ -129,7 +129,10 @@ addLayer("mem", {
             let eff=new Decimal(1.5);
             if (hasUpgrade('mem', 21)) eff=eff.pow(upgradeEffect('mem', 21));
             return eff;
-        }
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',11))+"x"
+        },
         },
         12:{ title: "Memory Extraction",
         description: "Memories gain is boosted by Memories.",
@@ -139,7 +142,10 @@ addLayer("mem", {
             let eff=player[this.layer].points.plus(1).pow(0.25);
             if (hasUpgrade('mem', 32)) eff=eff.pow(1.25);
             return eff;
-        }
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',12))+"x"
+        },
         },
         13:{ title: "Algorithm Managing",
         description: "Lower Fragments requirement for further Memories",
@@ -150,6 +156,9 @@ addLayer("mem", {
             if (hasUpgrade('mem', 23)) eff=eff.pow(upgradeEffect('mem', 23));
             return eff;
         },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',13))+"x"
+        },
         },
         14:{ title: "Fragments Duplication",
         description: "Fragments generation is boosted by Fragments",
@@ -157,7 +166,10 @@ addLayer("mem", {
         unlocked() { return hasUpgrade("mem", 13)||hasMilestone('light',1) },
         effect() {
             return player.points.plus(1).log10().pow(0.75).plus(1).max(1);
-        }
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',14))+"x"
+        },
         },
         21:{ title: "Thought Combination",
         description: "Thought Collect is much faster",
@@ -167,7 +179,10 @@ addLayer("mem", {
             let eff= new Decimal(2);
             if (hasUpgrade('mem', 31)) eff=eff.pow(upgradeEffect('mem', 31));
             return eff
-        }
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',21))+"x"
+        },
         },
         22:{ title: "Fragments Prediction",
         description: "Fragments generation is boosted by Memories",
@@ -175,7 +190,10 @@ addLayer("mem", {
         unlocked() { return hasUpgrade("mem", 21)||hasMilestone('light',1) },
         effect() {
             return player[this.layer].points.plus(1).pow(0.5)
-        }
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',22))+"x"
+        },
         },
         23:{ title: "Time Boosting",
         description: "Algorithm Managing is effected by Fragments.",
@@ -183,7 +201,10 @@ addLayer("mem", {
         unlocked() { return hasUpgrade("mem", 22)||hasMilestone('light',1) },
         effect() {
             return player.points.plus(1).times(1.5).log10().log10(2).pow(0.01).plus(1).max(1);
-        }
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',23))+"x"
+        },
         },
         24:{ title: "Directly Drown",
         description: "Memories gain is boosted by Fragments.",
@@ -191,7 +212,10 @@ addLayer("mem", {
         unlocked() { return hasUpgrade("mem", 23)||hasMilestone('light',1) },
         effect() {
             return player.points.plus(1).pow(0.05).plus(1).log10().plus(2).log10(5).plus(1).max(1);
-        }
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',24))+"x"
+        },
         },
         31:{ title: "Thought Growth",
         description: "Thought Combination is boosted by Memories",
@@ -199,6 +223,9 @@ addLayer("mem", {
         unlocked() { return hasUpgrade("mem", 24)||hasMilestone('dark',1) },
         effect() {
             return player[this.layer].points.plus(1).log10().pow(0.5).log10(2).max(1);
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',31))+"x"
         },
         },
         32:{ title: "Memory Inflation",
@@ -215,6 +242,9 @@ addLayer("mem", {
             let eff = new Decimal(1.5);
             if (hasUpgrade("light", 33)) eff=eff.plus(upgradeEffect('light', 33))
             return eff;
+        },
+        effectDisplay(){
+            if (hasUpgrade('lab',174)) return "<br>Currently: "+format(upgradeEffect('mem',33))+"x"
         },
         onPurchase(){player.points=new Decimal(1);player[this.layer].points = new Decimal(1);},
         },

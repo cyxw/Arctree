@@ -74,10 +74,7 @@ addLayer("lab", {
         if (hasUpgrade('lab',122)) auto =auto.concat([41,42]);
         for(var i = 0; i < auto.length; i++){
             if (layers.lab.buyables[auto[i]].canAfford()&&layers.lab.buyables[auto[i]].autoed()){
-                if (i!=43)
                 layers.lab.buyables[auto[i]].buy()
-                else if(!hasUpgrade('lab',172)) layers.lab.buyables[43].buy()
-                     else {player.lab.buyables[43] = player.lab.buyables[43].plus(upgradeEffect('lab',172));player.lab.points = player.lab.points.plus(upgradeEffect('lab',172))};
             };
         }
 
@@ -895,8 +892,20 @@ addLayer("lab", {
             player.lab.points = player.lab.points.sub(350000000);
         },
         effect(){
+            if(!hasUpgrade('lab',172)) return new Decimal(1);
             let bulk = player.world.points.plus(1).log(10).sub(layers.lab.buyables[43].cost().fo.plus(1).log10()).floor();
             return Decimal.pow(10,bulk).max(1);
+        },
+        },
+        174:{ title: "Memory Seeker",
+        description: "You can see Memory upgrades' effect.",
+        fullDisplay(){return "<b>Memory Seeker</b><br>You can see Memory upgrades' effect.<br><br>Cost: 5e9 Research Points<br>Req:1e460 Memories"},
+        unlocked(){return hasUpgrade('lab',171)&&hasUpgrade('lab',172)},
+        canAfford(){
+            return player.lab.points.gte(5e9)&&player.mem.points.gte("1e460");
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(5e9);
         },
         },
     },
@@ -1378,8 +1387,8 @@ addLayer("lab", {
 					let cost = layers[this.layer].buyables[this.id].cost();
                     player.world.Worldtimer = new Decimal(0);
 					player.world.points = player.world.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(upgradeEffect('lab',172));
+                    player.lab.points = player.lab.points.plus(upgradeEffect('lab',172));
                 },
                 effect(){
                     let eff= player.lab.buyables[this.id].div(50).plus(1);
