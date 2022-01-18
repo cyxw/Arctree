@@ -140,6 +140,7 @@ addLayer("lab", {
         "blank",
         ["row",[["upgrade","161"],["upgrade","162"],["upgrade","163"],["upgrade","164"]]],
         ["row",[["upgrade","171"],["upgrade","172"],["upgrade","173"],["upgrade","174"]]],
+        ["row",[["upgrade","181"],["upgrade","182"],["upgrade","183"],["upgrade","184"]]],
     ]
 },
         }
@@ -458,7 +459,9 @@ addLayer("lab", {
         },
         63:{ title: "Archaeologists",
         description: "Luminous Church itself boosts Research Power gain.",
-        fullDisplay(){return "<b>Archaeologists</b><br>Luminous Church itself boosts Research Power gain.<br><br>Cost: 7,500 Research Points<br>1 Luminous Church"},
+        fullDisplay(){
+            return "<b>Archaeologists</b><br>Luminous Church itself boosts Research Power gain."+((hasUpgrade('lab',184))?("<br>Currently: "+format(upgradeEffect('lab',63))+"x"):"")+"<br><br>Cost: 7,500 Research Points<br>1 Luminous Church"
+        },
         unlocked(){return hasUpgrade('lab',61)&&hasUpgrade('lab',62)},
         canAfford(){
             return player.lab.points.gte(7500)&&player.rei.points.gte(1);
@@ -473,7 +476,7 @@ addLayer("lab", {
         },
         64:{ title: "Cartographers",
         description: "Flourish Labyrinth itself boosts Research Power gain.",
-        fullDisplay(){return "<b>Cartographers</b><br>Flourish Labyrinth itself boosts Research Power gain.<br><br>Cost: 7,500 Research Points<br>1 Flourish Labyrinth"},
+        fullDisplay(){return "<b>Cartographers</b><br>Flourish Labyrinth itself boosts Research Power gain."+((hasUpgrade('lab',184))?("<br>Currently: "+format(upgradeEffect('lab',64))+"x"):"")+"<br><br>Cost: 7,500 Research Points<br>1 Flourish Labyrinth"},
         unlocked(){return hasUpgrade('lab',61)&&hasUpgrade('lab',62)},
         canAfford(){
             return player.lab.points.gte(7500)&&player.yugamu.points.gte(1);
@@ -651,7 +654,7 @@ addLayer("lab", {
         },
         112:{ title: "Priests",
         description: "Luminous Churches boosts Glowing Roses gain.",
-        fullDisplay(){return "<b>Priests</b><br>Luminous Churches boosts Glowing Roses gain.<br><br>Cost: 30,000 Research Points<br>4 Luminous Churches"},
+        fullDisplay(){return "<b>Priests</b><br>Luminous Churches boosts Glowing Roses gain."+((hasUpgrade('lab',184))?("<br>Currently: "+format(upgradeEffect('lab',112))+"x"):"")+"<br><br>Cost: 30,000 Research Points<br>4 Luminous Churches"},
         unlocked(){return hasUpgrade('lab',111)},
         canAfford(){
             return player.lab.points.gte(30000)&&player.rei.points.gte(4);
@@ -666,7 +669,7 @@ addLayer("lab", {
         },
         113:{ title: "Tissue Decomposition",
         description: "Research Power boosts Glowing Roses gain.",
-        fullDisplay(){return "<b>Tissue Decomposition</b><br>Research Power boosts Glowing Roses gain.<br><br>Cost: 40,000 Research Points<br>150 Glowing Roses"},
+        fullDisplay(){return "<b>Tissue Decomposition</b><br>Research Power boosts Glowing Roses gain."+((hasUpgrade('lab',184))?("<br>Currently: "+format(upgradeEffect('lab',113))+"x"):"")+"<br><br>Cost: 40,000 Research Points<br>150 Glowing Roses"},
         unlocked(){return hasUpgrade('lab',112)},
         canAfford(){
             return player.lab.points.gte(40000)&&player.rei.roses.gte(150);
@@ -681,7 +684,7 @@ addLayer("lab", {
         },
         114:{ title: "Gyroscope",
         description: "Research Power gives you more move times in the Maze.",
-        fullDisplay(){return "<b>Gyroscope</b><br>Research Power gives you more move times in the Maze.<br><br>Cost: 40,000 Research Points<br>Req: 30 moved times in the Maze"},
+        fullDisplay(){return "<b>Gyroscope</b><br>Research Power gives you more move times in the Maze."+((hasUpgrade('lab',184))?("<br>Currently: +"+format(upgradeEffect('lab',114))):"")+"<br><br>Cost: 40,000 Research Points<br>Req: 30 moved times in the Maze"},
         unlocked(){return hasUpgrade('lab',112)},
         canAfford(){
             return player.lab.points.gte(40000)&&player.yugamu.timesmoved.gte(30);
@@ -705,7 +708,7 @@ addLayer("lab", {
         },
         123:{ title: "Fluorescent Steps",
         description: "Light Tachyons itself boosts The Speed of World Steps gain.",
-        fullDisplay(){return "<b>Fluorescent Steps</b><br>Light Tachyons itself boosts The Speed of World Steps gain.<br><br>Cost: 150,000 Research Points<br>7 Luminous Churches"},
+        fullDisplay(){return "<b>Fluorescent Steps</b><br>Light Tachyons itself boosts The Speed of World Steps gain."+((hasUpgrade('lab',184))?("<br>Currently: "+format(upgradeEffect('lab',123))+"x"):"")+"<br><br>Cost: 150,000 Research Points<br>7 Luminous Churches"},
         unlocked(){return hasUpgrade('lab',122)},
         canAfford(){
             return player.lab.points.gte(150000)&&player.rei.points.gte(7);
@@ -720,7 +723,7 @@ addLayer("lab", {
         },
         124:{ title: "Unstable Steps",
         description: "Dark Matters itself boosts The Speed of World Steps gain.",
-        fullDisplay(){return "<b>Unstable Steps</b><br>Dark Matters itself boosts The Speed of World Steps gain.<br><br>Cost: 150,000 Research Points<br>7 Flourish Labyrinths"},
+        fullDisplay(){return "<b>Unstable Steps</b><br>Dark Matters itself boosts The Speed of World Steps gain."+((hasUpgrade('lab',184))?("<br>Currently: "+format(upgradeEffect('lab',124))+"x"):"")+"<br><br>Cost: 150,000 Research Points<br>7 Flourish Labyrinths"},
         unlocked(){return hasUpgrade('lab',122)},
         canAfford(){
             return player.lab.points.gte(150000)&&player.yugamu.points.gte(7);
@@ -784,6 +787,9 @@ addLayer("lab", {
         effect(){
             return player[this.layer].points.plus(1).log10().div(15).plus(1);
         },
+        effectDisplay(){
+           if (hasUpgrade('lab',184)) return "<br>Currently: "+format(upgradeEffect('lab',141))+"x"
+        },
         },
         142:{ title: "DFS Method",
         description: "Research Points gives you more move times in the Maze.",
@@ -792,10 +798,13 @@ addLayer("lab", {
         effect(){
             return player[this.layer].points.plus(1).log10().max(1);
         },
+        effectDisplay(){
+           if (hasUpgrade('lab',184)) return "<br>Currently: "+format(upgradeEffect('lab',142))+"x"
+        },
         },
         143:{ title: "The Blueprint of Theology",
         description: "Research Points boosts Luminous Churches gain.",
-        fullDisplay(){return "<b>The Blueprint of Theology</b><br>Research Points boosts Luminous Churches gain.<br><br>Cost: 1,000,000 Research Points<br>8 Luminous Churches"},
+        fullDisplay(){return "<b>The Blueprint of Theology</b><br>Research Points boosts Luminous Churches gain."+((hasUpgrade('lab',184))?("<br>Currently: "+format(upgradeEffect('lab',143))+"x"):"")+"<br><br>Cost: 1,000,000 Research Points<br>8 Luminous Churches"},
         unlocked(){return hasUpgrade('lab',141)&&hasUpgrade('lab',142)},
         canAfford(){
             return player.lab.points.gte(1000000)&&player.rei.points.gte(8);
@@ -810,7 +819,7 @@ addLayer("lab", {
         },
         144:{ title: "The Blueprint of Anxiety",
         description: "Research Points boosts Flourish Labyrinths gain.",
-        fullDisplay(){return "<b>The Blueprint of Anxiety</b><br>Research Points boosts Flourish Labyrinths gain.<br><br>Cost: 1,000,000 Research Points<br>8 Flourish Labyrinths"},
+        fullDisplay(){return "<b>The Blueprint of Anxiety</b><br>Research Points boosts Flourish Labyrinths gain."+((hasUpgrade('lab',184))?("<br>Currently: "+format(upgradeEffect('lab',144))+"x"):"")+"<br><br>Cost: 1,000,000 Research Points<br>8 Flourish Labyrinths"},
         unlocked(){return hasUpgrade('lab',141)&&hasUpgrade('lab',142)},
         canAfford(){
             return player.lab.points.gte(1000000)&&player.yugamu.points.gte(8);
@@ -847,6 +856,9 @@ addLayer("lab", {
         effect(){
             return player.points.plus(1).log10().div(150).max(1);
         },
+        effectDisplay(){
+           if (hasUpgrade('lab',184)) return "<br>Currently: Research Points softcap starts "+format(upgradeEffect('lab',161))+"x later";
+        },
         },
         162:{ title: "Faster And Higher",
         description: "Research Points lowers World Step Height softcap exponent.",
@@ -854,6 +866,9 @@ addLayer("lab", {
         cost:new Decimal(150000000),
         effect(){
             return player[this.layer].points.plus(1).log10().div(100);
+        },
+        effectDisplay(){
+           if (hasUpgrade('lab',184)) return "<br>Currently: -"+format(upgradeEffect('lab',162));
         },
         },
         163:{ title: "Imitate",
@@ -897,6 +912,9 @@ addLayer("lab", {
             let bulk = player.world.points.plus(1).log(10).sub(layers.lab.buyables[43].cost().fo.plus(1).log10()).floor();
             return Decimal.pow(10,bulk).max(1);
         },
+        effectDisplay(){
+            if (hasUpgrade('lab',184)) return "<br>Currently: buy "+formatWhole(upgradeEffect('lab',172))+" Step Transformer in a bulk";
+         },
         },
         173:{ title: "Over Proud",
         description: "Research Point gain is boosted by achievements.",
@@ -904,6 +922,9 @@ addLayer("lab", {
         cost:new Decimal(5e9),
         effect(){
             return Math.max(1,(player.a.achievements.length/5));
+        },
+        effectDisplay(){
+           if (hasUpgrade('lab',184)) return "<br>Currently: "+format(upgradeEffect('lab',173))+"x";
         },
         },
         174:{ title: "Memory Seeker",
@@ -916,6 +937,44 @@ addLayer("lab", {
         pay(){
             player.lab.points = player.lab.points.sub(5e9);
         },
+        },
+        181:{ title: "Soilless Culture",
+        description: "Church Transformer boosts Glowing Roses gain.",
+        fullDisplay(){return "<b>Soilless Culture</b><br>Church Transformer boosts Glowing Roses gain.<br><br>Cost: 5e10 Research Points<br>Req:16 Luminous Churches"},
+        unlocked(){return hasUpgrade('lab',171)&&hasUpgrade('lab',172)},
+        canAfford(){
+            return player.lab.points.gte(5e10)&&player.rei.points.gte(16);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(5e10);
+        },
+        },
+        182:{ title: "Maze Bot",
+        description: "Labyrinth Transformer gives base move times in Maze.",
+        fullDisplay(){return "<b>Maze Bot</b><br>Labyrinth Transformer gives base move times in Maze.<br><br>Cost: 5e10 Research Points<br>Req:16 Flourish Labyrinths"},
+        unlocked(){return hasUpgrade('lab',171)&&hasUpgrade('lab',172)},
+        canAfford(){
+            return player.lab.points.gte(5e10)&&player.yugamu.points.gte(16);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(5e10);
+        },
+        effect(){
+            return player.lab.buyables[33].times(1000)
+        },
+        },
+        183:{ title: "Power^Power",
+        description: "Tech Transformer's formula now much better.",
+        cost() { return new Decimal(2e31)},
+        unlocked(){return hasUpgrade('lab',181)&&hasUpgrade('lab',182)&&hasAchievement('lab',22)},
+        currencyDisplayName:"Research Power",
+        currencyInternalName:"power",
+        currencyLayer:"lab",
+        },
+        184:{ title: "Indicator",
+        description: "You can see lab upgrades' effect.",
+        cost() { return new Decimal(2e13)},
+        unlocked(){return hasUpgrade('lab',183)},
         },
     },
     achievements:{//Research Progress
@@ -992,6 +1051,12 @@ addLayer("lab", {
             unlocked(){return hasAchievement('lab',21)},
             done() { return hasUpgrade('storylayer',33) },
             tooltip: "Unlock Fragmental Researches after you are about to forget the Lab.",
+        },
+        31: {
+            name: "\"Finally, I can see.\"",
+            unlocked(){return hasAchievement('lab',26)},
+            done() { return hasUpgrade('lab',174) },
+            tooltip: "See how Memory upgrades work.",
         },
     },
     buyables:{//Research Transformers
@@ -1180,7 +1245,7 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.rei.points)+" / "+formatWhole(cost.fo)+" Luminous Churches"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+"<br>Also boosts Luminous Church gain by x"+format(buyableEffect('lab',23));
+                    let display = formatWhole(player.rei.points)+" / "+formatWhole(cost.fo)+" Luminous Churches"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+"<br>Also boosts Luminous Church gain"+((hasUpgrade('lab',181))?"&Glowing Rose gain":"")+" by x"+format(buyableEffect('lab',23));
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',163); }, 
@@ -1284,6 +1349,7 @@ addLayer("lab", {
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
                     let display = formatWhole(player.yugamu.points)+" / "+formatWhole(cost.fo)+" Flourish Labyrinths"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+"<br>Also boosts Flourish Labyrinth gain by x"+format(buyableEffect('lab',23));
+                    if (hasUpgrade('lab',182)) display += "<br>Also gives "+formatWhole(upgradeEffect('lab',182))+" more base move times in Maze"
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',163); }, 
@@ -1366,6 +1432,7 @@ addLayer("lab", {
                 effect(){
                     let eff = player.lab.power.plus(1).log10().div(10).times(player.lab.buyables[this.id]);
                     if (hasAchievement('lab',22)) eff = player.lab.power.plus(1).ln().div(10).times(player.lab.buyables[this.id])
+                    if (hasUpgrade('lab',183)) eff = player.lab.power.plus(1).pow(0.15).times(player.lab.buyables[this.id])
                     if (eff.lt(0)) eff = new Decimal(0);
                     return eff;
                 },

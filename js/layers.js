@@ -2154,6 +2154,7 @@ addLayer("rei", {
                 gain =gain.times(tmp["rei"].challenges[11].gainMult);
                 gain =gain.times(challengeEffect('saya',41));
                 if (hasAchievement('a',102)) gain = gain.times(tmp["saya"].effect);
+                if (hasUpgrade('lab',181)) gain = gain.times(buyableEffect('lab',23))
                 return gain;
             },
             onEnter(){
@@ -2401,6 +2402,7 @@ addLayer("yugamu", {
         if (hasUpgrade('lab',114)) mt = mt.plus(upgradeEffect('lab',114));
         if (hasUpgrade('lab',142)) mt = mt.plus(upgradeEffect('lab',142));
         if (hasMilestone('saya',2)) mt = mt.plus(10);
+        if (hasUpgrade('lab',182)) mt = mt.plus(upgradeEffect('lab',182));
 
         if (hasAchievement('a',94)) mt = mt.times(2);
         mt = mt.round();
