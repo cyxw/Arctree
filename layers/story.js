@@ -38,6 +38,9 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==7) return "LA-4";
                 if (player.storylayer.storycounter==8) return "K-1";
                 if (player.storylayer.storycounter==9) return "G-1";
+                if (player.storylayer.storycounter==10) return "K-2";
+                if (player.storylayer.storycounter==11) return "G-2";
+                if (player.storylayer.storycounter==12) return "LA-5";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -283,21 +286,197 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==6){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "The Archbishop was not surprised by her arrival. In fact, when the High Priest asked that question, he knew that the question could only be dealt by the girl in front of her.";
+                    if (player[this.layer].storyTimer > 5){
+                        story +="<br><br>It was too far fetched to call this one \"a girl\". The Archbishop knew, in fact, the girl in front of her, same as the High Priest, are both the embodiments of the character of the world. In the eyes of mortals, embodiments' abilities were like gods. Although the Archbishop had high power and had extraordinary longevity and magic ability, he still came from mortals, and would become mortal after the successor was appointed, and died."
+                    };
+
+                    if (player[this.layer].storyTimer > 10){
+                        story +="<br>\"I can take you to her if I'm present for your conversation.\" He made a majestic gesture, which he seldom did."
+                        story +="\"That's fine. I think---\" A shadow of a smile touched the girl's mouth, \"you want to know the reasons of it, too.\""
+                    }
+                    if (player[this.layer].storyTimer > 15){
+                        story +="<br>\"Nope. I know all of the reasons. It's clearly written in the book.\" The Archbishop despised it. It seemed that the girl underestimated his erudition. \"I just want to know what you bring this time and make sure this meeting won't collapse the church.\""
+                        story +="<br>\"Hah, that can't happen. You think too highly of me.\" She gave a laugh, \"Lead the way.\""
+                    }
+
+                    if (player[this.layer].storyTimer > 25){
+                        story += "<br><br>There was a steady knock on the door. It was the Archbishop. \"Please come in.\" The High Priest said."
+                    }
+
+                    if (player[this.layer].storyTimer > 28){
+                        story += "<br>\"Hope that you are well, my High Priest......\" The Archbishop came in, \"......Today I bring someone......who is your friend.\""
+                    }
+
+                    if (player[this.layer].storyTimer > 31)story += "<br>\"Friend?\" The high priest was slightly stunned."
+                    if (player[this.layer].storyTimer > 33)story += "<br>\"That's true. You can't remember, because she belongs to your missing memory.\" The Archbishop explained,"
+                    if (player[this.layer].storyTimer > 36)story += "\"I want to stay aside in the next conversation if possible.\""
+                    if (player[this.layer].storyTimer > 40)story += "<br>\"......You can.\" The High Priest answered, looking at the so-called \"her friend\" brought by the Archbishop: Black hair, black dress, and a black umbrella in her hand."
+                    if (player[this.layer].storyTimer > 45)story += "<br>She could make sure, She didn't know this \"friend\"."
+
+                    if (player[this.layer].storyTimer > 55)story += "<br><br>\"Why do you come to see me?\" The High Priest asked with no interest. The girl's eyes were aggressive and annoying, she thought."
+                    if (player[this.layer].storyTimer > 58)story +="<br>\"I come to find you, 'cause I found the thing which could recover your memory.\" The girl with black hair gave a wee smile and took a fragment from behind."
+                    if (player[this.layer].storyTimer > 63)story +="<br>This fragment, was not pure like the High Priest had saw before. It was lackluster, emitting a dark red glow."
+                    if (player[this.layer].storyTimer > 66)story +="<br>\"......That is it?\" The High Priest asked disdainfully, failed to notice that the Archbishop's breath had already been rapid."
+
+                    if (player[this.layer].storyTimer > 72)story +="<br><br>\"My High Priest, what this fragment contains......is yourself, is the part of memory you deliberately got rid of.\" The Archbishop hurried into the two side of this conversation. "
+                    if (player[this.layer].storyTimer > 75)story +="\"It could explain your memory loss problem, but, I think you should use it from <b>ANY</b> reason. Because......It gives me a premonition of pain.\""
+                    if (player[this.layer].storyTimer > 80)story +="<br>\"What?\" The High Priest was obviously stunned by the Archbishop's words, but soon her attention was attracted by the black haired girl's laughter."
+                    if (player[this.layer].storyTimer > 85)story +="<br>\"Hahaha......You really don't remember anything. Is your memory so completely abandoned?\" Her tone became more and more aggressive, but somehow it had a kind of temptation."
+                    if (player[this.layer].storyTimer > 90)story +="<br>The High Priest knew this sound."
+                    if (player[this.layer].storyTimer > 95)story +="<br>She didn't know this \"friend\", but she knew this sound."
+
+                    if (player[this.layer].storyTimer > 105)story += "<br><br>\"Give it to me.\" The High Priese said to that girl."
+                    if (player[this.layer].storyTimer > 108)story += "<br>\"What are you doing, my High Priest?!\" The Archbishop still tried to dissuade."
+                    if (player[this.layer].storyTimer > 111)story += "<br>\"Give that fragment to me, no matter what.\""
+                    if (player[this.layer].storyTimer > 114)story += "<br>Only then did the Archbishop forcibly withdraw his hand and slowly step away from the two sides of the meeting."
+                    if (player[this.layer].storyTimer > 120)story += "<br>\"Take it, you will remember who you are, really.\" The black hair girl said. Her tone was not that aggressive."
+                    if (player[this.layer].storyTimer > 125)story += "<br>The High Priest extended his hand, stumbled briefly, and took that bloody fragment."
+
+                    if (player[this.layer].storyTimer > 130)story +="<br>";
+                    if (player[this.layer].storyTimer > 135)story +="<br>";
+                    if (player[this.layer].storyTimer > 140)story +="<br>";
+
+                    if (player[this.layer].storyTimer > 145)story +="<br>It all happened very suddenly, but the Archbishop was sure that it was not a scene he would like to see. At least for now, it was worse than the collapse of the church."
+                    if (player[this.layer].storyTimer > 150)story +="<br>\"My High Priest......\" He wanted to speak, but he couldn't."
+                    if (player[this.layer].storyTimer > 155)story +="<br>He couldn't blame the black haired girl. When she took out that fragment---no, when she appeared in front of him, all this was doomed."
+                    if (player[this.layer].storyTimer > 160)story +="<br>That \"her\", had come back. He could not stop this even if he wanted. Although he persuaded himself not to stop, but......"
+                    if (player[this.layer].storyTimer > 165)story +="<br>\"The High Priest\", no, that \"Her\", knelt down on the ground, crying."
+                    if (player[this.layer].storyTimer > 170)story +="<br>\"Hahahahaha......\" That girl's laughter, again, \"In the countless of world cycles, you and I had fought for thousands of times. You beat me every time, but that's because I don't think it was a fair fight. So I lost, every time."
+                    if (player[this.layer].storyTimer > 180)story +="<br>\"You never thought about how I felt, because you have never really experienced the world. You have never carefully observe the memories corresponding to the fragments you collected. You couldn't bear them, every time, and lost yourself at last, gain power from fragements."
+                    if (player[this.layer].storyTimer > 190)story +="<br>\"I really enjoyed my time with you, before you collected those fragements, before you lost yourself.\" She bent down, lifting the High Priest---No, \"her\"--- face gently with her hand, \"You were a very interesting and kind girl, that time.\""
+                    if (player[this.layer].storyTimer > 195)story +="<br>"
+                    if (player[this.layer].storyTimer > 200)story +="<br>\"Welcom back, 「Hikari」.\""
+
                     return story;
                 };
 
                 if (player.storylayer.storycounter==7){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "Somebody knocked your door, \"Please come in.\" You said.";
+                    if (player[this.layer].storyTimer > 5) story += "<br>The door opened, it was the leader of world advance team. After the success of \"Pure White Action\", you specially approved the world advance team for half a month's vacation. Today was his first work day after vacation. \"What's up?\" You asked."
+                    if (player[this.layer].storyTimer > 10) story += "<br>\"Things are that I think it's time for our world advance team continuing to explore the world.\" The team leader said, \"The Pure White City, wonderful though, shouldn't be our end.\""
+                    if (player[this.layer].storyTimer > 15) story += "<br>\"Oh? That's true. Do you have any idea?\" You asked."
+                    if (player[this.layer].storyTimer > 18) story += "<br>\"I think we should think further. Our goal should be the end of the world.\" He patted his chest with pride."
+
+                    if (player[this.layer].storyTimer > 25) story += "<br><br>You broke out a laughter, \"This step is too far, huh?\""
+                    if (player[this.layer].storyTimer > 28) story += "<br>\"Nope. According to the investigation about the world view of the residents of Pure White City, many people there don't know if there were cities outside their city. A few scholars have given a positive answer though, but they don't know the exact position.\" He seemed very confident in his ideas, \"We can roughly determine several directions based on the map we found in city library.\""
+                    if (player[this.layer].storyTimer > 35) story += "<br>\"But your previous report have shown that the mainstream view is that only Pure White City is inhabited?\" You were still persuading him to give up the idea."
+                    if (player[this.layer].storyTimer > 40) story += "<br>\"How could you know without going to see it?\" His confidence still."
+
+                    if (player[this.layer].storyTimer > 45) story += "<br><br>Yes, don't dwell too much on specific aspects.  \"So I'll arrange people who will stay at Pure White City. Write a preliminary plan on paper today. If convenient, speak your plan to me briefly.\""
+                    if (player[this.layer].storyTimer > 50) story += "<br>\"Alright. According to the destination and terrain, I think there are two suspicious spots we could approach easily. One in the west of Pure White City, another in the south-east.\" He said. \"Both of them are not far away from the city. If we take some days to prepare,  exploration report will be on your desk in at most two weeks.\""
+
+                    if (player[this.layer].storyTimer > 60) story += "<br>\"OK, let's do this.\" You approved his plan, like making a new risky move in chess."
                     return story;
                 };
 
                 if (player.storylayer.storycounter==8){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "To her, everyday was a grand banquet.";
+                    story += "<br>A banquet without guests."
+
+                    if (player[this.layer].storyTimer > 5) {
+                        story += "<br><br>She built this architecture in strict accordance with her own experience and memories: A exquisite Western style manor."
+                        story += "<br>If someone arrived, he must have been impressed by the exquisite layout and decoration."
+                }
+
+                if (player[this.layer].storyTimer > 10){
+                    story += "<br>But, no one had arrived."
+                    story += "<br>And, no one would arrive."
+                }
+
+                if (player[this.layer].storyTimer > 20){
+                    story += "<br><br>After finding out that she didn't need to eat like people in fragments' memories, she devoted all her energy to piecing together and visiting memories. She saw a lot. She felt bored."
+                    story += "<br>Wandering in her own manor, is remembering her first time in the world, is remembering her first memory."
+                }
+
+                if (player[this.layer].storyTimer > 25){
+                    story += "<br><br>But what she didn't know is today would be different."
+                    story += "<br>In fact, she didn't know what this difference could bring."
+                    story += "<br>Even if she had knew, she would not be scared, though."
+                }
+
+                if (player[this.layer].storyTimer > 35)story += "<br><br>\"There seems to be something......in the hall.\" She muttered to herself and hid carefully behind the wall in the corridor."
+                if (player[this.layer].storyTimer > 38)story += "<br>Somebody here. Looked like not guests."
+                if (player[this.layer].storyTimer > 41)story += "<br>\"Be cautious. Don't touch any suspicious things. Photo every thing we want to know.\" Said the leading man, commanding the others."
+                if (player[this.layer].storyTimer > 46)story += "<br>What in their hands......seemed to have more than just cameras."
+                if (player[this.layer].storyTimer > 50)story += "<br>She went back to kitchen, picked up the bread knife she knew."
+                if (player[this.layer].storyTimer > 53)story += "<br>From her eyes, she didn't know what these men wanted to do, just as she wouldn't know the whole memory in the beginning."
+                if (player[this.layer].storyTimer > 58)story += "<br>She was just doing what she knows."
+                if (player[this.layer].storyTimer > 61)story += "<br>Go around outside the hall and behind them, reasonable."
+
+                if (player[this.layer].storyTimer > 70){
+                    story += "<br><br>With a quick throw, the bread knife flew out of her hand and ran directly to the throat of the leading man."
+                    story += "<br>But then came the sound of violent metal collision. The knife was blocked by the shield. It fell to the ground and made a crisp noise."
+                }
+
                     return story;
                 };
 
                 if (player.storylayer.storycounter==9){
+                    let story = "If you said, this is sea, then sorry, \"This must be not the sea in our worlds.\"";
+                    if (player[this.layer].storyTimer > 5)story += "<br>But, it did a sea. As the book in the Pure White City said, \"There is really a lot of water stored here.\""
+                    if (player[this.layer].storyTimer > 10)story += "<br>\"Hey, forget it. If this thing could drink, I will drink a whole bucket of drinking water in front of everyone.\" A member made a joke. His jokes did express the doubts of the whole team."
+                    if (player[this.layer].storyTimer > 15)story += "<br>\"But since we have been at the sea, we must be not far away from our destination. But it's going dark. You want to camp here or further towards the goal?\" Obviously, the leader wanted the later answer."
+                    if (player[this.layer].storyTimer > 20)story += "<br>\"Camp here. We don't know whether it's at the seaside or in the sea. Who knows what could happen if we walk along the coastline in total darkness.\""
+                    
+                    if (player[this.layer].storyTimer > 25)story += "<br><br>A couple of simple but professional tents had been set up along the seaside. The faint light of the campfire brought warmth to the whole camp."
+                    if (player[this.layer].storyTimer > 30)story += "<br>Now it was deep night. Most team members were asleep, except those who took care of the campfire and the team scientist wandering with a flashlight in his hand."
+                    if (player[this.layer].storyTimer > 35)story += "<br>\"......Fine, this should be recorded, too. 'There are a large number of shells composed of fragments on the coast. It can be confirmed that......'\""
+                    if (player[this.layer].storyTimer > 40)story += "<br>\"'......this coast is trying to imitate the impression of a person with average knowledge of the coast', OK, that's fine.\" He put back his ball pen and prepare to return to the camp not far away to rest---Before the campfire watchers found him leaving too far without permission."
+                    if (player[this.layer].storyTimer > 45)story += "<br>The moonlight shone on his notebook, emitting a light blue background."
+
+                    if (player[this.layer].storyTimer > 50)story += "<br><br>But, \"Wait, it's not moonlight.\""
+                    if (player[this.layer].storyTimer > 55)story += "<br>Scientists' intuition was always accurate. He glimpsed a tall building in the distance---Maybe a tower, maybe not."
+                    if (player[this.layer].storyTimer > 60)story += "<br>And on the top of that building, blue and purple lights were converging."
+                    if (player[this.layer].storyTimer > 65)story += "<br>The penetration of those lights was so strong that scientists thought it was moonlight at first."
+                    
+                    if (player[this.layer].storyTimer > 70)story += "<br><br>He rushed back to the camp and said to the team member watching the campfire:"
+                    if (player[this.layer].storyTimer > 75)story += "<br>\"Wake the leader up! I think I know where's the destination!\""
+
+
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==10){
+                    let story = "\"And that's all. I think that's all I can tell you.\" The girl said on the alert to the team leader.";
+                    if (player[this.layer].storyTimer > 5) story += "<br>\"Thank you very much. We don't mean to offend. Your answer is very important for us to understand the world.\" The leader replied, turned around and prepared to let the team return to the camp."
+                    if (player[this.layer].storyTimer > 10) story +="<br>\"Hey, hey, leader, how can we just leave?\" A voice sounded."
+                    if (player[this.layer].storyTimer > 13) story +="<br>The leader took a look. It was the team scientist, the annoying guy."
+                    if (player[this.layer].storyTimer > 16) story +="<br>\"What else do you want to ask? We can't disturb others.\" The leader's words implied an order."
+
+                    if (player[this.layer].storyTimer > 20) story +="<br><br>\"So, that, miss,\" The scientist asked. \"You have mentioned that your main life is to explore and experience......memories in fragments? How could you make it? We only have the ability to judge whether they have energy.\""
+                    if (player[this.layer].storyTimer > 30) story +="<br>That girl answered with a smile, \"Hah, only this question? Easy for me, you just need to step into the memory. Maybe you will become somebody in the memory, but that's fine for me......Maybe I can show them to you and you could see those memories.\""
+                    if (player[this.layer].storyTimer > 40) story +="<br>\"That's great!\" The scientist lighted up with pleasure. The leader shook his head slightly. Seems that the whole team needs to be silly with this \"mad guy\" again."
+
+                    if (player[this.layer].storyTimer > 45) story +="<br><br>The girl led the group in front of a door. It was a big gate. Obviously, the room behind it couldn't be small. Maybe another hall."
+                    if (player[this.layer].storyTimer > 47) story +="<br>She pushed the door slightly. What in front of their eyes was a florescent cloud, made by fragments, floating in the hall."
+                    if (player[this.layer].storyTimer > 50) story +="<br>No one didn't show surprise, but all soldiers were trained to be silent."
+                    if (player[this.layer].storyTimer > 53) story +="<br>Except the scientisit."
+
+                    if (player[this.layer].storyTimer > 60) story += "<br>\"Wow, so many fragments 'alive' here......I think there must be more than one memory in these fragments. How could you pick up what you want to see among them?\""
+                    if (player[this.layer].storyTimer > 65) story += "<br>\"It's not hard. You could see parts of memories through fragments. The whole memory will be shown once you step in.\""
+                    if (player[this.layer].storyTimer > 70) story += "<br>She stopped for a while, and reached her hand to the scientisit."
+                    if (player[this.layer].storyTimer > 73) story += "<br>\"I'm afraid you don't know how first time.\" She explained."
+                    if (player[this.layer].storyTimer > 76) story += "<br>\"OK, OK, It's for science!\" To her surprise, the scientist held her hand directly and tightly, without any hesitation."
+                    if (player[this.layer].storyTimer > 80) story += "<br>\"That's fine. Let's go.\" She turned her head and extended her other hand to the nearest fragment."
+
+                    if (player[this.layer].storyTimer > 90) story += "<br><br>Scientists watched the girl's fingers gradually turn into fragments, flying towards the direction she had pointed before. The fragments of her had a blue-green fluorescence, beautiful."
+                    if (player[this.layer].storyTimer > 95) story += "<br>First the fingers, then the hands, and finally the whole arm and body, she became the thing she had wanted to get in."
+                    if (player[this.layer].storyTimer > 100) story += "<br>The fragments she had turned to had no no wire connection between each other, but others could see that this was a whole. The green fragments moved into a cloud of fragments, flickering."
+                    if (player[this.layer].storyTimer > 105) story += "<br>No one didn't show surprise, but all soldiers were trained to be silent."
+                    if (player[this.layer].storyTimer > 108) story += "<br>Except the scientisit."
+
+                    if (player[this.layer].storyTimer > 115) story += "<br>\"Wow......This......This is so <i>fascinating</i>!\""
+
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==11){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==12){
                     let story = "Story in Plan, haven't been written/translated.";
                     return story;
                 };
@@ -329,10 +508,13 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==3) req = 90;
         if (player.storylayer.storycounter==4) req = 75;
         if (player.storylayer.storycounter==5) req = 75;
-        if (player.storylayer.storycounter==6) req = 90;
-        if (player.storylayer.storycounter==7) req = 60;
-        if (player.storylayer.storycounter==8) req = 60;
+        if (player.storylayer.storycounter==6) req = 210;
+        if (player.storylayer.storycounter==7) req = 75;
+        if (player.storylayer.storycounter==8) req = 75;
         if (player.storylayer.storycounter==9) req = 60;
+        if (player.storylayer.storycounter==10) req = 135;
+        if (player.storylayer.storycounter==11) req = 60;
+        if (player.storylayer.storycounter==12) req = 60;
         return req;
     },
 
@@ -348,6 +530,9 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==7) color = "#00bdf9";
         if (player.storylayer.storycounter==8) color = "#16a951";
         if (player.storylayer.storycounter==9) color = "#d7a9f4";
+        if (player.storylayer.storycounter==10) color = "#16a951";
+        if (player.storylayer.storycounter==11) color = "#d7a9f4";
+        if (player.storylayer.storycounter==12) color = "#00bdf9";
         return color;
     },
 
@@ -426,6 +611,7 @@ addLayer("storylayer", {
             let eff = new Decimal(1);
             if (hasUpgrade('storylayer',12)) eff = player.rei.roses.plus(1).log(8).times(2).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
+            eff=eff.times(challengeEffect('saya',41));
             return eff;
         },
         },
@@ -476,6 +662,7 @@ addLayer("storylayer", {
             let eff = new Decimal(1);
             if (hasUpgrade('storylayer',21)) eff = player.rei.roses.plus(1).log(5).times(1.5).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
+            eff = eff.times(challengeEffect('saya',41));
             return eff;
         }
         },
@@ -504,7 +691,7 @@ addLayer("storylayer", {
         },
         24:{ title: "Comm-Channel",
         fullDisplay(){
-            return "<b>Comm-Channel</b><br>Gain 10 World Steps once you can gain it.<br><br>Req:Unlock Both G&K layers"
+            return "<b>Comm-Channel</b><br>Gain 10 World Steps in a bulk.<br><br>Req:Unlock Both G&K layers"
         },
         canAfford(){return player.storylayer.storycounter==8&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.etoluna.unlocked&&player.saya.unlocked},
         pay(){
@@ -525,6 +712,41 @@ addLayer("storylayer", {
         pay(){
         },
         unlocked() { return (player.storylayer.storycounter==9&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',25)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        31:{ title: "Fragmented Fusion",
+        fullDisplay(){
+            return "<b>Fragmented Fusion</b><br>World Step Height softcap exponent ^3 → ^2.<br><br>Req:35 Everflashing Knives"
+        },
+        canAfford(){return player.storylayer.storycounter==10&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.saya.points.gte(35)},
+        pay(){
+        },
+        unlocked() { return (player.storylayer.storycounter==10&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',31)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        32:{ title: "Unrecorded History",
+        fullDisplay(){
+            return "<b>Unrecorded History</b><br>Star Points&Moon Points boosts Luminous Churches&Flourish Labyrinths gain.<br><br>Req:40 Gemini Bounds"
+        },
+        effect(){
+            let eff = player.etoluna.starPoint.plus(player.etoluna.moonPoint).plus(1).log(7.5).sqrt();
+            return eff;
+        },
+        canAfford(){return player.storylayer.storycounter==11&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.etoluna.points.gte(40)},
+        pay(){
+        },
+        unlocked() { return (player.storylayer.storycounter==11&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',32)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        33:{ title: "Rediscover Fragments",
+        fullDisplay(){
+            return "<b>Rediscover Fragments</b><br>Unlock Fragmental researches.<br><br>Cost:350,000,000 Research Points"
+        },
+        canAfford(){return player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(400000000)},
+        pay(){
+            player.lab.points = player.lab.points.sub(350000000);
+        },
+        unlocked() { return (player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',33)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }

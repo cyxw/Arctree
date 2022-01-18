@@ -39,8 +39,8 @@ function challengeButtonText(layer, id) {
 function achievementStyle(layer, id){
     ach = tmp[layer].achievements[id]
     let style = []
-    if (ach.image){ 
-        style.push({'background-image': 'url("' + ach.image + '")'})
+    if (ach.image&&ach.done()){ 
+        style.push({'background-image': 'url("' + ach.image + '")','background-position':'center'})
     } 
     if (!ach.unlocked) style.push({'visibility': 'hidden'})
     style.push(ach.style)

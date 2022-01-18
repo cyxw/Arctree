@@ -13,11 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.3.5",
-	name: "Suspicious Spots",
+	num: "0.0.4.0",
+	name: "Liner ≥ Softcaps",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.4.0</h3><br>
+		- All row4 QoL added.<br>
+		- Call row5 done.<br>
 	<h3>v0.0.3.5</h3><br>
 		- All row5 layers added with basic stuff.<br>
 		- Not all row4 QoL added.<br>
