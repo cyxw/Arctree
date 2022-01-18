@@ -66,6 +66,8 @@ addLayer("lab", {
         let sc = new Decimal(100000);
         if (hasUpgrade('lab',121)) sc = sc.times(2);
         if (hasUpgrade('lab',161)) sc = sc.times(upgradeEffect('lab',161));
+        if (hasUpgrade('lab',191)) sc = sc.times(upgradeEffect('lab',191));
+        if (hasUpgrade('lab',192)) sc = sc.times(upgradeEffect('lab',192));
         return sc;
     },
 
@@ -141,6 +143,7 @@ addLayer("lab", {
         ["row",[["upgrade","161"],["upgrade","162"],["upgrade","163"],["upgrade","164"]]],
         ["row",[["upgrade","171"],["upgrade","172"],["upgrade","173"],["upgrade","174"]]],
         ["row",[["upgrade","181"],["upgrade","182"],["upgrade","183"],["upgrade","184"]]],
+        ["row",[["upgrade","191"],["upgrade","192"],["upgrade","193"],["upgrade","194"]]],
     ]
 },
         }
@@ -799,7 +802,7 @@ addLayer("lab", {
             return player[this.layer].points.plus(1).log10().max(1);
         },
         effectDisplay(){
-           if (hasUpgrade('lab',184)) return "<br>Currently: "+format(upgradeEffect('lab',142))+"x"
+           if (hasUpgrade('lab',184)) return "<br>Currently: +"+format(upgradeEffect('lab',142))
         },
         },
         143:{ title: "The Blueprint of Theology",
@@ -899,7 +902,7 @@ addLayer("lab", {
         },
         172:{ title: "HyperStacks",
         description: "The autobuyer of Step Transformer now behave in a more effective way.",
-        fullDisplay(){return "<b>HyperStacks</b><br>The autobuyer of Step Transformer now behave in a more effective way.<br><br>Cost: 350,000,000 Research Points<br>Req:150,000 World Steps"},
+        fullDisplay(){return "<b>HyperStacks</b><br>The autobuyer of Step Transformer now behave in a more effective way."+((hasUpgrade('lab',184))?("<br>Currently: buy "+formatWhole(upgradeEffect('lab',172))+" Step Transformer in a bulk"):"")+"<br><br>Cost: 350,000,000 Research Points<br>Req:150,000 World Steps"},
         unlocked(){return hasUpgrade('lab',164)},
         canAfford(){
             return player.lab.points.gte(350000000)&&player.world.points.gte(150000);
@@ -975,6 +978,53 @@ addLayer("lab", {
         description: "You can see lab upgrades' effect.",
         cost() { return new Decimal(2e13)},
         unlocked(){return hasUpgrade('lab',183)},
+        },
+        191:{ title: "Power Pushed Base",
+        description: "Research Power pushes Research Point softcap starts later.",
+        cost() { return new Decimal(2e34)},
+        unlocked(){return hasUpgrade('lab',184)},
+        currencyDisplayName:"Research Power",
+        currencyInternalName:"power",
+        currencyLayer:"lab",
+        effect(){
+            return player.lab.power.plus(1).log10().max(1);
+        },
+        effectDisplay(){
+           if (hasUpgrade('lab',184)&&hasUpgrade('lab',191)) return "<br>Currently: "+format(upgradeEffect('lab',191))+"x";
+        },
+        },
+        192:{ title: "Softcap Booster",
+        description: "Memory softcap pushes Research Point softcap starts later.",
+        fullDisplay(){return "<b>Softcap Booster</b><br>Memory softcap pushes Research Point softcap starts later."+((hasUpgrade('lab',192))?("<br>Currently: "+format(upgradeEffect('lab',192))+"x"):"")+"<br><br>Cost: 4.50e13 Research Points<br>Req:1e660 Memories"},
+        unlocked(){return hasUpgrade('lab',191)},
+        canAfford(){
+            return player.lab.points.gte(4.5e13)&&player.mem.points.gte("1e660");
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(4.5e13);
+        },
+        effect(){
+            return layers.mem.softcap().plus(1).log10().div(1.5).max(1);
+        },
+        },
+        193:{ title: "Softcap Accelerator",
+        description: "Fixed World Step effect softcap pushes restricted World Step effect hardcap starts later.",
+        fullDisplay(){return "<b>Softcap Accelerator</b><br>Fixed World Step effect softcap pushes restricted World Step effect hardcap starts later."+((hasUpgrade('lab',193))?("<br>Currently: Restricted World Step effect hardcap starts "+format(upgradeEffect('lab',193))+"x later"):"")+"<br><br>Cost: 9e13 Research Points<br>Req:2,000,000 World Steps"},
+        unlocked(){return hasUpgrade('lab',192)},
+        canAfford(){
+            return player.lab.points.gte(9e13)&&player.world.points.gte(2000000);
+        },
+        pay(){
+            player.lab.points = player.lab.points.sub(9e13);
+        },
+        effect(){
+            return layers.world.fixedsoftcap().plus(1).log10().max(1);
+        },
+        },
+        194:{ title: "Softcap Book",
+        description: "Unlock a side layer to see all current softcaps.",
+        unlocked(){return hasUpgrade('lab',193)},
+        cost:new Decimal(3e14),
         },
     },
     achievements:{//Research Progress

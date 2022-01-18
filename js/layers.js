@@ -2675,26 +2675,51 @@ addLayer("world", {
     },
 
     fixedReward(){
-        let softcap = new Decimal(500);
-        if (hasUpgrade('etoluna',13)) softcap = softcap.times(upgradeEffect('etoluna',13))
-        let softcappower = 0.25;
-        if (hasUpgrade('etoluna',22)) softcappower *= tmp["etoluna"].moonPointeffect.toNumber();
-        if (softcappower >0.75) softcappower = 0.75;
+        let softcap = layers[this.layer].fixedsoftcap();
+        let softcappower = layers[this.layer].fixedsoftcapexp();
         let reward = player.world.fixednum.div(2).plus(1);
         if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
         return reward;
     },
 
-    restrictReward(){
-        let softcap = new Decimal(20);
-        let hardcap = new Decimal(150)
-        if (hasUpgrade('etoluna',14)) hardcap = hardcap.times(tmp["etoluna"].moonPointeffect);
-        if (hasUpgrade('etoluna',21)) hardcap = hardcap.times(upgradeEffect('etoluna',21));
-        if (hasAchievement('a',83)) softcap = new Decimal(25);
+    fixedsoftcap(){
+        let softcap = new Decimal(500);
+        if (hasUpgrade('etoluna',13)) softcap = softcap.times(upgradeEffect('etoluna',13));
+        return softcap;
+    },
+    fixedsoftcapexp(){
         let softcappower = 0.25;
+        if (hasUpgrade('etoluna',22)) softcappower *= tmp["etoluna"].moonPointeffect.toNumber();
+        if (softcappower >0.75) softcappower = 0.75;
+        return softcappower;
+    },
+
+    restrictReward(){
+        let softcap = layers[this.layer].restrictsoftcap();
+        let hardcap = layers[this.layer].restricthardcap();
+        let softcappower = layers[this.layer].restrictsoftcapexp();
         let reward = Decimal.pow(1.5,player.world.restrictionnum);
         if (reward.gte(softcap)) reward = softcap.plus(Decimal.pow(reward.sub(softcap),softcappower));
         return reward.min(hardcap);
+    },
+
+    restrictsoftcap(){
+        let softcap = new Decimal(20);
+        if (hasAchievement('a',83)) softcap = new Decimal(25);
+        return softcap;
+    },
+
+    restrictsoftcapexp(){
+        let softcappower = 0.25;
+        return softcappower;
+    },
+
+    restricthardcap(){
+        let hardcap = new Decimal(150)
+        if (hasUpgrade('etoluna',14)) hardcap = hardcap.times(tmp["etoluna"].moonPointeffect);
+        if (hasUpgrade('etoluna',21)) hardcap = hardcap.times(upgradeEffect('etoluna',21));
+        if (hasUpgrade('lab',193)) hardcap = hardcap.times(upgradeEffect('lab',193));
+        return hardcap;
     },
 
     update(diff){//重头戏
@@ -4028,6 +4053,11 @@ addLayer("a", {
             tooltip: "See an NaN which won't break the game.",
             image:"img/acv/104.png",
         },
+        105: {
+            name: "Liner ≥ Softcaps",
+            done() { return hasUpgrade('lab',194)},
+            tooltip: "Unlock Softcap Book.",
+        },
     },
     tabFormat: [
         "blank", 
@@ -4113,4 +4143,37 @@ addLayer("ab", {
 			style: {"background-color"() { return player.yugamu.auto?"#716f5e":"#666666" }},
 		    },
 	},
+})
+
+addLayer("sc", {
+	startData() { return {unlocked: true}},
+	color: "blue",
+	symbol: "SC",
+	row: "side",
+	layerShown() { return hasUpgrade('lab',194) },
+	tooltip: "Softcaps",
+
+
+    tabFormat:
+         [
+            ["display-text",
+			function() {return "<h3 style='color: #c939db;'>Memory</h3><br>Softcap:"+format(tmp["mem"].softcap)+"<br>Gaining exponent:"+format(tmp["mem"].softcapPower)},
+			{}],
+            "blank",
+            ["display-text",
+			function() {return "<h3 style='color: #00bdf9;'>Research Point</h3><br>Softcap:"+format(layers.lab.pointsoftcap())},
+			{}],
+            "blank",
+            ["display-text",
+			function() {return "<h3 style='color: #ddeee3;'>World Step Height</h3><br>Softcap:"+format(layers.world.WorldstepHeightsc())+"<br>Exceeding exponent:"+format(layers.world.WorldstepHeightscexp())},
+			{}],
+            "blank",
+            ["display-text",
+			function() {return "<h3 style='color: #eec109;'>Fixed World Step effect</h3><br>Softcap:"+format(layers.world.fixedsoftcap())+"<br>Exponent:"+format(layers.world.fixedsoftcapexp())},
+			{}],
+            "blank",
+            ["display-text",
+			function() {return "<h3 style='color: #e8272a;'>Restricted World Step effect</h3><br>Softcap:"+format(layers.world.restrictsoftcap())+"<br>Exponent:"+format(layers.world.restrictsoftcapexp())+"<br>Hardcap ends at:"+format(layers.world.restricthardcap())},
+			{}],
+    ],
 })
