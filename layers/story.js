@@ -472,7 +472,44 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==11){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "The boat was sailing on the sea, and the team members were rowing hard.";
+                    story += "<br>It was just about to dawn, but that tower was clear to see."
+
+                    if (player[this.layer].storyTimer > 5){
+                        story += "<br>\"Nice view, sunny day, no fog.\" The leader observed the weather, \"Means good news and bad news. Good news is that we can reach the destination no matter what. Bad news is that it's a little further than we expected.\""
+                    }
+
+                    if (player[this.layer].storyTimer > 10)story += "<br>\"No problem, leader.\" The scientist encouraged---by making a joke, \"Today all of our members are motivated, this underestimated distance is nothing at all. We can take turns rowing, and we'll arrive.\""
+
+                    if (player[this.layer].storyTimer > 15)story += "<br><br>When the sun began his rising, the whole team had landed the small land which the tower standed."
+                    if (player[this.layer].storyTimer > 20)story += "<br>\"As we planned before. Group α, you take the lead. Group ζ, you bring up the rear, protect the scientist. Other groups, climb the tower in the order of names.\" The leader made the final arrangement. The whole team was waiting for this moment."
+                    if (player[this.layer].storyTimer > 30)story += "<br>Footsteps sounded in the tower, first a thin sound, and then turned into a messy drum-like sound, reflecting a soul stirring melody in the tower."
+                    if (player[this.layer].storyTimer > 35)story += "<br>Not a long time, the first team had reached the top."
+                    if (player[this.layer].storyTimer > 40){
+                        story += "<br>\"Report, group α has reached the top. No threat on the top. Two people are found, not dead but unconscious.\" A report came from the walkie talkie."
+                        story += "<br>\"Roger, nice job. We'll reach the top soon.\" Replied the leader."
+                        story += "<br>\"And, leader,\" The group leader added, \"Space of tower top is limited, and there's no fence. I suggest all of our bros should not stand on the top.\""
+                        story += "<br>\"Roger, I'll arrange it.\""
+                    }
+
+                    if (player[this.layer].storyTimer > 55)story += "<br><br>When the scientist reached the top, it's already broad daylight. What in his eyes were the \"two people\" group α had mentioned---A pair of twin sisters."
+                    if (player[this.layer].storyTimer > 60)story += "<br>They lied on the top of the tower, breathing evenly. \"In my words, they are asleep, and maybe they will wake up.\""
+                    if (player[this.layer].storyTimer > 65)story += "<br>\"Oh? Scientist, do you think they will wake up soon?\" The leader asked."
+                    if (player[this.layer].storyTimer > 70)story += "<br>\"Hard to say. They may need to be injected......There should be no problem to carry them back to our camp, huh?\" The scientist tentatively put forward a suggestion."
+                    if (player[this.layer].storyTimer > 75)story += "<br>\"Have you forgotten the lights you saw yesterday? Maybe it's related to them.\" The leader shaked his head, \"If they make some more reaction and blow up the whole camp, could you be responsible?\""
+                    if (player[this.layer].storyTimer > 80)story += "<br>\"......But the space here is limited. Not a good place too.\""
+                    if (player[this.layer].storyTimer > 85)story += "<br>\"Hmm, fair.\""
+
+                    if (player[this.layer].storyTimer > 95)story += "<br><br>The two sisters were placed in a separate tent far from the camp and were headed by a special group."
+                    if (player[this.layer].storyTimer > 100)story += "<br>\"When the light approaches the ground, it is blured......But it's sure that the light is a kind of energy, gathered in their bodies......\" The scientist sat outside the tent placing them, still recording."
+                    if (player[this.layer].storyTimer > 105)story += "<br>\"The blue light and the purple light point to each of the two sisters. The blue light comes from the sky directly, while the purple light comes from the moon, or kind of moonlight.\""
+                    if (player[this.layer].storyTimer > 110)story += "<br>There was a sound in the tent."
+                    if (player[this.layer].storyTimer > 113)story += "<br>The scientist hurried into the tent to see what had happened."
+
+                    if (player[this.layer].storyTimer > 120)story += "<br><br>\"......Horizon......broken......\" A dreaming murmur."
+                    if (player[this.layer].storyTimer > 125)story += "<br>\"En?\" The scientist responded tentatively."
+                    if (player[this.layer].storyTimer > 135)story += "<br>\"......Hold my hand......no matter what......\" Another dreaming murmur."
+
                     return story;
                 };
 
@@ -513,7 +550,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==8) req = 75;
         if (player.storylayer.storycounter==9) req = 60;
         if (player.storylayer.storycounter==10) req = 135;
-        if (player.storylayer.storycounter==11) req = 60;
+        if (player.storylayer.storycounter==11) req = 150;
         if (player.storylayer.storycounter==12) req = 60;
         return req;
     },
