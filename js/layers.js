@@ -2151,7 +2151,7 @@ addLayer("rei", {
             },
             amt(){//gain per sec
                 let gain = player.points.plus(1).log10().div(50).max(0).sqrt();
-                gain =gain.times(tmp["rei"].challenges[11].gainMult);
+                gain =gain.times(this.gainMult());
                 gain =gain.times(challengeEffect('saya',41));
                 if (hasAchievement('a',102)) gain = gain.times(tmp["saya"].effect);
                 if (hasUpgrade('lab',181)) gain = gain.times(buyableEffect('lab',23))
@@ -3255,7 +3255,8 @@ addLayer("saya",{
                 return des
             },
             debuff(){//layers
-                return 10-(challengeCompletions(this.layer, this.id)*2);
+                let debuff = 10-(challengeCompletions(this.layer, this.id)*2)
+                return Math.max(debuff,0.5);
             },
             rewardEffect(){
                 return Decimal.pow(2,challengeCompletions(this.layer, this.id));
