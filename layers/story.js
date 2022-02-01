@@ -41,6 +41,8 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==10) return "K-2";
                 if (player.storylayer.storycounter==11) return "G-2";
                 if (player.storylayer.storycounter==12) return "LA-5";
+                if (player.storylayer.storycounter==13) return "FL-1";
+                if (player.storylayer.storycounter==14) return "LA-6";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -147,7 +149,7 @@ addLayer("storylayer", {
                     }
                     
                     if (player[this.layer].storyTimer > 50){
-                        story +="<br>Was existence eternal? It was certain that she existed since the beginning of the world. The High Priest build the Pure White City, as the extension of her power. It was she who makd the people live and work in peace and contentment, and she who bathed the world in light and glory......"
+                        story +="<br>Was existence eternal? It was certain that she existed since the beginning of the world. The High Priest build the Pure White City, as the extension of her power. It was she who made the people live and work in peace and contentment, and she who bathed the world in light and glory......"
                     }
 
                     if (player[this.layer].storyTimer > 55){
@@ -518,6 +520,16 @@ addLayer("storylayer", {
                     return story;
                 };
 
+                if (player.storylayer.storycounter==13){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==14){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
                 if (player.storylayer.storycounter>=player.storylayer.points.toNumber()){
                     return "You have read all existing stories!"
                 }
@@ -552,6 +564,8 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==10) req = 135;
         if (player.storylayer.storycounter==11) req = 150;
         if (player.storylayer.storycounter==12) req = 60;
+        if (player.storylayer.storycounter==13) req = 120;
+        if (player.storylayer.storycounter==14) req = 120;
         return req;
     },
 
@@ -570,6 +584,8 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==10) color = "#16a951";
         if (player.storylayer.storycounter==11) color = "#d7a9f4";
         if (player.storylayer.storycounter==12) color = "#00bdf9";
+        if (player.storylayer.storycounter==13) color = "#716f5e";
+        if (player.storylayer.storycounter==14) color = "#00bdf9";
         return color;
     },
 
@@ -612,7 +628,7 @@ addLayer("storylayer", {
             title: "",
             display: "→",
             unlocked() { return player.storylayer.unlocked },
-            canClick() { return player.storylayer.points.gt(player.storylayer.storycounter) },
+            canClick() { return player.storylayer.points.gt(player.storylayer.storycounter)&&!(player.storylayer.storycounter==13&&!hasUpgrade('lab',201)) },
             onClick() { 
                 player.storylayer.storycounter += 1;
                 if(player.storylayer.points.eq(player.storylayer.storycounter))  player.storylayer.storyTimer = 0;
@@ -784,6 +800,31 @@ addLayer("storylayer", {
             player.lab.points = player.lab.points.sub(350000000);
         },
         unlocked() { return (player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',33)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        34:{ title: "Traceback Record",
+        fullDisplay(){
+            return "<b>Traceback Record</b><br>Your Times moved in Maze boosts Research Points gain.<br><br>Req:15,000 times moved in the Maze"
+        },
+        effect(){
+            return player.yugamu.timesmoved.plus(1).log10().times(1.5).max(1);
+        },
+        canAfford(){return player.storylayer.storycounter==13&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.yugamu.timesmoved.gte(15000)},
+        pay(){
+            //nothing
+        },
+        unlocked() { return (player.storylayer.storycounter==13&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',34)},
+        onPurchase(){/*player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;*/player.storylayer.points = player.storylayer.points.plus(1);},//去别的升级里干这活
+        },
+        35:{ title: "Institutions",
+        fullDisplay(){
+            return "<b>Institutions</b><br>Unlock Institutions.<br><br>Cost:5e15 Research Points"
+        },
+        canAfford(){return player.storylayer.storycounter==14&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(5e15)},
+        pay(){
+            player.lab.points = player.lab.points.sub(5e15);
+        },
+        unlocked() { return (player.storylayer.storycounter==14&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',35)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }

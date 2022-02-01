@@ -37,6 +37,7 @@ addLayer("lab", {
         if (hasUpgrade('lab',63)) mult = mult.times(upgradeEffect('lab',63));
         if (hasUpgrade('lab',64)) mult = mult.times(upgradeEffect('lab',64));
         if (hasUpgrade('world',11)) mult = mult.times(upgradeEffect('world',11));
+        if (hasMilestone('ins',0)) mult = mult.times(layers.ins.insEffect().Eng());
         mult = mult.pow(tmp["lab"].powerexp)
         return mult;
     },
@@ -59,6 +60,8 @@ addLayer("lab", {
         if (hasUpgrade('world',31)) gain = gain.times(layers.world.restrictReward());
         if (hasUpgrade('lab',121)) gain = gain.times(1.5);
         if (hasUpgrade('lab',173)) gain = gain.times(upgradeEffect('lab',173));
+        if (hasUpgrade('storylayer',34)) gain = gain.times(upgradeEffect('storylayer',34));
+        if (hasMilestone('ins',0)) gain = gain.times(layers.ins.insEffect().Eng());
 
         return gain;
     },
@@ -68,6 +71,8 @@ addLayer("lab", {
         if (hasUpgrade('lab',161)) sc = sc.times(upgradeEffect('lab',161));
         if (hasUpgrade('lab',191)) sc = sc.times(upgradeEffect('lab',191));
         if (hasUpgrade('lab',192)) sc = sc.times(upgradeEffect('lab',192));
+        if (hasUpgrade('lab',201)) sc = sc.times(upgradeEffect('lab',201));
+        if (hasMilestone('ins',0)) sc = sc.times(layers.ins.insEffect().Eng());
         return sc;
     },
 
@@ -144,6 +149,7 @@ addLayer("lab", {
         ["row",[["upgrade","171"],["upgrade","172"],["upgrade","173"],["upgrade","174"]]],
         ["row",[["upgrade","181"],["upgrade","182"],["upgrade","183"],["upgrade","184"]]],
         ["row",[["upgrade","191"],["upgrade","192"],["upgrade","193"],["upgrade","194"]]],
+        ["row",[["upgrade","201"] ]]
     ]
 },
         }
@@ -162,7 +168,7 @@ addLayer("lab", {
                     {}],
                 "blank",
                 ["display-text",
-                    function() {return "You have "+format(player.lab.power)+" Research Power."},
+                    function() {return "You have <a style='color: #00bdf9'>"+format(player.lab.power)+"</a> Research Power."},
                         {}],
                 ["display-text",
                 function() {return "You lose 1% Research Power every second."},
@@ -171,13 +177,13 @@ addLayer("lab", {
                 ["microtabs","Researchstuff",{'border-width':'0px'}],
             ]
         },
-        "Research Progresses": {
+        "Research Progress": {
             unlocked(){return hasUpgrade('lab',13)},
             content: [
                 "main-display",
                 "blank",
                 ["display-text",
-                function() {return "Progresses: "+player.lab.achievements.length+"/"+(Object.keys(tmp.lab.achievements).length-2)},
+                function() {return "Progress: "+player.lab.achievements.length+"/"+(Object.keys(tmp.lab.achievements).length-2)},
                     {}],
                 "blank",
                 "achievements",
@@ -189,7 +195,7 @@ addLayer("lab", {
                 "main-display",
                 "blank",
                 ["display-text",
-                    function() {return "You have "+format(player.lab.power)+" Research Power."},
+                    function() {return "You have <a style='color: #00bdf9'>"+format(player.lab.power)+"</a> Research Power."},
                         {}],
                 "blank",
                 "buyables",
@@ -201,7 +207,7 @@ addLayer("lab", {
                 "main-display",
                 "blank",
                 ["display-text",
-                    function() {return "You have "+format(player.lab.power)+" Research Power."},
+                    function() {return "You have <a style='color: #00bdf9'>"+format(player.lab.power)+"</a> Research Power."},
                         {}],
                 "resource-display",
                 "blank",
@@ -944,7 +950,7 @@ addLayer("lab", {
         181:{ title: "Soilless Culture",
         description: "Church Transformer boosts Glowing Roses gain.",
         fullDisplay(){return "<b>Soilless Culture</b><br>Church Transformer boosts Glowing Roses gain.<br><br>Cost: 5e10 Research Points<br>Req:16 Luminous Churches"},
-        unlocked(){return hasUpgrade('lab',171)&&hasUpgrade('lab',172)},
+        unlocked(){return hasUpgrade('lab',173)&&hasUpgrade('lab',174)},
         canAfford(){
             return player.lab.points.gte(5e10)&&player.rei.points.gte(16);
         },
@@ -955,7 +961,7 @@ addLayer("lab", {
         182:{ title: "Maze Bot",
         description: "Labyrinth Transformer gives base move times in Maze.",
         fullDisplay(){return "<b>Maze Bot</b><br>Labyrinth Transformer gives base move times in Maze.<br><br>Cost: 5e10 Research Points<br>Req:16 Flourish Labyrinths"},
-        unlocked(){return hasUpgrade('lab',171)&&hasUpgrade('lab',172)},
+        unlocked(){return hasUpgrade('lab',173)&&hasUpgrade('lab',174)},
         canAfford(){
             return player.lab.points.gte(5e10)&&player.yugamu.points.gte(16);
         },
@@ -995,10 +1001,10 @@ addLayer("lab", {
         },
         192:{ title: "Softcap Booster",
         description: "Memory softcap pushes Research Point softcap starts later.",
-        fullDisplay(){return "<b>Softcap Booster</b><br>Memory softcap pushes Research Point softcap starts later."+((hasUpgrade('lab',192))?("<br>Currently: "+format(upgradeEffect('lab',192))+"x"):"")+"<br><br>Cost: 4.50e13 Research Points<br>Req:1e660 Memories"},
+        fullDisplay(){return "<b>Softcap Booster</b><br>Memory softcap pushes Research Point softcap starts later."+((hasUpgrade('lab',192))?("<br>Currently: "+format(upgradeEffect('lab',192))+"x"):"")+"<br><br>Cost: 4.50e13 Research Points<br>Req:1e650 Memories"},
         unlocked(){return hasUpgrade('lab',191)},
         canAfford(){
-            return player.lab.points.gte(4.5e13)&&player.mem.points.gte("1e660");
+            return player.lab.points.gte(4.5e13)&&player.mem.points.gte("1e650");
         },
         pay(){
             player.lab.points = player.lab.points.sub(4.5e13);
@@ -1009,10 +1015,10 @@ addLayer("lab", {
         },
         193:{ title: "Softcap Accelerator",
         description: "Fixed World Step effect softcap pushes restricted World Step effect hardcap starts later.",
-        fullDisplay(){return "<b>Softcap Accelerator</b><br>Fixed World Step effect softcap pushes restricted World Step effect hardcap starts later."+((hasUpgrade('lab',193))?("<br>Currently: Restricted World Step effect hardcap starts "+format(upgradeEffect('lab',193))+"x later"):"")+"<br><br>Cost: 9e13 Research Points<br>Req:2,000,000 World Steps"},
+        fullDisplay(){return "<b>Softcap Accelerator</b><br>Fixed World Step effect softcap pushes restricted World Step effect hardcap starts later."+((hasUpgrade('lab',193))?("<br>Currently: Restricted World Step effect hardcap starts "+format(upgradeEffect('lab',193))+"x later"):"")+"<br><br>Cost: 9e13 Research Points<br>Req:500,000 World Steps"},
         unlocked(){return hasUpgrade('lab',192)},
         canAfford(){
-            return player.lab.points.gte(9e13)&&player.world.points.gte(2000000);
+            return player.lab.points.gte(9e13)&&player.world.points.gte(500000);
         },
         pay(){
             player.lab.points = player.lab.points.sub(9e13);
@@ -1024,7 +1030,25 @@ addLayer("lab", {
         194:{ title: "Softcap Book",
         description: "Unlock a side layer to see all current softcaps.",
         unlocked(){return hasUpgrade('lab',193)},
-        cost:new Decimal(3e14),
+        cost:new Decimal(5e14),
+        },
+        201:{ title: "Autobiography Draft",
+        description: "Your experienced stories push Research Point softcap starts later.",
+        fullDisplay(){return "<b>Autobiography Draft</b><br>Your experienced stories push Research Point softcap starts later."+((hasUpgrade('lab',201))?("<br>Currently: "+format(upgradeEffect('lab',201))+"x"):"")+"<br><br>Req:1,000 Gemini Bounds<br>90 Everflashing Knives"},
+        unlocked(){return (hasUpgrade('lab',194)&&hasUpgrade('storylayer',34))},
+        canAfford(){
+            return player.etoluna.points.gte(1000)&&player.saya.points.gte(90)
+        },
+        pay(){
+            //nothing
+            },
+        onPurchase(){
+            player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;showTab('storylayer');
+        },
+        effect(){
+            return player.storylayer.points.times(0.75).max(1);
+        },
+            style: {height: '200px', width: '200px'},
         },
     },
     achievements:{//Research Progress
@@ -1044,7 +1068,7 @@ addLayer("lab", {
         13: {
             name: "Finally, sth Related",
             done() { return player.lab.buyables[12].gte(1) },
-            tooltip: "Do researches relate to what you want to know.<br>Rewards:Research Power gain is now boosted by Research Progresses.",
+            tooltip: "Do researches relate to what you want to know.<br>Rewards:Research Power gain is now boosted by Research Progress.",
             effect(){
                 let eff = player.lab.achievements.length/3;
                 if (eff<1) return 1;
@@ -1107,6 +1131,21 @@ addLayer("lab", {
             unlocked(){return hasAchievement('lab',26)},
             done() { return hasUpgrade('lab',174) },
             tooltip: "See how Memory upgrades work.",
+        },
+        32: {
+            name: "Relax to Recall",
+            unlocked(){return hasAchievement('lab',26)},
+            done() { return hasUpgrade('lab',201) },
+            tooltip: "Begin to write autobiography.",
+        },
+        33: {
+            name: "Complexity",
+            unlocked(){return hasAchievement('lab',26)},
+            done() { return player.ins.total.gte(5) },
+            tooltip: "Get 5 Institution Funds.<br>Rewards:Research Progress reduces Institution Fund requirement.",
+            effect(){//not Decimal
+                return player.lab.achievements.length*0.02+1;
+            },
         },
     },
     buyables:{//Research Transformers

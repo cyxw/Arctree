@@ -79,6 +79,8 @@ function getPointGen() {
 	if (hasMilestone('lab',1)) gain = gain.times(player.lab.points.max(1));
 	if (hasUpgrade('storylayer',12)) gain = gain.times(upgradeEffect('storylayer',12));
 	if (hasAchievement('a',92)) gain = gain.times(achievementEffect('a',92));
+	if (hasMilestone('ins',3)) gain = gain.times(tmp['ins'].milestones[3].effect)
+	if (hasMilestone('ins',3)) gain = gain.times(layers.ins.insEffect().Sau().Pos())
 	
 	//POW
 	if (hasUpgrade('dark', 12))gain = gain.times(tmp.dark.effect.pow(0.5));
