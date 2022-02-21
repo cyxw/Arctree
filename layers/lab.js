@@ -73,6 +73,9 @@ addLayer("lab", {
         if (hasUpgrade('lab',192)) sc = sc.times(upgradeEffect('lab',192));
         if (hasUpgrade('lab',201)) sc = sc.times(upgradeEffect('lab',201));
         if (hasMilestone('ins',0)) sc = sc.times(layers.ins.insEffect().Eng());
+        if (hasMilestone('ins',6)) sc = sc.times(layers.ins.insEffect().Nga());
+        if (hasUpgrade('storylayer',42)) sc = sc.times(upgradeEffect('storylayer',42))
+        if (hasUpgrade('storylayer',44)) sc = sc.times(upgradeEffect('storylayer',44))
         return sc;
     },
 
@@ -100,7 +103,7 @@ addLayer("lab", {
     shouldNotify(){
         let buyableid = [11,12,13,21,22,31,32,41,42];
         for(var i = 0; i < buyableid.length; i++){
-            if (layers.lab.buyables[buyableid[i]].canAfford()){
+            if (layers.lab.buyables[buyableid[i]].canAfford()&&!hasMilestone('ins',7)){
                 return true;
             };
     }
@@ -877,7 +880,7 @@ addLayer("lab", {
             return player[this.layer].points.plus(1).log10().div(100);
         },
         effectDisplay(){
-           if (hasUpgrade('lab',184)) return "<br>Currently: -"+format(upgradeEffect('lab',162));
+           if (hasUpgrade('lab',184)) return "<br>Currently: -"+format(upgradeEffect('lab',162).min(new Decimal(2).sub(layers.world.WorldstepHeightscexp())));
         },
         },
         163:{ title: "Imitate",
@@ -907,8 +910,8 @@ addLayer("lab", {
         },
         },
         172:{ title: "HyperStacks",
-        description: "The autobuyer of Step Transformer now behave in a more effective way.",
-        fullDisplay(){return "<b>HyperStacks</b><br>The autobuyer of Step Transformer now behave in a more effective way."+((hasUpgrade('lab',184))?("<br>Currently: buy "+formatWhole(upgradeEffect('lab',172))+" Step Transformer in a bulk"):"")+"<br><br>Cost: 350,000,000 Research Points<br>Req:150,000 World Steps"},
+        description: "Step Transformer become more effective.",
+        fullDisplay(){return "<b>HyperStacks</b><br>Step Transformer become more effective."+"<br><br>Cost: 350,000,000 Research Points<br>Req:150,000 World Steps"},
         unlocked(){return hasUpgrade('lab',164)},
         canAfford(){
             return player.lab.points.gte(350000000)&&player.world.points.gte(150000);
@@ -916,14 +919,6 @@ addLayer("lab", {
         pay(){
             player.lab.points = player.lab.points.sub(350000000);
         },
-        effect(){
-            if(!hasUpgrade('lab',172)) return new Decimal(1);
-            let bulk = player.world.points.plus(1).log(10).sub(layers.lab.buyables[43].cost().fo.plus(1).log10()).floor();
-            return Decimal.pow(10,bulk).max(1);
-        },
-        effectDisplay(){
-            if (hasUpgrade('lab',184)) return "<br>Currently: buy "+formatWhole(upgradeEffect('lab',172))+" Step Transformer in a bulk";
-         },
         },
         173:{ title: "Over Proud",
         description: "Research Point gain is boosted by achievements.",
@@ -1144,7 +1139,7 @@ addLayer("lab", {
             done() { return player.ins.total.gte(5) },
             tooltip: "Get 5 Institution Funds.<br>Rewards:Research Progress reduces Institution Fund requirement.",
             effect(){//not Decimal
-                return player.lab.achievements.length*0.02+1;
+                return player.lab.achievements.length*0.5+1;
             },
         },
     },
@@ -1174,8 +1169,15 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					player.lab.power = player.lab.power.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.lab.power.times(Decimal.log10(player.lab.resetTime+1).div(1.5).max(1)).div(10).max(1).log(10).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = new Decimal(1);
@@ -1196,8 +1198,9 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.points)+" / "+formatWhole(cost.fo)+" Fragments"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',73)?("<br>Also boosts Fragment generation by ^"+format(buyableEffect('lab',12))):"");
-					return display;
+                    let display = formatWhole(player.points)+" / "+formatWhole(cost.fo)+" Fragments"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',73)?("<br>Also boosts Fragment generation by ^"+format(buyableEffect('lab',12).eff1())):"");
+					if (hasAchievement('a',113)) display+=("<br>Levels after hardcap boosts Fragment generation by x"+format(buyableEffect('lab',12).eff2()))+" instead."
+                    return display;
                 },
                 unlocked() { return hasUpgrade('lab',22); }, 
                 canAfford() {
@@ -1208,13 +1211,28 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					player.points = player.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.points.div(1e100).max(1).log(1e10).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
-                    let eff = new Decimal(1);
-                    if (hasUpgrade('lab',73)) eff = eff.plus(player[this.layer].buyables[this.id].div(1000));
-                    return eff;
+                    return {
+                        eff1(){
+                            let eff = new Decimal(1);
+                            if (hasUpgrade('lab',73)) eff = eff.plus(player['lab'].buyables[12].div(1000));
+                            return eff.min(1.1);
+                        },
+                        eff2(){
+                            let eff = player['lab'].buyables[12].sub(100).sqrt().times(100)
+                            return eff.max(1);
+                        },
+                    }
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44) },
@@ -1230,7 +1248,8 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.mem.points)+" / "+formatWhole(cost.fo)+" Memories"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',74)?("<br>Also boosts Memories gain by ^+"+format(buyableEffect('lab',13))):"");
+                    let display = formatWhole(player.mem.points)+" / "+formatWhole(cost.fo)+" Memories"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',74)?("<br>Also boosts Memories gain by ^+"+format(buyableEffect('lab',13).eff1())):"");
+                    if (hasAchievement('a',113)) display+=("<br>Levels after hardcap boosts Memory gain by x"+format(buyableEffect('lab',13).eff2()))+" instead."
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',23); }, 
@@ -1242,13 +1261,28 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					player.mem.points = player.mem.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.mem.points.times(Decimal.log10(player.mem.resetTime+1).div(1.5).max(1)).div(1e180).max(1).log(1e5).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
-                    let eff = new Decimal(0);
-                    if (hasUpgrade('lab',73)) eff = eff.plus(player[this.layer].buyables[this.id].div(1000));
-                    return eff;
+                    return{
+                        eff1(){
+                            let eff = new Decimal(0);
+                            if (hasUpgrade('lab',73)) eff = eff.plus(player['lab'].buyables[13].div(1000));
+                            return eff.min(0.2);
+                        },
+                        eff2(){
+                            let eff=player['lab'].buyables[13].sub(200).sqrt().times(200)
+                            return eff.max(1);
+                        }
+                    }
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44)  },
@@ -1276,12 +1310,20 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.light.points = player.light.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.light.points.pow(1/((player.lab.buyables[this.id].gt(40000))?1.5:1)).times(Decimal.log10(player.dark.resetTime+1).div(1.5).max(1).times(1.5)).sub(50000).div(5000).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = new Decimal(1);
                     if (hasUpgrade('lab',83)) eff = player[this.layer].buyables[this.id].div(50);
+                    if (eff.gt(1500)) eff=eff.sub(1500).pow(0.25).plus(1500);
                     if (eff.lt(1)) eff = new Decimal(1);
                     return eff;
                 },
@@ -1311,12 +1353,20 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.dark.points = player.dark.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.dark.points.pow(1/((player.lab.buyables[this.id].gt(40000))?1.5:1)).times(Decimal.log10(player.dark.resetTime+1).div(1.5).max(1).times(1.5)).sub(45000).div(5000).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = new Decimal(1);
                     if (hasUpgrade('lab',84)) eff = player[this.layer].buyables[this.id].div(50);
+                    if (eff.gt(1500)) eff=eff.sub(1500).pow(0.25).plus(1500);
                     if (eff.lt(1)) eff = new Decimal(1);
                     return eff;
                 },
@@ -1346,8 +1396,15 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.kou.points = player.rei.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.rei.points.sub(10).div(2).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff= player.lab.buyables[this.id].pow(3).max(1);
@@ -1379,8 +1436,15 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.kou.points = player.kou.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.kou.points.times(Decimal.log10(player.kou.resetTime+1).div(1.5).max(1)).sub(50).div(5).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff= new Decimal(1);
@@ -1414,8 +1478,15 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					player.lethe.points = player.lethe.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.lethe.points.times(Decimal.log10(player.lethe.resetTime+1).div(1.5).max(1)).div(1e95).log(1e5).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff= new Decimal(1);
@@ -1450,8 +1521,15 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.kou.points = player.yugamu.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)) {
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else {
+                        let bulk = player.yugamu.points.sub(10).div(2).sub(layers[this.layer].buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff= player.lab.buyables[this.id].pow(3).max(1);
@@ -1483,7 +1561,11 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();;
 					player.lab.points = player.lab.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+					if (!hasMilestone('ins',7)) {player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);}
+                    else {
+                        let bulk=player.lab.points.div(10).max(1).log(2).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = player.lab.points.sqrt().div(100).times(player.lab.buyables[this.id]);
@@ -1516,7 +1598,11 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();;
 					player.lab.power = player.lab.power.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+					if (!hasMilestone('ins',7)) player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                    else{
+                        let bulk = player.lab.power.div(1000000).max(1).log(10).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = player.lab.power.plus(1).log10().div(10).times(player.lab.buyables[this.id]);
@@ -1532,7 +1618,7 @@ addLayer("lab", {
 				title: "Step Transformer",
 				cost(x=player[this.layer].buyables[this.id]) {
 					return {
-						fo: new Decimal(10000).plus(new Decimal(1000).times(x)),
+						fo: new Decimal(10000).times(Decimal.pow(1.8,x)),
 					};
 				},
 				display() { // Everything else displayed in the buyable button after the title
@@ -1552,11 +1638,20 @@ addLayer("lab", {
 					let cost = layers[this.layer].buyables[this.id].cost();
                     player.world.Worldtimer = new Decimal(0);
 					player.world.points = player.world.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(upgradeEffect('lab',172));
-                    player.lab.points = player.lab.points.plus(upgradeEffect('lab',172));
+					if(!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.world.points.div(10000).max(1).log(1.8).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
+
                 },
                 effect(){
-                    let eff= player.lab.buyables[this.id].div(50).plus(1);
+                    let eff= player.lab.buyables[this.id].times(10000).max(1);
+                    if (hasUpgrade('lab',172)) eff = eff.times(1.5);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},

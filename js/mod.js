@@ -81,6 +81,12 @@ function getPointGen() {
 	if (hasAchievement('a',92)) gain = gain.times(achievementEffect('a',92));
 	if (hasMilestone('ins',3)) gain = gain.times(tmp['ins'].milestones[3].effect)
 	if (hasMilestone('ins',3)) gain = gain.times(layers.ins.insEffect().Sau().Pos())
+	if (hasMilestone('ins',4)) gain = gain.times(layers.ins.insEffect().Kaz())
+	if (hasMilestone('ins',4)) gain = gain.times(layers.ins.insEffect().Ind())
+	if (hasMilestone('ins',4)) gain = gain.times(layers.ins.insEffect().Chn().Pos());
+	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Can())
+	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Bra())
+	if (hasAchievement('a',113)) gain = gain.times(buyableEffect('lab',12).eff2());
 	
 	//POW
 	if (hasUpgrade('dark', 12))gain = gain.times(tmp.dark.effect.pow(0.5));
@@ -88,7 +94,7 @@ function getPointGen() {
 	if (hasChallenge("kou",21)) gain = gain.pow(1.025);
 	if (inChallenge("kou",11)) gain = gain.pow(0.75);
 	if (inChallenge("kou",21)) gain = gain.pow(1.05);
-	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12));
+	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12).eff1());
 	if (inChallenge('rei',11)) gain = gain.pow(0.5);
 	if (player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) gain = gain.pow(0.9);
 	if (challengeCompletions('saya',21)) gain=gain.pow(challengeEffect('saya',21))

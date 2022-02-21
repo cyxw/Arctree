@@ -43,6 +43,11 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==12) return "LA-5";
                 if (player.storylayer.storycounter==13) return "FL-1";
                 if (player.storylayer.storycounter==14) return "LA-6";
+                if (player.storylayer.storycounter==15) return "I-1";
+                if (player.storylayer.storycounter==16) return "K-3";
+                if (player.storylayer.storycounter==17) return "G-3";
+                if (player.storylayer.storycounter==18) return "LA-7";
+                if (player.storylayer.storycounter==19) return "I-2";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -530,6 +535,31 @@ addLayer("storylayer", {
                     return story;
                 };
 
+                if (player.storylayer.storycounter==15){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==16){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==17){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==18){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==19){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
                 if (player.storylayer.storycounter>=player.storylayer.points.toNumber()){
                     return "You have read all existing stories!"
                 }
@@ -566,6 +596,11 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==12) req = 60;
         if (player.storylayer.storycounter==13) req = 120;
         if (player.storylayer.storycounter==14) req = 120;
+        if (player.storylayer.storycounter==15) req = 120;
+        if (player.storylayer.storycounter==16) req = 120;
+        if (player.storylayer.storycounter==17) req = 120;
+        if (player.storylayer.storycounter==18) req = 120;
+        if (player.storylayer.storycounter==19) req = 120;
         return req;
     },
 
@@ -586,6 +621,11 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==12) color = "#00bdf9";
         if (player.storylayer.storycounter==13) color = "#716f5e";
         if (player.storylayer.storycounter==14) color = "#00bdf9";
+        if (player.storylayer.storycounter==15) color = "#45b5d3";
+        if (player.storylayer.storycounter==16) color = "#16a951";
+        if (player.storylayer.storycounter==17) color = "#d7a9f4";
+        if (player.storylayer.storycounter==18) color = "#00bdf9";
+        if (player.storylayer.storycounter==19) color = "#45b5d3";
         return color;
     },
 
@@ -825,6 +865,75 @@ addLayer("storylayer", {
             player.lab.points = player.lab.points.sub(5e15);
         },
         unlocked() { return (player.storylayer.storycounter==14&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',35)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        41:{ title: "Efficient line",
+        fullDisplay(){
+            let des= "<b>Efficient line</b><br>Institution's 4th Milestones now mult by total Institution Funds gained."
+            if (hasUpgrade('storylayer',41)) des += ("<br>Currently: "+format(upgradeEffect('storylayer',41))+"x")
+            des += "<br><br>Req:500 Institution Funds"
+            return des;
+        },
+        effect(){
+            return player.ins.total.plus(1).log(10).div(10).plus(1);
+        },
+        canAfford(){return player.storylayer.storycounter==15&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.ins.total.gte(500)},
+        unlocked() { return (player.storylayer.storycounter==15&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',41)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        42:{ title: "Fore-seen",
+        fullDisplay(){
+            return "<b>Fore-seen</b><br>Everflashing Knife itself pushes Research Points softcap starts later.<br><br>Cost:250 Everflashing Knives"
+        },
+        canAfford(){return player.storylayer.storycounter==16&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.saya.points.gte(250)},
+        pay(){
+            player.saya.points = player.saya.points.sub(250);
+        },
+        effect(){
+            return player.saya.points.times(2).max(1);
+        },
+        unlocked() { return (player.storylayer.storycounter==16&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',42)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        43:{ title: "K.A.R.M.A.",
+        fullDisplay(){
+            return "<b>K.A.R.M.A.</b><br>Restricted World Step effect's hardcap become another softcap.<br><br>Cost:5e23 Gemini Bounds"
+        },
+        canAfford(){return player.storylayer.storycounter==17&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.etoluna.points.gte(5e23)},
+        pay(){
+            player.etoluna.points = player.etoluna.points.sub(5e23);
+        },
+        unlocked() { return (player.storylayer.storycounter==17&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',43)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        44:{ title: "Self breakthrough",
+        fullDisplay(){
+            let des = "<b>Self breakthrough</b><br>Research Point itself pushes its softcap starts later."
+            if (hasUpgrade('storylayer',44)) des += ("<br>Currently: "+format(upgradeEffect('storylayer',44))+"x")
+            des += "<br><br>Cost:5e55 Research Points"
+            return des;
+        },
+        canAfford(){return player.storylayer.storycounter==18&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(5e55)},
+        pay(){
+            player.lab.points = player.lab.points.sub(5e55);
+        },
+        effect(){
+            return player.lab.points.max(1).log(5).times(1.5).max(1);
+        },
+        unlocked() { return (player.storylayer.storycounter==18&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',44)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        45:{ title: "Awaken",
+        fullDisplay(){
+            let des = "<b>Awaken</b><br>Unlock [Currently nothing here]."
+            des += "<br><br>Cost:1e1,616 Fragments"
+            return des;
+        },
+        canAfford(){return player.storylayer.storycounter==19&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.points.gte("1e1616")},
+        pay(){
+            player.points = player.points.sub("1e1616");
+        },
+        unlocked() { return (player.storylayer.storycounter==19&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',45)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }
