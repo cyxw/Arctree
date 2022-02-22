@@ -13,11 +13,16 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.4.0",
-	name: "Liner ≥ Softcaps",
+	num: "0.0.5.0",
+	name: "Worldwide Paces",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.5.0</h3><br>
+		- Add Institution layer.<br>
+		- Some balance rework.<br>
+		- Add some achievements' images, thanks to River咕咕酱 for drawing raw images.<br>
+		……and Sxy62146214 on Antimatter-dimensions related achievement image.<br>
 	<h3>v0.0.4.0</h3><br>
 		- All row4 QoL added.<br>
 		- Call row5 done.<br>
