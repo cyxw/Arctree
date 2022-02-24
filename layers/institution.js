@@ -239,7 +239,7 @@ addLayer("ins", {
                     ["blank",["10px","10px"]],
                     ["column",[
                         ["display-text",function(){return "<h3 style='color: #fcf788;'>Historical</h3>"},{}],
-                        ["display-text",function(){return "Architecture-boositng"},{}],
+                        ["display-text",function(){return "Architecture-boosting"},{}],
                     ]],
                 ]],
                 ["row",[//Sau
