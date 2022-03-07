@@ -4058,6 +4058,7 @@ addLayer("a", {
             name: "There is No Limit!",
             done() { return player.mem.points.gte(Number.MAX_VALUE)},
             tooltip: "Gain 1.79e308 Memories.",
+            image:"img/acv/84.png",
         },
         85: {
             name: "Thats Not Intended",
