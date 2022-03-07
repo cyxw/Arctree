@@ -844,12 +844,12 @@ addLayer("storylayer", {
         },
         34:{ title: "Traceback Record",
         fullDisplay(){
-            return "<b>Traceback Record</b><br>Your Times moved in Maze boosts Research Points gain.<br><br>Req:15,000 times moved in the Maze"
+            return "<b>Traceback Record</b><br>Your Times moved in Maze boosts Research Points gain.<br><br>Req:13,500 times moved in the Maze"
         },
         effect(){
             return player.yugamu.timesmoved.plus(1).log10().times(1.5).max(1);
         },
-        canAfford(){return player.storylayer.storycounter==13&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.yugamu.timesmoved.gte(15000)},
+        canAfford(){return player.storylayer.storycounter==13&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.yugamu.timesmoved.gte(13500)},
         pay(){
             //nothing
         },

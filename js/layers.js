@@ -3937,8 +3937,8 @@ addLayer("a", {
         },
         43: {
             name: "Force Balance",
-            done() { return (player.light.points.gte(900)&&player.dark.points.gte(900)&&player.light.points.eq(player.dark.points))},
-            tooltip: "Make you have same amounts of Light Tachyons&Dark Matters.(≥900)<br>Rewards:When one of L or D is fall behind by another, its gain will be boosted.",
+            done() { return (player.light.points.gte(900)&&player.dark.points.gte(900)&&player.light.points.sub(player.dark.points).abs().lte(5))},
+            tooltip: "Have more than 900 Light Tachyons&Dark Matters and difference between the two is not more than 5.<br>Rewards:When one of L or D is fall behind by another, its gain will be boosted.",
         },
         44: {
             name: "I Can Idle (For) Now",
