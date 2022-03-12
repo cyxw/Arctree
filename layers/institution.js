@@ -36,7 +36,7 @@ addLayer("ins", {
     name: "Institution",
     resource: "Institution Funds",
     row: 5,
-    displayRow:4,
+    displayRow:5,
     branches: ["lab"],
 
     baseResource: "Research Power",
@@ -757,6 +757,7 @@ addLayer("ins", {
                     effbase = effbase.plus(player.etoluna.points.max(1).log(10));
                     effbase = effbase.plus(player.saya.points.max(1).log(10));
                     effbase = effbase.plus(player.ins.points.max(1).log(10));
+                    effbase = effbase.plus(player.awaken.points.max(1).log(10));
 
                     let eff=effbase.times(player.ins.inslevel.Sau).div(50);
                     //pos
@@ -779,18 +780,19 @@ addLayer("ins", {
                         if (player.ins.inslevel.Isr.lte(0)) return new Decimal(1);
                         let effbase = new Decimal(0);
                         effbase = effbase.plus(player.mem.milestones.length);
-                        effbase = effbase.plus(player.light.milestones.length);
-                        effbase = effbase.plus(player.dark.milestones.length);
-                        effbase = effbase.plus(player.kou.milestones.length);
-                        effbase = effbase.plus(player.lethe.milestones.length);
+                        if(!layers['light'].deactivated()) effbase = effbase.plus(player.light.milestones.length);
+                        if(!layers['dark'].deactivated()) effbase = effbase.plus(player.dark.milestones.length);
+                        if(!layers['kou'].deactivated()) effbase = effbase.plus(player.kou.milestones.length);
+                        if(!layers['lethe'].deactivated()) effbase = effbase.plus(player.lethe.milestones.length);
                         effbase = effbase.plus(player.lab.milestones.length);
-                        effbase = effbase.plus(player.rei.milestones.length);
-                        effbase = effbase.plus(player.yugamu.milestones.length);
+                        if(!layers['rei'].deactivated()) effbase = effbase.plus(player.rei.milestones.length);
+                        if(!layers['yugamu'].deactivated()) effbase = effbase.plus(player.yugamu.milestones.length);
                         effbase = effbase.plus(player.world.milestones.length);
                         effbase = effbase.plus(player.storylayer.milestones.length);
-                        effbase = effbase.plus(player.etoluna.milestones.length);
-                        effbase = effbase.plus(player.saya.milestones.length);
+                        if(!layers['etoluna'].deactivated()) effbase = effbase.plus(player.etoluna.milestones.length);
+                        if(!layers['saya'].deactivated()) effbase = effbase.plus(player.saya.milestones.length);
                         effbase = effbase.plus(player.ins.milestones.length);
+                        effbase = effbase.plus(player.awaken.milestones.length);
 
                         let eff=effbase.pow(player.ins.inslevel.Isr.times(0.8));
                         //pos
@@ -916,18 +918,19 @@ addLayer("ins", {
                 if (player.ins.inslevel.Nga.lte(0)) return new Decimal(1);
                         let effbase = new Decimal(0);
                         effbase = effbase.plus(player.mem.upgrades.length);
-                        effbase = effbase.plus(player.light.upgrades.length);
-                        effbase = effbase.plus(player.dark.upgrades.length);
-                        effbase = effbase.plus(player.kou.upgrades.length);
-                        effbase = effbase.plus(player.lethe.upgrades.length);
+                        if(!layers['light'].deactivated()) effbase = effbase.plus(player.light.upgrades.length);
+                        if(!layers['dark'].deactivated()) effbase = effbase.plus(player.dark.upgrades.length);
+                        if(!layers['kou'].deactivated()) effbase = effbase.plus(player.kou.upgrades.length);
+                        if(!layers['lethe'].deactivated()) effbase = effbase.plus(player.lethe.upgrades.length);
                         effbase = effbase.plus(player.lab.upgrades.length);
-                        effbase = effbase.plus(player.rei.upgrades.length);
-                        effbase = effbase.plus(player.yugamu.upgrades.length);
+                        if(!layers['rei'].deactivated()) effbase = effbase.plus(player.rei.upgrades.length);
+                        if(!layers['yugamu'].deactivated()) effbase = effbase.plus(player.yugamu.upgrades.length);
                         effbase = effbase.plus(player.world.upgrades.length);
                         effbase = effbase.plus(player.storylayer.upgrades.length);
-                        effbase = effbase.plus(player.etoluna.upgrades.length);
-                        effbase = effbase.plus(player.saya.upgrades.length);
+                        if(!layers['etoluna'].deactivated()) effbase = effbase.plus(player.etoluna.upgrades.length);
+                        if(!layers['saya'].deactivated()) effbase = effbase.plus(player.saya.upgrades.length);
                         effbase = effbase.plus(player.ins.upgrades.length);
+                        effbase = effbase.plus(player.awaken.upgrades.length);
 
                         let eff=effbase.pow(player.ins.inslevel.Nga.times(0.8));
                         //pos
@@ -956,18 +959,19 @@ addLayer("ins", {
                 if (player.ins.inslevel.Nzl.lte(0)) return new Decimal(1);
                 let effbase = new Decimal(0);
                 if (player.mem.unlocked) effbase = effbase.plus(1);
-                if (player.light.unlocked) effbase = effbase.plus(1);
-                if (player.dark.unlocked) effbase = effbase.plus(1);
-                if (player.kou.unlocked) effbase = effbase.plus(1);
-                if (player.lethe.unlocked) effbase = effbase.plus(1);
+                if (player.light.unlocked&&!layers['light'].deactivated()) effbase = effbase.plus(1);
+                if (player.dark.unlocked&&!layers['dark'].deactivated()) effbase = effbase.plus(1);
+                if (player.kou.unlocked&&!layers['kou'].deactivated()) effbase = effbase.plus(1);
+                if (player.lethe.unlocked&&!layers['lethe'].deactivated()) effbase = effbase.plus(1);
                 if (player.lab.unlocked) effbase = effbase.plus(1);
-                if (player.rei.unlocked) effbase = effbase.plus(1);
-                if (player.yugamu.unlocked) effbase = effbase.plus(1);
+                if (player.rei.unlocked&&!layers['rei'].deactivated()) effbase = effbase.plus(1);
+                if (player.yugamu.unlocked&&!layers['yugamu'].deactivated()) effbase = effbase.plus(1);
                 if (player.world.unlocked) effbase = effbase.plus(1);
                 if (player.storylayer.unlocked) effbase = effbase.plus(1);
-                if (player.etoluna.unlocked) effbase = effbase.plus(1);
-                if (player.saya.unlocked) effbase = effbase.plus(1);
+                if (player.etoluna.unlocked&&!layers['etoluna'].deactivated()) effbase = effbase.plus(1);
+                if (player.saya.unlocked&&!layers['saya'].deactivated()) effbase = effbase.plus(1);
                 if (player.ins.unlocked) effbase = effbase.plus(1);
+                if (player.awaken.unlocked) effbase = effbase.plus(1);
                 let eff = Decimal.pow(effbase,player.ins.inslevel.Nzl.times(0.75))
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner())

@@ -193,6 +193,7 @@ function layOver(obj1, obj2) {
 }
 
 function prestigeNotify(layer) {
+	if (tmp[layer].deactivated) return false
 	if (layers[layer].prestigeNotify) return layers[layer].prestigeNotify()
 	
 	if (isPlainObject(tmp[layer].tabFormat)) {

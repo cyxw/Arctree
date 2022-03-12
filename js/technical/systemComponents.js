@@ -18,16 +18,21 @@ var systemComponents = {
 		<button v-if="nodeShown(layer)"
 			v-bind:id="layer"
 			v-on:click="function() {
+				if (player['awaken'].selectionActive&&tmp.awaken.canBeAwakened.includes(layer)&&player['awaken'].current===null) layers.awaken.startAwake(layer);
+				else{
 				if (shiftDown && options.forceTooltips) player[layer].forceTooltip = !player[layer].forceTooltip
 				else if(tmp[layer].isLayer) {
-					if (tmp[layer].leftTab) {
-						showNavTab(layer, prev)
-						showTab('none')
+					if( !((player['awaken'].selectionActive&&player['awaken'].current==null&&layer!='awaken'&&!layers['awaken'].canBeAwakened().includes(layer)&&layers[layer].row!='side')||(player['awaken'].selectionActive&&player['awaken'].current!=null&&!player['awaken'].unawable.includes(layer)&&!player['awaken'].awakened.includes(layer)&&layer!=player['awaken'].current&&layers[layer].row!='side')) ){
+						if (tmp[layer].leftTab) {
+							showNavTab(layer, prev)
+							showTab('none')
+						}
+						else
+							showTab(layer, prev)
 					}
-					else
-						showTab(layer, prev)
 				}
 				else {run(layers[layer].onClick, layers[layer])}
+				}
 			}"
 
 
@@ -40,10 +45,18 @@ var systemComponents = {
 				forceTooltip: player[layer].forceTooltip,
 				ghost: tmp[layer].layerShown == 'ghost',
 				hidden: !tmp[layer].layerShown,
-				locked: tmp[layer].isLayer ? !(player[layer].unlocked || tmp[layer].canReset) : !(tmp[layer].canClick),
+
+				locked: tmp[layer].isLayer ? (player['awaken'].selectionActive ? (player['awaken'].current == null ? !(layers['awaken'].canBeAwakened().includes(layer)||layer=='awaken'||layers[layer].row=='side') : !(player['awaken'].unawable.includes(layer)||layers[layer].row=='side'||layer==player['awaken'].current||player['awaken'].awakened.includes(layer)) ) : !(player[layer].unlocked || tmp[layer].canReset) ) : !(tmp[layer].canClick),
+
+				
+
 				notify: tmp[layer].notify && player[layer].unlocked,
 				resetNotify: tmp[layer].prestigeNotify,
-				can: ((player[layer].unlocked || tmp[layer].canReset) && tmp[layer].isLayer) || (!tmp[layer].isLayer && tmp[layer].canClick),
+
+				can: (((player[layer].unlocked || tmp[layer].canReset) && tmp[layer].isLayer))&&!(player['awaken'].selectionActive&&((player['awaken'].current == null &&!tmp.awaken.canBeAwakened.includes(layer)&&layers[layer].row!='side'&&layer!='awaken')||(player['awaken'].current != null&&!(player['awaken'].awakened.includes(layer)||player['awaken'].unawable.includes(layer)||layer == player['awaken'].current))&&!(layers[layer].row=='side'))) || (!tmp[layer].isLayer && tmp[layer].canClick),
+				
+
+
 				front: !tmp.scrolled,
 			}"
 			v-bind:style="constructNodeStyle(layer)">
@@ -51,13 +64,49 @@ var systemComponents = {
 			<tooltip
       v-if="tmp[layer].tooltip != ''"
 			:text="(tmp[layer].isLayer) ? (
-				player[layer].unlocked ? (tmp[layer].tooltip ? tmp[layer].tooltip : formatWhole(player[layer].points) + ' ' + tmp[layer].resource)
-				: (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : 'Reach ' + formatWhole(tmp[layer].requires) + ' ' + tmp[layer].baseResource + ' to unlock (You have ' + formatWhole(tmp[layer].baseAmount) + ' ' + tmp[layer].baseResource + ')')
-			)
-			: (
-				tmp[layer].canClick ? (tmp[layer].tooltip ? tmp[layer].tooltip : 'I am a button!')
+                (player['awaken'].selectionActive ? (
+                    player['awaken'].current == null ? (
+                        (layers['awaken'].canBeAwakened().includes(layer)||layer=='awaken'||layers[layer].row=='side') ? (
+                            player[layer].unlocked ? (tmp[layer].tooltip ? tmp[layer].tooltip : formatWhole(player[layer].points) + ' ' + tmp[layer].resource)
+				            : (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : 'Reach ' + formatWhole(tmp[layer].requires) + ' ' + tmp[layer].baseResource + ' to unlock (You have ' + formatWhole(tmp[layer].baseAmount) + ' ' + tmp[layer].baseResource + ')')
+                            )
+                            : (
+                                player['awaken'].unawable.includes(layer) ? (
+                                    'Unable to Awake'
+                                )
+                                : (
+									player['awaken'].awakened.includes(layer) ? (
+										'Already be Awaken!'
+									)
+									:(
+										'Cannot be Awake yet'
+									)
+                                )
+                            )
+                        )
+                        : (
+                            (player['awaken'].unawable.includes(layer)||player['awaken'].awakened.includes(layer)||layer==player['awaken'].current||layers[layer].row=='side') ? (
+                                player[layer].unlocked ? (tmp[layer].tooltip ? tmp[layer].tooltip : formatWhole(player[layer].points) + ' ' + tmp[layer].resource)
+				                : (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : 'Reach ' + formatWhole(tmp[layer].requires) + ' ' + tmp[layer].baseResource + ' to unlock (You have ' + formatWhole(tmp[layer].baseAmount) + ' ' + tmp[layer].baseResource + ')')
+                            )
+                            : (
+                                'Awakeing others...'
+                            )
+                        )
+
+                    )
+                    : (
+                        player[layer].unlocked ? (tmp[layer].tooltip ? tmp[layer].tooltip : formatWhole(player[layer].points) + ' ' + tmp[layer].resource)
+				        : (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : 'Reach ' + formatWhole(tmp[layer].requires) + ' ' + tmp[layer].baseResource + ' to unlock (You have ' + formatWhole(tmp[layer].baseAmount) + ' ' + tmp[layer].baseResource + ')')
+                    )
+                
+                )
+            )
+            :
+            (
+                tmp[layer].canClick ? (tmp[layer].tooltip ? tmp[layer].tooltip : 'I am a button!')
 				: (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : 'I am a button!')
-			)"></tooltip>
+            )"></tooltip>
 			<node-mark :layer='layer' :data='tmp[layer].marked'></node-mark></span>
 		</button>
 		`

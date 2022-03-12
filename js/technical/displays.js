@@ -14,8 +14,25 @@ function prestigeButtonText(layer) {
 
 function constructNodeStyle(layer){
 	let style = []
+
 	if ((tmp[layer].isLayer && layerunlocked(layer)) || (!tmp[layer].isLayer && tmp[layer].canClick))
-		style.push({'background-color': tmp[layer].color})
+		style.push({'background-color': tmp[layer].color});
+	
+
+	//AW相关，强制return出去的那种
+	if(player['awaken'].selectionActive){
+		if(player['awaken'].current == null){
+			if( !(tmp.awaken.canBeAwakened.includes(layer)||layers[layer].row=='side'||layer=='awaken') ) style.push({'background-color': '#bf8f8f'})
+			else style.push(tmp[layer].nodeStyle)
+		}
+		else{
+			if ( !(player['awaken'].awakened.includes(layer)||player['awaken'].unawable.includes(layer)||layer == player['awaken'].current||layers[layer].row=='side') ) style.push({'background-color': '#bf8f8f'})
+			else style.push(tmp[layer].nodeStyle)
+		}
+		return style
+	}
+
+	
 	if (tmp[layer].image !== undefined)
 		style.push({'background-image': 'url("' + tmp[layer].image + '")'})
 	if(tmp[layer].notify && player[layer].unlocked)

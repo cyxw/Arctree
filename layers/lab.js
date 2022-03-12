@@ -21,7 +21,7 @@ addLayer("lab", {
     branches: ["mem"],
 
     row: 3, // Row the layer is in on the tree (0 is the first row)
-    displayRow: 3,
+    displayRow: 4,
     position:2,
     layerShown(){return hasAchievement('a',55)},
 
@@ -691,6 +691,7 @@ addLayer("lab", {
             player.rei.roses = player.rei.roses.sub(150);
             },
         effect(){
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei'&&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return player.lab.power.plus(1).log10().div(10).max(1);
         },
         },
@@ -705,6 +706,7 @@ addLayer("lab", {
             player.lab.points = player.lab.points.sub(40000);
             },
         effect(){
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'yugamu'&&!player['awaken'].awakened.includes('yugamu')) return new Decimal(1);
             return player.lab.power.plus(1).log10().sqrt().max(0);
         },
         },
@@ -730,7 +732,7 @@ addLayer("lab", {
             player.rei.points = player.rei.points.sub(7);
             },
         effect(){
-            return player.light.points.plus(1).log10().div(2.5);
+            return player.light.points.plus(1).log10().div(2.5).max(1);
         },
         },
         124:{ title: "Unstable Steps",
@@ -745,7 +747,7 @@ addLayer("lab", {
             player.yugamu.points = player.yugamu.points.sub(7);
             },
         effect(){
-            return player.dark.points.plus(1).log10().div(2.5);
+            return player.dark.points.plus(1).log10().div(2.5).max(1);
         },
         },
         131:{ title: "Compass",
@@ -797,6 +799,7 @@ addLayer("lab", {
         unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
         cost:new Decimal(750000),
         effect(){
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei'&&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return player[this.layer].points.plus(1).log10().div(15).plus(1);
         },
         effectDisplay(){
@@ -808,6 +811,7 @@ addLayer("lab", {
         unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
         cost:new Decimal(750000),
         effect(){
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'yugamu'&&!player['awaken'].awakened.includes('yugamu')) return new Decimal(1);
             return player[this.layer].points.plus(1).log10().max(1);
         },
         effectDisplay(){
@@ -826,6 +830,7 @@ addLayer("lab", {
             player.rei.points = player.rei.points.sub(8);
             },
             effect(){
+                if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei'&&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
                 return player[this.layer].points.plus(1).log10().div(10).plus(1);
             },
         },
@@ -841,6 +846,7 @@ addLayer("lab", {
             player.yugamu.points = player.yugamu.points.sub(8);
             },
             effect(){
+                if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'yugamu'&&!player['awaken'].awakened.includes('yugamu')) return new Decimal(1);
                 return player[this.layer].points.plus(1).log10().div(10).plus(1);
             },
         },
@@ -964,6 +970,7 @@ addLayer("lab", {
             player.lab.points = player.lab.points.sub(5e10);
         },
         effect(){
+            if (layers['yugamu'].deactivated()) return new Decimal(0);
             return player.lab.buyables[33].times(1000)
         },
         },
@@ -1325,6 +1332,7 @@ addLayer("lab", {
                     if (hasUpgrade('lab',83)) eff = player[this.layer].buyables[this.id].div(50);
                     if (eff.gt(1500)) eff=eff.sub(1500).pow(0.25).plus(1500);
                     if (eff.lt(1)) eff = new Decimal(1);
+                    if (layers['light'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1368,6 +1376,7 @@ addLayer("lab", {
                     if (hasUpgrade('lab',84)) eff = player[this.layer].buyables[this.id].div(50);
                     if (eff.gt(1500)) eff=eff.sub(1500).pow(0.25).plus(1500);
                     if (eff.lt(1)) eff = new Decimal(1);
+                    if (layers['dark'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1408,6 +1417,7 @@ addLayer("lab", {
                 },
                 effect(){
                     let eff= player.lab.buyables[this.id].pow(3).max(1);
+                    if (layers['rei'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1450,6 +1460,7 @@ addLayer("lab", {
                     let eff= new Decimal(1);
                     if (hasUpgrade('lab',93)) eff = player.lab.buyables[this.id].div(5);
                     if (eff.lt(1)) eff = new Decimal(1);
+                    if (layers['kou'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1492,6 +1503,7 @@ addLayer("lab", {
                     let eff= new Decimal(1);
                     if (hasUpgrade('lab',94)) eff = player.lab.buyables[this.id].div(2.5);
                     if (eff.lt(1)) eff = new Decimal(1);
+                    if (layers['lethe'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1533,6 +1545,7 @@ addLayer("lab", {
                 },
                 effect(){
                     let eff= player.lab.buyables[this.id].pow(3).max(1);
+                    if (layers['yugamu'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},

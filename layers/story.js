@@ -16,7 +16,7 @@ addLayer("storylayer", {
     resource: "Stories",
     branches: ["world"],
     row: 4,
-    displayRow:0,
+    displayRow:1,
     position:3,
 
     unlocked()  {return hasUpgrade('lab',151)},
@@ -705,6 +705,8 @@ addLayer("storylayer", {
             if (hasUpgrade('storylayer',12)) eff = player.rei.roses.plus(1).log(8).times(2).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
             eff=eff.times(challengeEffect('saya',41));
+            //AW
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei' &&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return eff;
         },
         },
@@ -756,6 +758,8 @@ addLayer("storylayer", {
             if (hasUpgrade('storylayer',21)) eff = player.rei.roses.plus(1).log(5).times(1.5).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
             eff = eff.times(challengeEffect('saya',41));
+            //AW
+        if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei'&&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return eff;
         }
         },
@@ -925,7 +929,7 @@ addLayer("storylayer", {
         },
         45:{ title: "Awaken",
         fullDisplay(){
-            let des = "<b>Awaken</b><br>Unlock [Currently nothing here]."
+            let des = "<b>Awaken</b><br>Unlock Awake layer."
             des += "<br><br>Cost:1e1,616 Fragments"
             return des;
         },
