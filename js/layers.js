@@ -4582,14 +4582,14 @@ addLayer("awaken",{
             title:"Power Awake",
             display() {
 					if (player.awaken.current!==null) return "Currently Awakening: "+tmp[player.awaken.current].name+" layer. Click to exit the run.";
-					else return player.awaken.selectionActive?"You are in a Power Awaken. Click the node of the layer you wish to attempt to Awaken. Click to exit this status.":("Begin a Power Awaken.<br><br>"+((tmp.awaken.amtAwakened>=layers["awaken"].clickables.cap)?"MAXED (Currently)":("Req: "+formatWhole(tmp[this.layer].clickables[this.id].req)+" Awaken Core.")));
+					else return player.awaken.selectionActive?"You are in a Power Awake. Click the node of the layer you wish to attempt to Awake. Click to exit this status.":("Begin a Power Awake.<br><br>"+((tmp.awaken.amtAwakened>=layers["awaken"].clickables.cap)?"MAXED (Currently)":("Req: "+formatWhole(tmp[this.layer].clickables[this.id].req)+" Awaken Core.")));
 				},
 				unlocked() { return player.awaken.unlocked },
                 req() { return [1,2,(1e300)][tmp.awaken.amtAwakened||0] },
 				canClick() { return player.awaken.unlocked && (player.awaken.selectionActive?true:(layers["awaken"].amtAwakened()<layers["awaken"].clickables.cap&&player.awaken.points.gte(tmp[this.layer].clickables[this.id].req))) },
 				onClick() { 
 					if (player.awaken.current !== null) {
-						if (!confirm("Are you sure you want to exit this Awaken run?")) return;
+						if (!confirm("Are you sure you want to exit this Awake run?")) return;
 						player.awaken.selectionActive = false;
 						player.awaken.current = null;
 						doReset("awaken", true);
