@@ -13,30 +13,37 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.4.0",
-	name: "Liner ≥ Softcaps",
+	num: "0.0.5.3",
+	name: "Power Awake",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.5.3</h3><br>
+		- Add Awake layer stage 1.<br><br>
+	<h3>v0.0.5.0</h3><br>
+		- Add Institution layer.<br>
+		- Some balance rework.<br>
+		- Add some achievements' images, thanks to River咕咕酱 for drawing raw images.<br>
+		……and Sxy62146214 on Antimatter-dimensions related achievement image.<br><br>
 	<h3>v0.0.4.0</h3><br>
 		- All row4 QoL added.<br>
-		- Call row5 done.<br>
+		- Call row5 done.<br><br>
 	<h3>v0.0.3.5</h3><br>
 		- All row5 layers added with basic stuff.<br>
-		- Not all row4 QoL added.<br>
+		- Not all row4 QoL added.<br><br>
 	<h3>v0.0.3.2</h3><br>
-		- Add first branch of stories, now it's time to check my writing skill(lol).<br>
+		- Add first branch of stories, now it's time to check my writing skill(lol).<br><br>
 	<h3>v0.0.3.0</h3><br>
-		- Call row4 done.<br>
+		- Call row4 done.<br><br>
 	<h3>v0.0.2.5</h3><br>
 		- All row4 layers added with basic stuff.<br>
-		- All row3 QoL added.<br>
+		- All row3 QoL added.<br><br>
 	<h3>v0.0.2.0</h3><br>
-		- Call row3 completed.<br>
+		- Call row3 completed.<br><br>
 	<h3>v0.0.1.1</h3><br>
-		- Call row2 completed.(Convinced)<br>
+		- Call row2 completed.(Convinced)<br><br>
 	<h3>v0.0.1</h3><br>
-		- Call row2 completed.(Part of)<br>
+		- Call row2 completed.(Part of)<br><br>
 	<h3>v0.0</h3><br>
 		- Added things.<br>
 		- Added stuff.(Convinced)`
@@ -45,7 +52,7 @@ let winText = `Congratulations! You have reached the end and beaten this game, b
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
-var doNotCallTheseFunctionsEveryTick = ["blowUpEverything"]
+var doNotCallTheseFunctionsEveryTick = ["blowUpEverything","startAwake","completeAwake"]
 
 function getStartPoints(){
     return new Decimal(modInfo.initialStartPoints)
@@ -79,14 +86,26 @@ function getPointGen() {
 	if (hasMilestone('lab',1)) gain = gain.times(player.lab.points.max(1));
 	if (hasUpgrade('storylayer',12)) gain = gain.times(upgradeEffect('storylayer',12));
 	if (hasAchievement('a',92)) gain = gain.times(achievementEffect('a',92));
+	if (hasMilestone('ins',3)) gain = gain.times(tmp['ins'].milestones[3].effect)
+	if (hasMilestone('ins',3)) gain = gain.times(layers.ins.insEffect().Sau().Pos())
+	if (hasMilestone('ins',4)) gain = gain.times(layers.ins.insEffect().Kaz())
+	if (hasMilestone('ins',4)) gain = gain.times(layers.ins.insEffect().Ind())
+	if (hasMilestone('ins',4)) gain = gain.times(layers.ins.insEffect().Chn().Pos());
+	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Can())
+	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Bra())
+	if (hasAchievement('a',113)) gain = gain.times(buyableEffect('lab',12).eff2());
 	
 	//POW
-	if (hasUpgrade('dark', 12))gain = gain.times(tmp.dark.effect.pow(0.5));
-	if (hasUpgrade('mem', 33)&& !hasMilestone('kou',2)) gain = gain.pow(hasUpgrade('light', 23)?0.75:0.5);
+	if (hasUpgrade('dark', 12))gain = gain.times(upgradeEffect('dark',12));
+	if (hasUpgrade('mem', 33)&& !hasMilestone('kou',2)) {
+		if(player['awaken'].current=='light'||player['awaken'].awakened.includes(this.layer)) gain=gain.times(upgradeEffect('mem',33))
+		else gain = gain.pow(hasUpgrade('light', 23)?0.75:0.5);
+	}//很抱歉上下两行并不是POW
+	if (hasUpgrade('mem', 33)&&hasMilestone('kou',2)&&(player['awaken'].current=='light'||player['awaken'].awakened.includes(this.layer))) gain=gain.times(upgradeEffect('mem',33))
 	if (hasChallenge("kou",21)) gain = gain.pow(1.025);
 	if (inChallenge("kou",11)) gain = gain.pow(0.75);
 	if (inChallenge("kou",21)) gain = gain.pow(1.05);
-	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12));
+	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12).eff1());
 	if (inChallenge('rei',11)) gain = gain.pow(0.5);
 	if (player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) gain = gain.pow(0.9);
 	if (challengeCompletions('saya',21)) gain=gain.pow(challengeEffect('saya',21))
@@ -94,7 +113,8 @@ function getPointGen() {
 	//tetrate
 	if (inChallenge('saya',21)) gain = gain.tetrate(layers.saya.challenges[21].debuff())
 
-	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
+	if (hasUpgrade('dark', 11)&&player.points.lt(new Decimal(upgradeEffect('dark',11)))&&!(player['awaken'].current=='dark'||player['awaken'].awakened.includes('dark'))) gain = gain.times(2);
+	if (hasUpgrade('dark', 11)&&player.points.gt(new Decimal(upgradeEffect('dark',11)))&&(player['awaken'].current=='dark'||player['awaken'].awakened.includes('dark'))) gain = gain.times(3);
 	if (isNaN(gain.toNumber())) return new Decimal(1);
         return gain
 }

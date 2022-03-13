@@ -26,3 +26,6 @@ G:Gemini Bounds
 G.starPoint:Star Points
 G.moonPoint:Moon Points
 K:Everflashing Knives
+
+//row6
+I:Institution Funds

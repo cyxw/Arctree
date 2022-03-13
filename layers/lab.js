@@ -21,7 +21,7 @@ addLayer("lab", {
     branches: ["mem"],
 
     row: 3, // Row the layer is in on the tree (0 is the first row)
-    displayRow: 3,
+    displayRow: 4,
     position:2,
     layerShown(){return hasAchievement('a',55)},
 
@@ -37,6 +37,7 @@ addLayer("lab", {
         if (hasUpgrade('lab',63)) mult = mult.times(upgradeEffect('lab',63));
         if (hasUpgrade('lab',64)) mult = mult.times(upgradeEffect('lab',64));
         if (hasUpgrade('world',11)) mult = mult.times(upgradeEffect('world',11));
+        if (hasMilestone('ins',0)) mult = mult.times(layers.ins.insEffect().Eng());
         mult = mult.pow(tmp["lab"].powerexp)
         return mult;
     },
@@ -59,6 +60,8 @@ addLayer("lab", {
         if (hasUpgrade('world',31)) gain = gain.times(layers.world.restrictReward());
         if (hasUpgrade('lab',121)) gain = gain.times(1.5);
         if (hasUpgrade('lab',173)) gain = gain.times(upgradeEffect('lab',173));
+        if (hasUpgrade('storylayer',34)) gain = gain.times(upgradeEffect('storylayer',34));
+        if (hasMilestone('ins',0)) gain = gain.times(layers.ins.insEffect().Eng());
 
         return gain;
     },
@@ -68,6 +71,11 @@ addLayer("lab", {
         if (hasUpgrade('lab',161)) sc = sc.times(upgradeEffect('lab',161));
         if (hasUpgrade('lab',191)) sc = sc.times(upgradeEffect('lab',191));
         if (hasUpgrade('lab',192)) sc = sc.times(upgradeEffect('lab',192));
+        if (hasUpgrade('lab',201)) sc = sc.times(upgradeEffect('lab',201));
+        if (hasMilestone('ins',0)) sc = sc.times(layers.ins.insEffect().Eng());
+        if (hasMilestone('ins',6)) sc = sc.times(layers.ins.insEffect().Nga());
+        if (hasUpgrade('storylayer',42)) sc = sc.times(upgradeEffect('storylayer',42))
+        if (hasUpgrade('storylayer',44)) sc = sc.times(upgradeEffect('storylayer',44))
         return sc;
     },
 
@@ -95,7 +103,7 @@ addLayer("lab", {
     shouldNotify(){
         let buyableid = [11,12,13,21,22,31,32,41,42];
         for(var i = 0; i < buyableid.length; i++){
-            if (layers.lab.buyables[buyableid[i]].canAfford()){
+            if (layers.lab.buyables[buyableid[i]].canAfford()&&!hasMilestone('ins',7)){
                 return true;
             };
     }
@@ -144,6 +152,7 @@ addLayer("lab", {
         ["row",[["upgrade","171"],["upgrade","172"],["upgrade","173"],["upgrade","174"]]],
         ["row",[["upgrade","181"],["upgrade","182"],["upgrade","183"],["upgrade","184"]]],
         ["row",[["upgrade","191"],["upgrade","192"],["upgrade","193"],["upgrade","194"]]],
+        ["row",[["upgrade","201"] ]]
     ]
 },
         }
@@ -162,7 +171,7 @@ addLayer("lab", {
                     {}],
                 "blank",
                 ["display-text",
-                    function() {return "You have "+format(player.lab.power)+" Research Power."},
+                    function() {return "You have <a style='color: #00bdf9'>"+format(player.lab.power)+"</a> Research Power."},
                         {}],
                 ["display-text",
                 function() {return "You lose 1% Research Power every second."},
@@ -171,13 +180,13 @@ addLayer("lab", {
                 ["microtabs","Researchstuff",{'border-width':'0px'}],
             ]
         },
-        "Research Progresses": {
+        "Research Progress": {
             unlocked(){return hasUpgrade('lab',13)},
             content: [
                 "main-display",
                 "blank",
                 ["display-text",
-                function() {return "Progresses: "+player.lab.achievements.length+"/"+(Object.keys(tmp.lab.achievements).length-2)},
+                function() {return "Progress: "+player.lab.achievements.length+"/"+(Object.keys(tmp.lab.achievements).length-2)},
                     {}],
                 "blank",
                 "achievements",
@@ -189,7 +198,7 @@ addLayer("lab", {
                 "main-display",
                 "blank",
                 ["display-text",
-                    function() {return "You have "+format(player.lab.power)+" Research Power."},
+                    function() {return "You have <a style='color: #00bdf9'>"+format(player.lab.power)+"</a> Research Power."},
                         {}],
                 "blank",
                 "buyables",
@@ -201,7 +210,7 @@ addLayer("lab", {
                 "main-display",
                 "blank",
                 ["display-text",
-                    function() {return "You have "+format(player.lab.power)+" Research Power."},
+                    function() {return "You have <a style='color: #00bdf9'>"+format(player.lab.power)+"</a> Research Power."},
                         {}],
                 "resource-display",
                 "blank",
@@ -682,6 +691,7 @@ addLayer("lab", {
             player.rei.roses = player.rei.roses.sub(150);
             },
         effect(){
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei'&&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return player.lab.power.plus(1).log10().div(10).max(1);
         },
         },
@@ -696,6 +706,7 @@ addLayer("lab", {
             player.lab.points = player.lab.points.sub(40000);
             },
         effect(){
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'yugamu'&&!player['awaken'].awakened.includes('yugamu')) return new Decimal(1);
             return player.lab.power.plus(1).log10().sqrt().max(0);
         },
         },
@@ -721,7 +732,7 @@ addLayer("lab", {
             player.rei.points = player.rei.points.sub(7);
             },
         effect(){
-            return player.light.points.plus(1).log10().div(2.5);
+            return player.light.points.plus(1).log10().div(2.5).max(1);
         },
         },
         124:{ title: "Unstable Steps",
@@ -736,7 +747,7 @@ addLayer("lab", {
             player.yugamu.points = player.yugamu.points.sub(7);
             },
         effect(){
-            return player.dark.points.plus(1).log10().div(2.5);
+            return player.dark.points.plus(1).log10().div(2.5).max(1);
         },
         },
         131:{ title: "Compass",
@@ -788,6 +799,7 @@ addLayer("lab", {
         unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
         cost:new Decimal(750000),
         effect(){
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei'&&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return player[this.layer].points.plus(1).log10().div(15).plus(1);
         },
         effectDisplay(){
@@ -799,6 +811,7 @@ addLayer("lab", {
         unlocked(){return hasUpgrade('lab',131)&&hasUpgrade('lab',132)&&hasUpgrade('lab',133)&&hasUpgrade('lab',134)},
         cost:new Decimal(750000),
         effect(){
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'yugamu'&&!player['awaken'].awakened.includes('yugamu')) return new Decimal(1);
             return player[this.layer].points.plus(1).log10().max(1);
         },
         effectDisplay(){
@@ -817,6 +830,7 @@ addLayer("lab", {
             player.rei.points = player.rei.points.sub(8);
             },
             effect(){
+                if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei'&&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
                 return player[this.layer].points.plus(1).log10().div(10).plus(1);
             },
         },
@@ -832,6 +846,7 @@ addLayer("lab", {
             player.yugamu.points = player.yugamu.points.sub(8);
             },
             effect(){
+                if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'yugamu'&&!player['awaken'].awakened.includes('yugamu')) return new Decimal(1);
                 return player[this.layer].points.plus(1).log10().div(10).plus(1);
             },
         },
@@ -871,7 +886,7 @@ addLayer("lab", {
             return player[this.layer].points.plus(1).log10().div(100);
         },
         effectDisplay(){
-           if (hasUpgrade('lab',184)) return "<br>Currently: -"+format(upgradeEffect('lab',162));
+           if (hasUpgrade('lab',184)) return "<br>Currently: -"+format(upgradeEffect('lab',162).min(new Decimal(2).sub(layers.world.WorldstepHeightscexp())));
         },
         },
         163:{ title: "Imitate",
@@ -901,8 +916,8 @@ addLayer("lab", {
         },
         },
         172:{ title: "HyperStacks",
-        description: "The autobuyer of Step Transformer now behave in a more effective way.",
-        fullDisplay(){return "<b>HyperStacks</b><br>The autobuyer of Step Transformer now behave in a more effective way."+((hasUpgrade('lab',184))?("<br>Currently: buy "+formatWhole(upgradeEffect('lab',172))+" Step Transformer in a bulk"):"")+"<br><br>Cost: 350,000,000 Research Points<br>Req:150,000 World Steps"},
+        description: "Step Transformer become more effective.",
+        fullDisplay(){return "<b>HyperStacks</b><br>Step Transformer become more effective."+"<br><br>Cost: 350,000,000 Research Points<br>Req:150,000 World Steps"},
         unlocked(){return hasUpgrade('lab',164)},
         canAfford(){
             return player.lab.points.gte(350000000)&&player.world.points.gte(150000);
@@ -910,14 +925,6 @@ addLayer("lab", {
         pay(){
             player.lab.points = player.lab.points.sub(350000000);
         },
-        effect(){
-            if(!hasUpgrade('lab',172)) return new Decimal(1);
-            let bulk = player.world.points.plus(1).log(10).sub(layers.lab.buyables[43].cost().fo.plus(1).log10()).floor();
-            return Decimal.pow(10,bulk).max(1);
-        },
-        effectDisplay(){
-            if (hasUpgrade('lab',184)) return "<br>Currently: buy "+formatWhole(upgradeEffect('lab',172))+" Step Transformer in a bulk";
-         },
         },
         173:{ title: "Over Proud",
         description: "Research Point gain is boosted by achievements.",
@@ -944,7 +951,7 @@ addLayer("lab", {
         181:{ title: "Soilless Culture",
         description: "Church Transformer boosts Glowing Roses gain.",
         fullDisplay(){return "<b>Soilless Culture</b><br>Church Transformer boosts Glowing Roses gain.<br><br>Cost: 5e10 Research Points<br>Req:16 Luminous Churches"},
-        unlocked(){return hasUpgrade('lab',171)&&hasUpgrade('lab',172)},
+        unlocked(){return hasUpgrade('lab',173)&&hasUpgrade('lab',174)},
         canAfford(){
             return player.lab.points.gte(5e10)&&player.rei.points.gte(16);
         },
@@ -955,7 +962,7 @@ addLayer("lab", {
         182:{ title: "Maze Bot",
         description: "Labyrinth Transformer gives base move times in Maze.",
         fullDisplay(){return "<b>Maze Bot</b><br>Labyrinth Transformer gives base move times in Maze.<br><br>Cost: 5e10 Research Points<br>Req:16 Flourish Labyrinths"},
-        unlocked(){return hasUpgrade('lab',171)&&hasUpgrade('lab',172)},
+        unlocked(){return hasUpgrade('lab',173)&&hasUpgrade('lab',174)},
         canAfford(){
             return player.lab.points.gte(5e10)&&player.yugamu.points.gte(16);
         },
@@ -963,6 +970,7 @@ addLayer("lab", {
             player.lab.points = player.lab.points.sub(5e10);
         },
         effect(){
+            if (layers['yugamu'].deactivated()) return new Decimal(0);
             return player.lab.buyables[33].times(1000)
         },
         },
@@ -995,10 +1003,10 @@ addLayer("lab", {
         },
         192:{ title: "Softcap Booster",
         description: "Memory softcap pushes Research Point softcap starts later.",
-        fullDisplay(){return "<b>Softcap Booster</b><br>Memory softcap pushes Research Point softcap starts later."+((hasUpgrade('lab',192))?("<br>Currently: "+format(upgradeEffect('lab',192))+"x"):"")+"<br><br>Cost: 4.50e13 Research Points<br>Req:1e660 Memories"},
+        fullDisplay(){return "<b>Softcap Booster</b><br>Memory softcap pushes Research Point softcap starts later."+((hasUpgrade('lab',192))?("<br>Currently: "+format(upgradeEffect('lab',192))+"x"):"")+"<br><br>Cost: 4.50e13 Research Points<br>Req:1e650 Memories"},
         unlocked(){return hasUpgrade('lab',191)},
         canAfford(){
-            return player.lab.points.gte(4.5e13)&&player.mem.points.gte("1e660");
+            return player.lab.points.gte(4.5e13)&&player.mem.points.gte("1e650");
         },
         pay(){
             player.lab.points = player.lab.points.sub(4.5e13);
@@ -1009,10 +1017,10 @@ addLayer("lab", {
         },
         193:{ title: "Softcap Accelerator",
         description: "Fixed World Step effect softcap pushes restricted World Step effect hardcap starts later.",
-        fullDisplay(){return "<b>Softcap Accelerator</b><br>Fixed World Step effect softcap pushes restricted World Step effect hardcap starts later."+((hasUpgrade('lab',193))?("<br>Currently: Restricted World Step effect hardcap starts "+format(upgradeEffect('lab',193))+"x later"):"")+"<br><br>Cost: 9e13 Research Points<br>Req:2,000,000 World Steps"},
+        fullDisplay(){return "<b>Softcap Accelerator</b><br>Fixed World Step effect softcap pushes restricted World Step effect hardcap starts later."+((hasUpgrade('lab',193))?("<br>Currently: Restricted World Step effect hardcap starts "+format(upgradeEffect('lab',193))+"x later"):"")+"<br><br>Cost: 9e13 Research Points<br>Req:500,000 World Steps"},
         unlocked(){return hasUpgrade('lab',192)},
         canAfford(){
-            return player.lab.points.gte(9e13)&&player.world.points.gte(2000000);
+            return player.lab.points.gte(9e13)&&player.world.points.gte(500000);
         },
         pay(){
             player.lab.points = player.lab.points.sub(9e13);
@@ -1024,7 +1032,25 @@ addLayer("lab", {
         194:{ title: "Softcap Book",
         description: "Unlock a side layer to see all current softcaps.",
         unlocked(){return hasUpgrade('lab',193)},
-        cost:new Decimal(3e14),
+        cost:new Decimal(5e14),
+        },
+        201:{ title: "Autobiography Draft",
+        description: "Your experienced stories push Research Point softcap starts later.",
+        fullDisplay(){return "<b>Autobiography Draft</b><br>Your experienced stories push Research Point softcap starts later."+((hasUpgrade('lab',201))?("<br>Currently: "+format(upgradeEffect('lab',201))+"x"):"")+"<br><br>Req:1,000 Gemini Bounds<br>90 Everflashing Knives"},
+        unlocked(){return (hasUpgrade('lab',194)&&hasUpgrade('storylayer',34))},
+        canAfford(){
+            return player.etoluna.points.gte(1000)&&player.saya.points.gte(90)
+        },
+        pay(){
+            //nothing
+            },
+        onPurchase(){
+            player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;showTab('storylayer');
+        },
+        effect(){
+            return player.storylayer.points.times(0.75).max(1);
+        },
+            style: {height: '200px', width: '200px'},
         },
     },
     achievements:{//Research Progress
@@ -1044,7 +1070,7 @@ addLayer("lab", {
         13: {
             name: "Finally, sth Related",
             done() { return player.lab.buyables[12].gte(1) },
-            tooltip: "Do researches relate to what you want to know.<br>Rewards:Research Power gain is now boosted by Research Progresses.",
+            tooltip: "Do researches relate to what you want to know.<br>Rewards:Research Power gain is now boosted by Research Progress.",
             effect(){
                 let eff = player.lab.achievements.length/3;
                 if (eff<1) return 1;
@@ -1108,6 +1134,21 @@ addLayer("lab", {
             done() { return hasUpgrade('lab',174) },
             tooltip: "See how Memory upgrades work.",
         },
+        32: {
+            name: "Relax to Recall",
+            unlocked(){return hasAchievement('lab',26)},
+            done() { return hasUpgrade('lab',201) },
+            tooltip: "Begin to write autobiography.",
+        },
+        33: {
+            name: "Complexity",
+            unlocked(){return hasAchievement('lab',26)},
+            done() { return player.ins.total.gte(5) },
+            tooltip: "Get 5 Institution Funds.<br>Rewards:Research Progress reduces Institution Fund requirement.",
+            effect(){//not Decimal
+                return player.lab.achievements.length*0.5+1;
+            },
+        },
     },
     buyables:{//Research Transformers
 			//rows: 1,
@@ -1135,8 +1176,15 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					player.lab.power = player.lab.power.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.lab.power.times(Decimal.log10(player.lab.resetTime+1).div(1.5).max(1)).div(10).max(1).log(10).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = new Decimal(1);
@@ -1157,8 +1205,9 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.points)+" / "+formatWhole(cost.fo)+" Fragments"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',73)?("<br>Also boosts Fragment generation by ^"+format(buyableEffect('lab',12))):"");
-					return display;
+                    let display = formatWhole(player.points)+" / "+formatWhole(cost.fo)+" Fragments"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',73)?("<br>Also boosts Fragment generation by ^"+format(buyableEffect('lab',12).eff1())):"");
+					if (hasAchievement('a',113)) display+=("<br>Levels after hardcap boosts Fragment generation by x"+format(buyableEffect('lab',12).eff2()))+" instead."
+                    return display;
                 },
                 unlocked() { return hasUpgrade('lab',22); }, 
                 canAfford() {
@@ -1169,13 +1218,28 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					player.points = player.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.points.div(1e100).max(1).log(1e10).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
-                    let eff = new Decimal(1);
-                    if (hasUpgrade('lab',73)) eff = eff.plus(player[this.layer].buyables[this.id].div(1000));
-                    return eff;
+                    return {
+                        eff1(){
+                            let eff = new Decimal(1);
+                            if (hasUpgrade('lab',73)) eff = eff.plus(player['lab'].buyables[12].div(1000));
+                            return eff.min(1.1);
+                        },
+                        eff2(){
+                            let eff = player['lab'].buyables[12].sub(100).sqrt().times(100)
+                            return eff.max(1);
+                        },
+                    }
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44) },
@@ -1191,7 +1255,8 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.mem.points)+" / "+formatWhole(cost.fo)+" Memories"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',74)?("<br>Also boosts Memories gain by ^+"+format(buyableEffect('lab',13))):"");
+                    let display = formatWhole(player.mem.points)+" / "+formatWhole(cost.fo)+" Memories"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',74)?("<br>Also boosts Memories gain by ^+"+format(buyableEffect('lab',13).eff1())):"");
+                    if (hasAchievement('a',113)) display+=("<br>Levels after hardcap boosts Memory gain by x"+format(buyableEffect('lab',13).eff2()))+" instead."
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',23); }, 
@@ -1203,13 +1268,28 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					player.mem.points = player.mem.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.mem.points.times(Decimal.log10(player.mem.resetTime+1).div(1.5).max(1)).div(1e180).max(1).log(1e5).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
-                    let eff = new Decimal(0);
-                    if (hasUpgrade('lab',73)) eff = eff.plus(player[this.layer].buyables[this.id].div(1000));
-                    return eff;
+                    return{
+                        eff1(){
+                            let eff = new Decimal(0);
+                            if (hasUpgrade('lab',73)) eff = eff.plus(player['lab'].buyables[13].div(1000));
+                            return eff.min(0.2);
+                        },
+                        eff2(){
+                            let eff=player['lab'].buyables[13].sub(200).sqrt().times(200)
+                            return eff.max(1);
+                        }
+                    }
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44)  },
@@ -1237,13 +1317,22 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.light.points = player.light.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.light.points.pow(1/((player.lab.buyables[this.id].gt(40000))?1.5:1)).times(Decimal.log10(player.dark.resetTime+1).div(1.5).max(1).times(1.5)).sub(50000).div(5000).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = new Decimal(1);
                     if (hasUpgrade('lab',83)) eff = player[this.layer].buyables[this.id].div(50);
+                    if (eff.gt(1500)) eff=eff.sub(1500).pow(0.25).plus(1500);
                     if (eff.lt(1)) eff = new Decimal(1);
+                    if (layers['light'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1272,13 +1361,22 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.dark.points = player.dark.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.dark.points.pow(1/((player.lab.buyables[this.id].gt(40000))?1.5:1)).times(Decimal.log10(player.dark.resetTime+1).div(1.5).max(1).times(1.5)).sub(45000).div(5000).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = new Decimal(1);
                     if (hasUpgrade('lab',84)) eff = player[this.layer].buyables[this.id].div(50);
+                    if (eff.gt(1500)) eff=eff.sub(1500).pow(0.25).plus(1500);
                     if (eff.lt(1)) eff = new Decimal(1);
+                    if (layers['dark'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1307,11 +1405,19 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.kou.points = player.rei.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.rei.points.sub(10).div(2).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff= player.lab.buyables[this.id].pow(3).max(1);
+                    if (layers['rei'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1340,13 +1446,21 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.kou.points = player.kou.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.kou.points.times(Decimal.log10(player.kou.resetTime+1).div(1.5).max(1)).sub(50).div(5).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff= new Decimal(1);
                     if (hasUpgrade('lab',93)) eff = player.lab.buyables[this.id].div(5);
                     if (eff.lt(1)) eff = new Decimal(1);
+                    if (layers['kou'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1375,13 +1489,21 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					player.lethe.points = player.lethe.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.lethe.points.times(Decimal.log10(player.lethe.resetTime+1).div(1.5).max(1)).div(1e95).log(1e5).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff= new Decimal(1);
                     if (hasUpgrade('lab',94)) eff = player.lab.buyables[this.id].div(2.5);
                     if (eff.lt(1)) eff = new Decimal(1);
+                    if (layers['lethe'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1411,11 +1533,19 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
 					//player.kou.points = player.yugamu.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
-                    player.lab.points = player.lab.points.plus(1);
+					if (!hasMilestone('ins',7)) {
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else {
+                        let bulk = player.yugamu.points.sub(10).div(2).sub(layers[this.layer].buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
                 },
                 effect(){
                     let eff= player.lab.buyables[this.id].pow(3).max(1);
+                    if (layers['yugamu'].deactivated()) eff = new Decimal(1);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
@@ -1444,7 +1574,11 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();;
 					player.lab.points = player.lab.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+					if (!hasMilestone('ins',7)) {player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);}
+                    else {
+                        let bulk=player.lab.points.div(10).max(1).log(2).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = player.lab.points.sqrt().div(100).times(player.lab.buyables[this.id]);
@@ -1477,7 +1611,11 @@ addLayer("lab", {
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();;
 					player.lab.power = player.lab.power.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+					if (!hasMilestone('ins',7)) player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                    else{
+                        let bulk = player.lab.power.div(1000000).max(1).log(10).sub(player.lab.buyables[this.id]).floor().max(0).plus(1);
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                    }
                 },
                 effect(){
                     let eff = player.lab.power.plus(1).log10().div(10).times(player.lab.buyables[this.id]);
@@ -1493,7 +1631,7 @@ addLayer("lab", {
 				title: "Step Transformer",
 				cost(x=player[this.layer].buyables[this.id]) {
 					return {
-						fo: new Decimal(10000).plus(new Decimal(1000).times(x)),
+						fo: new Decimal(10000).times(Decimal.pow(1.8,x)),
 					};
 				},
 				display() { // Everything else displayed in the buyable button after the title
@@ -1513,11 +1651,20 @@ addLayer("lab", {
 					let cost = layers[this.layer].buyables[this.id].cost();
                     player.world.Worldtimer = new Decimal(0);
 					player.world.points = player.world.points.sub(cost.fo);
-					player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(upgradeEffect('lab',172));
-                    player.lab.points = player.lab.points.plus(upgradeEffect('lab',172));
+					if(!hasMilestone('ins',7)){
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(1);
+                        player.lab.points = player.lab.points.plus(1);
+                    }
+                    else{
+                        let bulk = player.world.points.div(10000).max(1).log(1.8).sub(player.lab.buyables[this.id]).floor().max(0).plus(1)
+                        player.lab.buyables[this.id] = player.lab.buyables[this.id].plus(bulk);
+                        player.lab.points = player.lab.points.plus(bulk);
+                    }
+
                 },
                 effect(){
-                    let eff= player.lab.buyables[this.id].div(50).plus(1);
+                    let eff= player.lab.buyables[this.id].times(10000).max(1);
+                    if (hasUpgrade('lab',172)) eff = eff.times(1.5);
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},

@@ -1,0 +1,22 @@
+L层：
+effectbase: 1.5->2
+显示效果
+Upg11（Optimistic Thoughts）：效果重做：Conclusion由45~5变成45~100
+Upg12（Wandering For Beauty）：光eff影响 ^0.5->0.75
+Upg13（Experiencing Happiness）：光eff影响 ^0.15->0.2
+Upg14（After That Butterfly）：^0.5->^1
+Upg21（Seeking Delight.）：效果重做：milestone.length增强L点数获取
+Upg23（Fragment Sympathy）：效果重做：Directly Transfer效果现在也加成Frag
+Upg33（Prepare To Travel）：加成效果最大值从+0.3变成+0.5
+增加四个新升级（棒读）
+
+D层：
+effectbase: 1.5->5
+显示效果
+Upg11（Overclock）：效果重做：在生成速度低于当前Frag值时，乘三倍
+Upg12（Seeking For Other Sides）：暗eff影响 ^0.5->0.75
+Upg13（Crack Everything）：暗eff影响 ^0.5->0.6
+Upg14（Wrath In Calm）：^0.5->^1
+Upg21（Power Override）：效果重做：mem softcap后推由50x变为log10(Mem+1)x
+Upg32（Moments of Anger）：暗点数 x0.5->x1
+增加四个新升级（棒读）

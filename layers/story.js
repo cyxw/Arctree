@@ -16,7 +16,7 @@ addLayer("storylayer", {
     resource: "Stories",
     branches: ["world"],
     row: 4,
-    displayRow:0,
+    displayRow:1,
     position:3,
 
     unlocked()  {return hasUpgrade('lab',151)},
@@ -41,6 +41,13 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==10) return "K-2";
                 if (player.storylayer.storycounter==11) return "G-2";
                 if (player.storylayer.storycounter==12) return "LA-5";
+                if (player.storylayer.storycounter==13) return "FL-1";
+                if (player.storylayer.storycounter==14) return "LA-6";
+                if (player.storylayer.storycounter==15) return "I-1";
+                if (player.storylayer.storycounter==16) return "K-3";
+                if (player.storylayer.storycounter==17) return "G-3";
+                if (player.storylayer.storycounter==18) return "LA-7";
+                if (player.storylayer.storycounter==19) return "I-2";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -147,7 +154,7 @@ addLayer("storylayer", {
                     }
                     
                     if (player[this.layer].storyTimer > 50){
-                        story +="<br>Was existence eternal? It was certain that she existed since the beginning of the world. The High Priest build the Pure White City, as the extension of her power. It was she who makd the people live and work in peace and contentment, and she who bathed the world in light and glory......"
+                        story +="<br>Was existence eternal? It was certain that she existed since the beginning of the world. The High Priest build the Pure White City, as the extension of her power. It was she who made the people live and work in peace and contentment, and she who bathed the world in light and glory......"
                     }
 
                     if (player[this.layer].storyTimer > 55){
@@ -472,11 +479,83 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==11){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "The boat was sailing on the sea, and the team members were rowing hard.";
+                    story += "<br>It was just about to dawn, but that tower was clear to see."
+
+                    if (player[this.layer].storyTimer > 5){
+                        story += "<br>\"Nice view, sunny day, no fog.\" The leader observed the weather, \"Means good news and bad news. Good news is that we can reach the destination no matter what. Bad news is that it's a little further than we expected.\""
+                    }
+
+                    if (player[this.layer].storyTimer > 10)story += "<br>\"No problem, leader.\" The scientist encouraged---by making a joke, \"Today all of our members are motivated, this underestimated distance is nothing at all. We can take turns rowing, and we'll arrive.\""
+
+                    if (player[this.layer].storyTimer > 15)story += "<br><br>When the sun began his rising, the whole team had landed the small land which the tower standed."
+                    if (player[this.layer].storyTimer > 20)story += "<br>\"As we planned before. Group α, you take the lead. Group ζ, you bring up the rear, protect the scientist. Other groups, climb the tower in the order of names.\" The leader made the final arrangement. The whole team was waiting for this moment."
+                    if (player[this.layer].storyTimer > 30)story += "<br>Footsteps sounded in the tower, first a thin sound, and then turned into a messy drum-like sound, reflecting a soul stirring melody in the tower."
+                    if (player[this.layer].storyTimer > 35)story += "<br>Not a long time, the first team had reached the top."
+                    if (player[this.layer].storyTimer > 40){
+                        story += "<br>\"Report, group α has reached the top. No threat on the top. Two people are found, not dead but unconscious.\" A report came from the walkie talkie."
+                        story += "<br>\"Roger, nice job. We'll reach the top soon.\" Replied the leader."
+                        story += "<br>\"And, leader,\" The group leader added, \"Space of tower top is limited, and there's no fence. I suggest all of our bros should not stand on the top.\""
+                        story += "<br>\"Roger, I'll arrange it.\""
+                    }
+
+                    if (player[this.layer].storyTimer > 55)story += "<br><br>When the scientist reached the top, it's already broad daylight. What in his eyes were the \"two people\" group α had mentioned---A pair of twin sisters."
+                    if (player[this.layer].storyTimer > 60)story += "<br>They lied on the top of the tower, breathing evenly. \"In my words, they are asleep, and maybe they will wake up.\""
+                    if (player[this.layer].storyTimer > 65)story += "<br>\"Oh? Scientist, do you think they will wake up soon?\" The leader asked."
+                    if (player[this.layer].storyTimer > 70)story += "<br>\"Hard to say. They may need to be injected......There should be no problem to carry them back to our camp, huh?\" The scientist tentatively put forward a suggestion."
+                    if (player[this.layer].storyTimer > 75)story += "<br>\"Have you forgotten the lights you saw yesterday? Maybe it's related to them.\" The leader shaked his head, \"If they make some more reaction and blow up the whole camp, could you be responsible?\""
+                    if (player[this.layer].storyTimer > 80)story += "<br>\"......But the space here is limited. Not a good place too.\""
+                    if (player[this.layer].storyTimer > 85)story += "<br>\"Hmm, fair.\""
+
+                    if (player[this.layer].storyTimer > 95)story += "<br><br>The two sisters were placed in a separate tent far from the camp and were headed by a special group."
+                    if (player[this.layer].storyTimer > 100)story += "<br>\"When the light approaches the ground, it is blured......But it's sure that the light is a kind of energy, gathered in their bodies......\" The scientist sat outside the tent placing them, still recording."
+                    if (player[this.layer].storyTimer > 105)story += "<br>\"The blue light and the purple light point to each of the two sisters. The blue light comes from the sky directly, while the purple light comes from the moon, or kind of moonlight.\""
+                    if (player[this.layer].storyTimer > 110)story += "<br>There was a sound in the tent."
+                    if (player[this.layer].storyTimer > 113)story += "<br>The scientist hurried into the tent to see what had happened."
+
+                    if (player[this.layer].storyTimer > 120)story += "<br><br>\"......Horizon......broken......\" A dreaming murmur."
+                    if (player[this.layer].storyTimer > 125)story += "<br>\"En?\" The scientist responded tentatively."
+                    if (player[this.layer].storyTimer > 135)story += "<br>\"......Hold my hand......no matter what......\" Another dreaming murmur."
+
                     return story;
                 };
 
                 if (player.storylayer.storycounter==12){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==13){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==14){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==15){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==16){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==17){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==18){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
+                if (player.storylayer.storycounter==19){
                     let story = "Story in Plan, haven't been written/translated.";
                     return story;
                 };
@@ -513,8 +592,15 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==8) req = 75;
         if (player.storylayer.storycounter==9) req = 60;
         if (player.storylayer.storycounter==10) req = 135;
-        if (player.storylayer.storycounter==11) req = 60;
+        if (player.storylayer.storycounter==11) req = 150;
         if (player.storylayer.storycounter==12) req = 60;
+        if (player.storylayer.storycounter==13) req = 120;
+        if (player.storylayer.storycounter==14) req = 120;
+        if (player.storylayer.storycounter==15) req = 120;
+        if (player.storylayer.storycounter==16) req = 120;
+        if (player.storylayer.storycounter==17) req = 120;
+        if (player.storylayer.storycounter==18) req = 120;
+        if (player.storylayer.storycounter==19) req = 120;
         return req;
     },
 
@@ -533,6 +619,13 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==10) color = "#16a951";
         if (player.storylayer.storycounter==11) color = "#d7a9f4";
         if (player.storylayer.storycounter==12) color = "#00bdf9";
+        if (player.storylayer.storycounter==13) color = "#716f5e";
+        if (player.storylayer.storycounter==14) color = "#00bdf9";
+        if (player.storylayer.storycounter==15) color = "#45b5d3";
+        if (player.storylayer.storycounter==16) color = "#16a951";
+        if (player.storylayer.storycounter==17) color = "#d7a9f4";
+        if (player.storylayer.storycounter==18) color = "#00bdf9";
+        if (player.storylayer.storycounter==19) color = "#45b5d3";
         return color;
     },
 
@@ -575,7 +668,7 @@ addLayer("storylayer", {
             title: "",
             display: "→",
             unlocked() { return player.storylayer.unlocked },
-            canClick() { return player.storylayer.points.gt(player.storylayer.storycounter) },
+            canClick() { return player.storylayer.points.gt(player.storylayer.storycounter)&&!(player.storylayer.storycounter==13&&!hasUpgrade('lab',201)) },
             onClick() { 
                 player.storylayer.storycounter += 1;
                 if(player.storylayer.points.eq(player.storylayer.storycounter))  player.storylayer.storyTimer = 0;
@@ -612,6 +705,8 @@ addLayer("storylayer", {
             if (hasUpgrade('storylayer',12)) eff = player.rei.roses.plus(1).log(8).times(2).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
             eff=eff.times(challengeEffect('saya',41));
+            //AW
+            if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei' &&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return eff;
         },
         },
@@ -663,6 +758,8 @@ addLayer("storylayer", {
             if (hasUpgrade('storylayer',21)) eff = player.rei.roses.plus(1).log(5).times(1.5).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
             eff = eff.times(challengeEffect('saya',41));
+            //AW
+        if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei'&&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return eff;
         }
         },
@@ -747,6 +844,100 @@ addLayer("storylayer", {
             player.lab.points = player.lab.points.sub(350000000);
         },
         unlocked() { return (player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',33)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        34:{ title: "Traceback Record",
+        fullDisplay(){
+            return "<b>Traceback Record</b><br>Your Times moved in Maze boosts Research Points gain.<br><br>Req:13,500 times moved in the Maze"
+        },
+        effect(){
+            return player.yugamu.timesmoved.plus(1).log10().times(1.5).max(1);
+        },
+        canAfford(){return player.storylayer.storycounter==13&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.yugamu.timesmoved.gte(13500)},
+        pay(){
+            //nothing
+        },
+        unlocked() { return (player.storylayer.storycounter==13&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',34)},
+        onPurchase(){/*player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;*/player.storylayer.points = player.storylayer.points.plus(1);},//去别的升级里干这活
+        },
+        35:{ title: "Institutions",
+        fullDisplay(){
+            return "<b>Institutions</b><br>Unlock Institutions.<br><br>Cost:5e15 Research Points"
+        },
+        canAfford(){return player.storylayer.storycounter==14&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(5e15)},
+        pay(){
+            player.lab.points = player.lab.points.sub(5e15);
+        },
+        unlocked() { return (player.storylayer.storycounter==14&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',35)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        41:{ title: "Efficient line",
+        fullDisplay(){
+            let des= "<b>Efficient line</b><br>Institution's 4th Milestones now mult by total Institution Funds gained."
+            if (hasUpgrade('storylayer',41)) des += ("<br>Currently: "+format(upgradeEffect('storylayer',41))+"x")
+            des += "<br><br>Req:500 Institution Funds"
+            return des;
+        },
+        effect(){
+            return player.ins.total.plus(1).log(10).div(10).plus(1);
+        },
+        canAfford(){return player.storylayer.storycounter==15&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.ins.total.gte(500)},
+        unlocked() { return (player.storylayer.storycounter==15&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',41)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        42:{ title: "Fore-seen",
+        fullDisplay(){
+            return "<b>Fore-seen</b><br>Everflashing Knife itself pushes Research Points softcap starts later.<br><br>Cost:250 Everflashing Knives"
+        },
+        canAfford(){return player.storylayer.storycounter==16&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.saya.points.gte(250)},
+        pay(){
+            player.saya.points = player.saya.points.sub(250);
+        },
+        effect(){
+            return player.saya.points.times(2).max(1);
+        },
+        unlocked() { return (player.storylayer.storycounter==16&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',42)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        43:{ title: "K.A.R.M.A.",
+        fullDisplay(){
+            return "<b>K.A.R.M.A.</b><br>Restricted World Step effect's hardcap become another softcap.<br><br>Cost:5e23 Gemini Bounds"
+        },
+        canAfford(){return player.storylayer.storycounter==17&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.etoluna.points.gte(5e23)},
+        pay(){
+            player.etoluna.points = player.etoluna.points.sub(5e23);
+        },
+        unlocked() { return (player.storylayer.storycounter==17&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',43)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        44:{ title: "Self breakthrough",
+        fullDisplay(){
+            let des = "<b>Self breakthrough</b><br>Research Point itself pushes its softcap starts later."
+            if (hasUpgrade('storylayer',44)) des += ("<br>Currently: "+format(upgradeEffect('storylayer',44))+"x")
+            des += "<br><br>Cost:5e55 Research Points"
+            return des;
+        },
+        canAfford(){return player.storylayer.storycounter==18&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(5e55)},
+        pay(){
+            player.lab.points = player.lab.points.sub(5e55);
+        },
+        effect(){
+            return player.lab.points.max(1).log(5).times(1.5).max(1);
+        },
+        unlocked() { return (player.storylayer.storycounter==18&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',44)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        45:{ title: "Awaken",
+        fullDisplay(){
+            let des = "<b>Awaken</b><br>Unlock Awake layer."
+            des += "<br><br>Cost:1e1,616 Fragments"
+            return des;
+        },
+        canAfford(){return player.storylayer.storycounter==19&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.points.gte("1e1616")},
+        pay(){
+            player.points = player.points.sub("1e1616");
+        },
+        unlocked() { return (player.storylayer.storycounter==19&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',45)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }
