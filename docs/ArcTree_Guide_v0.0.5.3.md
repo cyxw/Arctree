@@ -83,8 +83,33 @@ Keep pushing _Gemini Tower_ and _Memory Adjustment_ challenges, so that you coul
 
 _Rediscover Fragments_ (S33) will unlock the forth part of Lab layer-Fragmental Researches, bringing you back to the Lab. There are new powerful upgrades, enabling you to pass the last Kc.
 
-What you need to do here is simple: buy upgrades. After you have bought all 16 new Fragmental Researches, you will unlock <s>_[REDACTED]_</s> nothing. That's <s>the end of this stage</s> current endgame.
+What you need to do here is simple: buy upgrades. After you have bought all 17 new Fragmental Researches and two new Story upgrades, you will unlock Institution layer. That's the end of this stage.
 
-> *__Stage 10: [REDACTED]:__*
+> *__Stage 10: Institution layer:__*
 
-||Spoiler|||
+Things become very crazy in Institution layer. In this layer, you main goal is to get more Institution Funds, so you need to gain more Research Power. At first you only have England site. It's passive but powerful, which you would like to use it in the entire stage. After you unlocked Western European sites, Germany site is recommended because it can boost Research Power greatly and it can be boosted by Poland site. Norway is the thing you will like after unlocking Eastern European sites, but it needs active gaming and quick operation. Before you get the 6th milestone of Institution layer, the strategy below is recommended: 
+1. Upgrade your England site as possible as you can.
+2. Upgrade Germany second and Poland third.
+3. When you almost reach the next Funds, degrade your sites and upgrade Norway as quick as possible.
+
+When you unlocked Asian and American sites, things become more crazy. China site is very strong at Memory & Fragments generation, while USA site is **ultra** strong on everything else. Egypt site itself has a weak effect but USA could boost it to 30x. At this stage, the strategy below is recommended:
+* Setup
+    1. Upgrade Egypt site as far as you can and upgrade USA site after that.
+    2. Gradually switch the grades of Egypt site and USA site.
+    3. Degrade all and Upgrade China site as far as you can, then Upgrade USA site second.
+    4. Idle for a few seconds.
+* Progressing
+    1. Degrade all, and upgrade England as far as you can. 
+    2. Upgrade Germany site second, Poland third. (If you can't push much Research Power when "England first", try "Germany-Poland combination first" strategy instead.)
+    3. Idle for gaining Research Power.
+    4. When you **almost** get the next Funds, degrade some and upgrade Norway as fast as you can to get more Institution Funds.
+
+With this strategy, it should be easy for you to get _Efficient Line_ (S41). The next timewall update is _Self Breakthrough_ (S44). Try France site since France can boost Research Point (but not Power) gain. Once you get _Awaken_ (S45) Upgrade, you unlock Awake layer and that's the end of this stage.
+
+> *__Stage 11: Awake layer Stage 1-L&D Awake:__*
+
+Like Master layer in PT, Awake layer will let you replay old layers and amplify old layers. The first two awake-able layers are Light and Dark layers. Both of them are fine, but awaking Light layer first is easier because you could keep more Memory upgrades.
+
+After awaken two layers, both layers will unlock four new upgrades, eight in total. All these upgrades needs a challenging requirement. China, France, Germany and Isreal sites will help.
+
+After you bought all new upgrades, you will be able to get the third Awaken Core and that's the end of this stage and current endgame.

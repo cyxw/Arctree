@@ -526,7 +526,28 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==13){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "She returned to the ruined city again, beginning her next search in the ruin.";
+                    if (player[this.layer].storyTimer > 5)story +="<br>But what was different this time, what she knew this time, is that she was not search for that High Priest, but for herself."
+
+                    if (player[this.layer].storyTimer > 15)story +="<br><br>Different from Hikari, she insisted on remembering everything she could remember. She remembered the first meet with Hikari. She remembered her travels in the world with Hikari."
+                    if (player[this.layer].storyTimer > 20)story +="<br>Maybe it was really fate. From fragments, she seemed to see only painful and sad memories. There were happy memories, but just a little. But she knew there was happiness and light in fragments, because Hikari could see them."
+                    if (player[this.layer].storyTimer > 25)story +="<br>It seemed that Hikari could see happiness and light memory <b>only</b>. The innocence of Hikari could really make her laugh sometimes, but it also made her admire. \"She were a very interesting and kind girl, that time......\" She paced the ruins and muttered to herself."
+                    if (player[this.layer].storyTimer > 30)story +="<br>Thanked to Hikari, she could see the flashlight in fragments, she could know that this world was not eternal darkness---Although she might be the one walking in the dark, she vaguely knew."
+                    if (player[this.layer].storyTimer > 35)story +="<br>If it goes on like this... What will it be like now? Maybe Hikari will be the god of light, and herself will in charge of darkness, commanding a city just like the High Priest now?"
+                    if (player[this.layer].storyTimer > 40)story +="<br>But when they arrived at this ruins, all \"if\" had broken."
+                    if (player[this.layer].storyTimer > 43)story +="<br>Her memory ended at here."
+
+                    if (player[this.layer].storyTimer > 50)story +="<br><br>The ruins must have experienced something, but she couldn't remember it herself. Her memory ended at here, and here Hikari had abandoned all her previous self."
+                    if (player[this.layer].storyTimer > 55)story +="<br>Since then, Hikari became the High Priest, gaining endless power from fragments. Herself, though, became the representative of the devil, never be able to have something under the ray of light."
+                    if (player[this.layer].storyTimer > 60)story +="<br>It was not a fair fight. \"It was not a fair fight!\" She roared at the ruins, but there was no even echo."
+                    if (player[this.layer].storyTimer > 65)story +="<br>After that, there was no light anymore in her world. What was in her world is endless cycles and failure."
+
+                    if (player[this.layer].storyTimer > 75)story +="<br><br>So, what happened here at that time? She continued searching in this ruins. She had already found the memory that Hikari abandoned, so where was hers?"
+                    if (player[this.layer].storyTimer > 80)story +="<br>What she could remember, was that Hikari \"couldn't bear\". Did that happened every cycle? Or after the Abandonment of Hikari in the first cycle, she was the High Priest forever?"
+                    if (player[this.layer].storyTimer > 85)story +="<br>So, what happened here? What is the thing here? Hikari and her, experienced what at here?"
+                    if (player[this.layer].storyTimer > 90)story +="<br>She couldn't remember, so she continued finding."
+
+                    if (player[this.layer].storyTimer > 100)story +="<br><br>This time, find for herself."
                     return story;
                 };
 
@@ -910,9 +931,9 @@ addLayer("storylayer", {
         unlocked() { return (player.storylayer.storycounter==17&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',43)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
-        44:{ title: "Self breakthrough",
+        44:{ title: "Self Breakthrough",
         fullDisplay(){
-            let des = "<b>Self breakthrough</b><br>Research Point itself pushes its softcap starts later."
+            let des = "<b>Self Bsreakthrough</b><br>Research Point itself pushes its softcap starts later."
             if (hasUpgrade('storylayer',44)) des += ("<br>Currently: "+format(upgradeEffect('storylayer',44))+"x")
             des += "<br><br>Cost:5e55 Research Points"
             return des;
