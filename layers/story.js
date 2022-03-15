@@ -860,7 +860,7 @@ addLayer("storylayer", {
         fullDisplay(){
             return "<b>Rediscover Fragments</b><br>Unlock Fragmental researches.<br><br>Cost:350,000,000 Research Points"
         },
-        canAfford(){return player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(400000000)},
+        canAfford(){return player.storylayer.storycounter==12&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(350000000)},
         pay(){
             player.lab.points = player.lab.points.sub(350000000);
         },
