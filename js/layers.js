@@ -5837,7 +5837,7 @@ addLayer("world", {
 
             if (player.world.currentStepType < 99 && player.world.currentStepType >= 87) player.world.fixednum = player.world.fixednum.plus(Decimal.times(1, upgradeEffect('storylayer', 24)).times(hasMilestone('etoluna', 6) ? (player.world.Worldtimer.div(tmp["world"].WorldstepHeight).max(1).min(player[this.layer].points)) : 1));
             if (player.world.currentStepType >= 99) { player.world.restrictionnum = player.world.restrictionnum.plus(Decimal.times(1, upgradeEffect('storylayer', 24)).times(hasMilestone('etoluna', 6) ? (player.world.Worldtimer.div(tmp["world"].WorldstepHeight).max(1).min(player[this.layer].points)) : 1)); player.world.restrictChallenge = false; };
-            player[this.layer].points = player[this.layer].points.plus(Decimal.times(1, upgradeEffect('storylayer', 24)).times(hasMilestone('etoluna', 6) ? (player.world.Worldtimer.div(tmp["world"].WorldstepHeight).max(1).min(player[this.layer].points)) : 1));
+            player[this.layer].points = player[this.layer].points.plus(Decimal.times(1, upgradeEffect('storylayer', 24)).times(hasMilestone('etoluna', 6) ? (player.world.Worldtimer.div(tmp["world"].WorldstepHeight).max(1).min(player[this.layer].points.max(1))) : 1));
             player.world.Worldtimer = new Decimal(0);
             if (hasUpgrade('world', 31)) player.world.currentStepType = Math.floor(Math.random() * (100));//0~99
             player.world.Worldrandomnum = Math.random();
