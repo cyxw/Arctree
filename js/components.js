@@ -288,7 +288,7 @@ function loadVue() {
 		</button>
 		<button v-if="player.awaken.selectionActive&&tmp.awaken.canBeAwakened.includes(layer)&&player.awaken.current==layer" v-bind:class="{ awaken: true, reset: true, locked: player[layer].points.lt(tmp.awaken.awakenGoal[layer]), can: player[layer].points.gte(tmp.awaken.awakenGoal[layer]) }"
 			v-bind:style="(player[layer].points.gte(tmp.awaken.awakenGoal[layer]))?{'background': tmp.awaken.color}:{}"
-			v-html="(player[layer].points.gte(tmp.awaken.awakenGoal[layer]))?('Awake one aspect of Power of the World!'):('Reach '+format(tmp.awaken.awakenGoal[layer])+' '+tmp[layer].resource+' to Awake this kind of Power...')"
+			v-html="(player[layer].points.gte(tmp.awaken.awakenGoal[layer]))?('Awake one aspect of Power of the World!'):('Reach '+formatWhole(tmp.awaken.awakenGoal[layer])+' '+tmp[layer].resource+' to Awake this kind of Power...')"
 			v-on:click="layers.awaken.completeAwake(layer)">
 		</button></div>
 		`

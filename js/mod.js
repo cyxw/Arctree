@@ -13,11 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.5.3",
-	name: "Power Awake",
+	num: "0.0.5.5",
+	name: "Define Aspects®",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.5.5</h3><br>
+		- Add Awake layer stage 2.<br>
+		- Add a new story.<br><br>
 	<h3>v0.0.5.3</h3><br>
 		- Add Awake layer stage 1.<br><br>
 	<h3>v0.0.5.0</h3><br>
@@ -70,6 +73,7 @@ function getPointGen() {
 
 		
 	let gain = new Decimal(1)
+	if(inChallenge('kou',62)) return challengeEffect('kou',62);
 
 	//ADD
 	if (hasAchievement("a", 11)) gain=gain.add(0.5);

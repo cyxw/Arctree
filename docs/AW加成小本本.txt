@@ -20,3 +20,35 @@ Upg14（Wrath In Calm）：^0.5->^1
 Upg21（Power Override）：效果重做：mem softcap后推由50x变为log10(Mem+1)x
 Upg32（Moments of Anger）：暗点数 x0.5->x1
 增加四个新升级（棒读）
+
+R层：
+effect：x0.1->x0.5
+第三里程碑更改
+显示挑战加成
+challenge11（Broken Toyhouse）：^0.5->^1
+challenge31（The Balance of Conflict）：x0.5->x2
+新添“曲终人散”页面挑战
+
+F层：
+effect：^2->^3.25
+第三里程碑更改
+显示灯塔加成
+Guiding Scythes base effect before Uprising Tower challenge: 2->2.5
+Guiding Scythes base effect after Uprising Tower challenge: 4->5
+Upg42（Forgotten Memories）公式加成：加成再乘mem的二次对数
+Upg22（Delightful Memories）: x0.5->x2
+Upg44（Dark Memories）：x0.05->x1
+Upg11（White Beacon）：x0.5->x1
+Upg51（Yellow Beacon）：^0.5->^0.75
+Upg55（Black Beacon）：x0.25->x1
+Upg21（Delightful-Yellow Synergy）：x0.5->x2
+Upg41（Forgotten-White Synergy）：x0.5->x2
+Upg52（Forgotten-Black Synergy）：x0.5->x2
+Upg12（Delightful-Red Synergy）：x0.5->x2
+Upg14（Joyful-White Synergy）：x0.5->x2
+Upg15（Red Beacon）：^0.5->^0.75
+Upg23（Monument of Light）：÷1.5->÷1
+Upg24（Joyful Memories）：x0.01->x1
+Upg25（Joyful-Black Synergy）：x0.5->x2
+Upg45（Dark-Red Synergy）：x0.5->x2
+解锁超镰刀

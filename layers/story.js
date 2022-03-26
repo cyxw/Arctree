@@ -353,7 +353,7 @@ addLayer("storylayer", {
                     if (player[this.layer].storyTimer > 180)story +="<br>\"You never thought about how I felt, because you have never really experienced the world. You have never carefully observe the memories corresponding to the fragments you collected. You couldn't bear them, every time, and lost yourself at last, gain power from fragements."
                     if (player[this.layer].storyTimer > 190)story +="<br>\"I really enjoyed my time with you, before you collected those fragements, before you lost yourself.\" She bent down, lifting the High Priest---No, \"her\"--- face gently with her hand, \"You were a very interesting and kind girl, that time.\""
                     if (player[this.layer].storyTimer > 195)story +="<br>"
-                    if (player[this.layer].storyTimer > 200)story +="<br>\"Welcom back, 「Hikari」.\""
+                    if (player[this.layer].storyTimer > 200)story +="<br>\"Welcome back, 「Hikari」.\""
 
                     return story;
                 };
@@ -458,7 +458,7 @@ addLayer("storylayer", {
                     if (player[this.layer].storyTimer > 45) story +="<br><br>The girl led the group in front of a door. It was a big gate. Obviously, the room behind it couldn't be small. Maybe another hall."
                     if (player[this.layer].storyTimer > 47) story +="<br>She pushed the door slightly. What in front of their eyes was a florescent cloud, made by fragments, floating in the hall."
                     if (player[this.layer].storyTimer > 50) story +="<br>No one didn't show surprise, but all soldiers were trained to be silent."
-                    if (player[this.layer].storyTimer > 53) story +="<br>Except the scientisit."
+                    if (player[this.layer].storyTimer > 53) story +="<br>Except the scientist."
 
                     if (player[this.layer].storyTimer > 60) story += "<br>\"Wow, so many fragments 'alive' here......I think there must be more than one memory in these fragments. How could you pick up what you want to see among them?\""
                     if (player[this.layer].storyTimer > 65) story += "<br>\"It's not hard. You could see parts of memories through fragments. The whole memory will be shown once you step in.\""
@@ -471,7 +471,7 @@ addLayer("storylayer", {
                     if (player[this.layer].storyTimer > 95) story += "<br>First the fingers, then the hands, and finally the whole arm and body, she became the thing she had wanted to get in."
                     if (player[this.layer].storyTimer > 100) story += "<br>The fragments she had turned to had no no wire connection between each other, but others could see that this was a whole. The green fragments moved into a cloud of fragments, flickering."
                     if (player[this.layer].storyTimer > 105) story += "<br>No one didn't show surprise, but all soldiers were trained to be silent."
-                    if (player[this.layer].storyTimer > 108) story += "<br>Except the scientisit."
+                    if (player[this.layer].storyTimer > 108) story += "<br>Except the scientist."
 
                     if (player[this.layer].storyTimer > 115) story += "<br>\"Wow......This......This is so <i>fascinating</i>!\""
 
@@ -567,7 +567,28 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==17){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "It was not enough to just prove the existence of cycles. The more you knew about details, the more you would know about the world.";
+                    if (player[this.layer].storyTimer > 5)story +="<br>The scientist had already been tired of their chattering about their memories of playing at concerts, their memories of playing cards in rooms, their memories of swimming on the beach. Emotion? Emotion had no such a <b>damn</b> usage. He just wanted to knew the fact, just wanted to knew the truth, just wanted to knew more knowledge."
+                    if (player[this.layer].storyTimer > 15)story +="<br>\"......But there are some memories......They seems strange......\" The twin sister in light-blue suit said."
+                    if (player[this.layer].storyTimer > 20)story +="<br>\"Oh? Why it's strage?\" The scientist was already sulking, but still pretended to be very intrested."
+                    if (player[this.layer].storyTimer > 25)story +="<br>\"......In these memories......Although the protagonist is me and my sister......But from now, from our sights, these memories seem to be implanted in our minds. They seems not to be 'our' own experience......\""
+                    if (player[this.layer].storyTimer > 35)story +="<br>\"It's okay. Let's talk about it.\" Now the scientist was really intrested."
+
+                    if (player[this.layer].storyTimer > 40)story +="<br><br>\"In those memories. Luna and me were two gods of a city, in charge of the power of the stars and the moon.\" She described it slowly, with a slight stiffness in her tone, \"In that city, the night was our stage."
+                    if (player[this.layer].storyTimer > 50)story +="<br>\"We brought blessedness to the residents of the city from time to time, and we were also esteemed by city residents, just liked other gods......We, or I mean the 'we' in the memories, recognized other gods in the world, but we can't remember who we recognized now, can't remember what they represent......"
+                    if (player[this.layer].storyTimer > 60)story +="<br>\"And one day, a red comet past our city. We---'We'---stopped it, and it led to chaos in the city. The residents were very disappointed to us, so they sealed us.\""
+                    if (player[this.layer].storyTimer > 70)story +="<br>She signed slightly. \"Memories end at here. They don't fit in with our other experiences.\""
+
+                    if (player[this.layer].storyTimer > 80)story +="<br><br>\"You mentioned......the red comet?\" The scientist asked, \"Do you think it was a bad omen in those memories?\""
+                    if (player[this.layer].storyTimer > 90)story +="<br>\"At least as far as 'we' stand, it was true. We don't know what it stands for......\" She bowed her head."
+
+                    if (player[this.layer].storyTimer > 95)story +="<br><br>This action was seen by the scientist. A person will not <i>be shame</i> for what he didn't experience. Obviously, either something happened that made them think it was not their memory, or she was lying."
+                    if (player[this.layer].storyTimer > 105)story +="<br>And, she was not the only one who saw the red comet."
+
+                    if (player[this.layer].storyTimer > 110)story +="<br><br>As the scientist was about to ask, a messenger broke in:"
+                    if (player[this.layer].storyTimer > 115)story +="<br>\"Capital calls you to assemble. Something happened at the Pure White City!\""
+
+
                     return story;
                 };
 
@@ -726,6 +747,7 @@ addLayer("storylayer", {
             if (hasUpgrade('storylayer',12)) eff = player.rei.roses.plus(1).log(8).times(2).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
             eff=eff.times(challengeEffect('saya',41));
+            //if (hasUpgrade('lethe',65)) eff=eff.times(upgradeEffect('lethe',65));
             //AW
             if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei' &&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return eff;
@@ -779,6 +801,7 @@ addLayer("storylayer", {
             if (hasUpgrade('storylayer',21)) eff = player.rei.roses.plus(1).log(5).times(1.5).max(1);
             if (hasAchievement('a',93)) eff = eff.times(tmp.etoluna.starPointeffect);
             eff = eff.times(challengeEffect('saya',41));
+            //if (hasUpgrade('lethe',65)) eff=eff.times(upgradeEffect('lethe',65));
             //AW
         if (player['awaken'].selectionActive&&player['awaken'].current != null&&player['awaken'].current != 'rei'&&!player['awaken'].awakened.includes('rei')) return new Decimal(1);
             return eff;

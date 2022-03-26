@@ -527,7 +527,7 @@ addLayer("ins", {
                         case 'Pol':return "You are choosing Poland Institution site."
                         case 'Nor':return "You are choosing Norway Institution site."
                         case 'Rus':return "You are choosing Russia Institution site."
-                        case 'Egy':return "You are choosing Russia Institution site."
+                        case 'Egy':return "You are choosing Egypt Institution site."
                         case 'Sau':return "You are choosing Saudi Arabia Institution site."
                         case 'Isr':return "You are choosing Isreal Institution site."
                         case 'Jpn':return "You are choosing Japan Institution site."
@@ -588,28 +588,116 @@ addLayer("ins", {
 
     levelHardcap(){//level hardcap
         return {
-            Eng(){return new Decimal(10);},
-            Fra(){return new Decimal(10);},
-            Deu(){return new Decimal(10);},
-            Che(){return new Decimal(10);},
-            Pol(){return new Decimal(10);},
-            Nor(){return new Decimal(10);},
-            Rus(){return new Decimal(10);},
-            Egy(){return new Decimal(10);},
-            Sau(){return new Decimal(10);},
-            Isr(){return new Decimal(10);},
-            Jpn(){return new Decimal(10);},
-            Ind(){return new Decimal(10);},
-            Kaz(){return new Decimal(10);},
-            Chn(){return new Decimal(10);},
-            Can(){return new Decimal(10);},
-            Usa(){return new Decimal(10);},
-            Bra(){return new Decimal(10);},
-            Arg(){return new Decimal(10);},
-            Nga(){return new Decimal(10);},
-            Zaf(){return new Decimal(10);},
-            Aus(){return new Decimal(10);},
-            Nzl(){return new Decimal(10);},
+            Eng(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Fra(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Deu(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Che(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Pol(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Nor(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Rus(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Egy(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Sau(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Isr(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Jpn(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Ind(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Kaz(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Chn(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Can(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Usa(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Bra(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Arg(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Nga(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Zaf(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Aus(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
+            Nzl(){
+                let lhcp=new Decimal(10);
+                if(inChallenge('kou',71)||hasChallenge('kou',71)) lhcp=new Decimal(12);
+                return lhcp;
+            },
         }
         },
 
@@ -617,13 +705,15 @@ addLayer("ins", {
         return {
             Eng(){
                 if (player.ins.inslevel.Eng.lte(0)) return new Decimal(1);
-                let eff = Decimal.pow(4,player.ins.inslevel.Eng)
+                let eff = Decimal.pow(4,player.ins.inslevel.Eng);
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 return eff;
             },
             Fra(){return {
                 Pos(){
                     if (player.ins.inslevel.Fra.lte(0)) return new Decimal(1);
                     let eff = Decimal.pow(200,player.ins.inslevel.Fra.max(1).log(1.5).plus(1));
+                    if(inChallenge('kou',71)) eff=eff.log10().max(1);
                     //pos
                     eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                     //nerf
@@ -640,6 +730,7 @@ addLayer("ins", {
                 Pos(){
                     if (player.ins.inslevel.Deu.lte(0)) return new Decimal(1);
                     let eff = Decimal.pow(100,player.ins.inslevel.Deu.max(1).log(1.5).plus(1));
+                    if(inChallenge('kou',71)) eff=eff.log10().max(1);
                     //pos
                     eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                     eff=eff.pow(layers.ins.insEffect().Pol())
@@ -668,6 +759,7 @@ addLayer("ins", {
                 if (layers.ins.insEffect().Chn().Neg().lt(1)) exponent = exponent.plus(1);
                 if (layers.ins.insEffect().Chn().fixedNeg().lt(1)) exponent = exponent.plus(1);
                 let eff = Decimal.pow(2,exponent).times(player.ins.inslevel.Che);
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner());
                 if (eff.gte(500)) eff=eff.sub(500).pow(0.75).plus(500)
@@ -678,6 +770,7 @@ addLayer("ins", {
                 if (player.ins.inslevel.Pol.lte(0)) return new Decimal(1);
                 let eff = new Decimal(1).plus(player.ins.inslevel.Pol.times(0.05));
                 if (eff.gt(1.50)) eff = eff.sub(1.50).times(100).plus(1).ln().div(100).plus(1.50);
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toExponent())
                 //nerf
@@ -686,7 +779,8 @@ addLayer("ins", {
             },
             Nor(){
                 if (player.ins.inslevel.Nor.lte(0)) return new Decimal(1);
-                let eff = Decimal.pow(2.5,player.ins.inslevel.Nor).times(player.ins.points);
+                let eff = Decimal.pow(2.5,player.ins.inslevel.Nor).times(player.ins.points).max(1);
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                 eff = eff.pow(layers.ins.insEffect().Pol())
@@ -704,6 +798,7 @@ addLayer("ins", {
                         effbase = effbase.plus(player.ins.inslevel.Can).plus(player.ins.inslevel.Usa).plus(player.ins.inslevel.Bra).plus(player.ins.inslevel.Arg)
                         effbase = effbase.plus(player.ins.inslevel.Nga).plus(player.ins.inslevel.Zaf)
                         let eff = Decimal.pow(player.ins.inslevel.Rus.plus(1),effbase).div(10);
+                        if(inChallenge('kou',71)) eff=eff.log10().max(1);
                         //pos
                         eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                         eff = eff.pow(layers.ins.insEffect().Pol())
@@ -725,6 +820,7 @@ addLayer("ins", {
                 return{
                     Pos(){
                         let eff = player.ins.inslevel.Egy.times(0.15).plus(1);
+                        if(inChallenge('kou',71)) eff=eff.log10().max(1);
                     //pos
                     eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                     //nerf
@@ -742,7 +838,7 @@ addLayer("ins", {
             Sau(){//每加一个层都要回来看一遍
                 return{
                     Pos(){
-                        let effbase = new Decimal(0);
+                    let effbase = new Decimal(0);
                     effbase = effbase.plus(player.points.max(1).log(10));
                     effbase = effbase.plus(player.mem.points.max(1).log(10));
                     effbase = effbase.plus(player.light.points.max(1).log(10));
@@ -759,7 +855,8 @@ addLayer("ins", {
                     effbase = effbase.plus(player.ins.points.max(1).log(10));
                     effbase = effbase.plus(player.awaken.points.max(1).log(10));
 
-                    let eff=effbase.times(player.ins.inslevel.Sau).div(50);
+                    let eff=new Decimal(effbase.times(player.ins.inslevel.Sau).div(50));
+                    if(inChallenge('kou',71)) eff=eff.log10().max(1);
                     //pos
                     eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                     //nerf
@@ -795,6 +892,7 @@ addLayer("ins", {
                         effbase = effbase.plus(player.awaken.milestones.length);
 
                         let eff=effbase.pow(player.ins.inslevel.Isr.times(0.8));
+                        if(inChallenge('kou',71)) eff=eff.log10().max(1);
                         //pos
                         eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                         //nerf
@@ -812,6 +910,7 @@ addLayer("ins", {
             },
             Jpn(){
                 let eff=new Decimal(1e4).div(new Decimal(10).pow(Decimal.log(player.ins.resetTime+1,15).times(Decimal.pow(player.ins.resetTime+1,0.1))))
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                 //nerf
@@ -825,6 +924,7 @@ addLayer("ins", {
                 if (player.ins.inslevel.Pol.gt(0)&&player.ins.inslevel.Deu.gte(0)) exponent = exponent.plus(2);
                 if (player.ins.inslevel.Pol.gt(0)&&player.ins.inslevel.Rus.gte(0)) exponent = exponent.plus(2);
                 let eff = Decimal.pow(1.5,exponent);
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                 //nerf
@@ -834,6 +934,7 @@ addLayer("ins", {
             Kaz(){
                 let amp=new Decimal(250);
                 let eff=amp.times(Math.sin(player.ins.resetTime)+2);
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                 //nerf
@@ -848,6 +949,7 @@ addLayer("ins", {
                         if (player.ins.inslevel.Chn.lte(0)) return new Decimal(1);
                         let eff=Decimal.pow(1e5,(player.ins.inslevel.Chn.times(0.5).plus(0.5)))
                         eff=eff.div(eff.log(5));
+                        if(inChallenge('kou',71)) eff=eff.log10().max(1);
                         //pos
                         eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                         //neg
@@ -869,6 +971,7 @@ addLayer("ins", {
                 if (player.ins.inslevel.Can.lte(0)) return new Decimal(1);
                 let eff=new Decimal(3).pow(Decimal.log(player.ins.resetTime+1,5).times(Decimal.pow(player.ins.resetTime+1,0.1)));
                 eff=eff.div(eff.plus(1).log(10))
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                 //nerf
@@ -880,6 +983,7 @@ addLayer("ins", {
                         if (player.ins.inslevel.Usa.lte(0)) return new Decimal(1);
                         let effbase=player.ins.inslevel.Usa.div(5).plus(1);
                         let eff=effbase.times(player.ins.inslevel.Usa.times(0.8))
+                        if(inChallenge('kou',71)) eff=eff.log10().max(1);
                         //pos
                         //nerf
                         eff = eff.times(layers.ins.insEffect().Chn().fixedNeg());
@@ -891,6 +995,7 @@ addLayer("ins", {
                         if (player.ins.inslevel.Usa.lte(0)) return new Decimal(1);
                         let eff=player.ins.inslevel.Usa.div(100).plus(1);
                         if (eff.gt(1.25)) eff=eff.sub(1.25).times(100).sqrt().div(100).plus(1.25);
+                        if(inChallenge('kou',71)) eff=eff.log10().max(1);
                         //pos
                         //nerf
                         eff = eff.times(layers.ins.insEffect().Chn().fixedNeg());
@@ -903,6 +1008,7 @@ addLayer("ins", {
             Bra(){
                 if (player.ins.inslevel.Bra.lte(0)) return new Decimal(1);
                 let eff=new Decimal(player.timePlayed).div(3600*5).floor().times(2).pow(player.ins.inslevel.Bra)
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                 return eff.max(1);
@@ -910,6 +1016,7 @@ addLayer("ins", {
             Arg(){
                 if (player.ins.inslevel.Arg.lte(0)) return new Decimal(0);
                 let eff=player.ins.inslevel.Arg.times(0.02);
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toExponent())
                 return eff.min(1);
@@ -933,6 +1040,7 @@ addLayer("ins", {
                         effbase = effbase.plus(player.awaken.upgrades.length);
 
                         let eff=effbase.pow(player.ins.inslevel.Nga.times(0.8));
+                        if(inChallenge('kou',71)) eff=eff.log10().max(1);
                         //pos
                         eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                 return eff.max(1);
@@ -944,6 +1052,7 @@ addLayer("ins", {
                 effbase = effbase.plus(challengeCompletions('saya',11)+challengeCompletions('saya',12)+challengeCompletions('saya',21)+challengeCompletions('saya',22)+challengeCompletions('saya',31)+challengeCompletions('saya',32)+challengeCompletions('saya',41)+challengeCompletions('saya',42))
 
                 let eff=effbase.pow(player.ins.inslevel.Zaf.times(0.5));
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                 return eff.max(1);
@@ -951,6 +1060,7 @@ addLayer("ins", {
             Aus(){
                 if (player.ins.inslevel.Aus.lte(0)) return new Decimal(1);
                 let eff = player.ins.total.times(0.02).times(player.ins.inslevel.Aus.times(0.2).plus(1)).plus(1);
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.sub(1).times(layers.ins.insEffect().Usa().toLiner()).plus(1);
                 return eff.max(1);
@@ -973,6 +1083,7 @@ addLayer("ins", {
                 if (player.ins.unlocked) effbase = effbase.plus(1);
                 if (player.awaken.unlocked) effbase = effbase.plus(1);
                 let eff = Decimal.pow(effbase,player.ins.inslevel.Nzl.times(0.75))
+                if(inChallenge('kou',71)) eff=eff.log10().max(1);
                 //pos
                 eff=eff.times(layers.ins.insEffect().Usa().toLiner())
                 return eff.max(1);
