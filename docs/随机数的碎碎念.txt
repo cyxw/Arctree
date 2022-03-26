@@ -1,0 +1,12 @@
+(Math.floor(Math.random()*5+1)).toString()+(Math.floor(Math.random()*5+1)).toString()
+
+random 1: e2850 （有点欧）
+random 2: e1905
+random 3: e1830
+random 4: e1855
+random 5: e1875
+random 6: e1850
+random 7: e1818
+random 8: e1840
+random 9: e2785
+random 10: e1855

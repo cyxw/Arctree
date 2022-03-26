@@ -62,6 +62,8 @@ addLayer("lab", {
         if (hasUpgrade('lab',173)) gain = gain.times(upgradeEffect('lab',173));
         if (hasUpgrade('storylayer',34)) gain = gain.times(upgradeEffect('storylayer',34));
         if (hasMilestone('ins',0)) gain = gain.times(layers.ins.insEffect().Eng());
+        if (inChallenge('kou',72)) gain = gain.times(100) 
+        else if (hasChallenge('kou',72)) gain = gain.times(challengeEffect('kou',72))
 
         return gain;
     },
@@ -95,7 +97,13 @@ addLayer("lab", {
 
         if (player.lab.points.gte(player.lab.best)) player.lab.best = player.lab.points;
         if (player.lab.unlocked) player.lab.power = player.lab.power.plus(tmp["lab"].powermult.times(diff));
-        player.lab.power = player.lab.power.sub(player.lab.power.times(0.01).times(diff));
+        
+        //每秒减少
+        let powerminus=new Decimal(0.01);
+        if (inChallenge('kou',72)) powerminus = new Decimal(0.1);
+        player.lab.power = player.lab.power.sub(player.lab.power.times(powerminus).times(diff));
+        
+        
         if (player.lab.power.lt(0)) player.lab.power = new Decimal(0);
         if (player.lab.points.lt(0)) player.lab.points = new Decimal(0);
     },
@@ -174,7 +182,7 @@ addLayer("lab", {
                     function() {return "You have <a style='color: #00bdf9'>"+format(player.lab.power)+"</a> Research Power."},
                         {}],
                 ["display-text",
-                function() {return "You lose 1% Research Power every second."},
+                function() {return "You lose "+(inChallenge('kou',72)?"10%":"1%")+" Research Power every second."},
                     {}],
                 "blank",
                 ["microtabs","Researchstuff",{'border-width':'0px'}],
