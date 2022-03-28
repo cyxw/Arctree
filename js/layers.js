@@ -4539,7 +4539,7 @@ addLayer("lethe", {
                 return price && req && this.roundbol() && (layers['lethe'].HyperBeaconLength() < tmp.lethe.HypernodeSlots)
             },
             effect() {
-                let eff = player.rei.roses.pow(0.2).div(player.etoluna.points).pow(0.5).div(50).max(1);
+                let eff = player.rei.roses.pow(0.2).div(player.etoluna.points.max(1)).pow(0.5).div(50).max(1);
                 return eff;
             }
         },
