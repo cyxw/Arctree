@@ -6429,7 +6429,8 @@ addLayer("saya", {
                 return des
             },
             debuff() {//layers
-                let debuff = 10 - (challengeCompletions(this.layer, this.id) * 2)
+                let debuff = 10 - (challengeCompletions(this.layer, this.id) * 2);
+                if (maxedChallenge(this.layer, this.id)) return 60;
                 return Math.max(debuff, 0.5);
             },
             rewardEffect() {
