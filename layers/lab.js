@@ -62,6 +62,7 @@ addLayer("lab", {
         if (hasUpgrade('lab',173)) gain = gain.times(upgradeEffect('lab',173));
         if (hasUpgrade('storylayer',34)) gain = gain.times(upgradeEffect('storylayer',34));
         if (hasMilestone('ins',0)) gain = gain.times(layers.ins.insEffect().Eng());
+        if (hasUpgrade('storylayer',51)) gain = gain.times(upgradeEffect('storylayer',51));
         if (inChallenge('kou',72)) gain = gain.times(100) 
         else if (hasChallenge('kou',72)) gain = gain.times(challengeEffect('kou',72))
 

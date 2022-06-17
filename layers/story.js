@@ -48,6 +48,7 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==17) return "G-3";
                 if (player.storylayer.storycounter==18) return "LA-7";
                 if (player.storylayer.storycounter==19) return "I-2";
+                if (player.storylayer.storycounter==20) return "AW-1";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -602,6 +603,11 @@ addLayer("storylayer", {
                     return story;
                 };
 
+                if (player.storylayer.storycounter==20){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
                 if (player.storylayer.storycounter>=player.storylayer.points.toNumber()){
                     return "You have read all existing stories!"
                 }
@@ -643,6 +649,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==17) req = 120;
         if (player.storylayer.storycounter==18) req = 120;
         if (player.storylayer.storycounter==19) req = 120;
+        if (player.storylayer.storycounter==20) req = 120;
         return req;
     },
 
@@ -668,6 +675,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==17) color = "#d7a9f4";
         if (player.storylayer.storycounter==18) color = "#00bdf9";
         if (player.storylayer.storycounter==19) color = "#45b5d3";
+        if (player.storylayer.storycounter==20) color = "#e3dbf7";
         return color;
     },
 
@@ -982,6 +990,20 @@ addLayer("storylayer", {
             player.points = player.points.sub("1e1616");
         },
         unlocked() { return (player.storylayer.storycounter==19&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',45)},
+        onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        51:{ title: "Target Contribution",
+        fullDisplay(){
+            let des = "<b>Target Contribution</b><br>Unlock Awaken Cores boosts Research Points gain."
+            if (hasUpgrade('storylayer',51)) des += ("<br>Currently: "+format(upgradeEffect('storylayer',51))+"x")
+            des += "<br><br>Req:4 Awaken Cores"
+            return des;
+        },
+        effect(){
+            return player.awaken.points.div(2).max(1);
+        },
+        canAfford(){return player.storylayer.storycounter==20&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.awaken.points.gte(4)},
+        unlocked() { return (player.storylayer.storycounter==20&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',51)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }
