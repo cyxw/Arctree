@@ -994,7 +994,7 @@ addLayer("storylayer", {
         },
         51:{ title: "Target Contribution",
         fullDisplay(){
-            let des = "<b>Target Contribution</b><br>Unlock Awaken Cores boosts Research Points gain."
+            let des = "<b>Target Contribution</b><br>Awaken Cores boosts Research Points gain."
             if (hasUpgrade('storylayer',51)) des += ("<br>Currently: "+format(upgradeEffect('storylayer',51))+"x")
             des += "<br><br>Req:4 Awaken Cores"
             return des;
