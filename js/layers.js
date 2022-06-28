@@ -478,7 +478,7 @@ addLayer("light", {
             unlocked() { return hasAchievement('a', 21) },
             effectDescription() {
                 let str = "This Layer no longer hidden";
-                if (player.awaken.current != this.layer) str = str + ' & Light Upgrades give back its cost by Achievements.';
+                if (player.awaken.current != this.layer) str = str + ' & Light Upgrades give back its cost by total num of Achievements you have.';
                 else str = str + "."
                 return str;
             },
@@ -1037,7 +1037,7 @@ addLayer("dark", {
             unlocked() { return hasAchievement('a', 21) },
             effectDescription() {
                 let str = "This Layer no longer hidden";
-                if (player.awaken.current != this.layer) str = str + ' & Dark Upgrades give back its cost by Achievements.';
+                if (player.awaken.current != this.layer) str = str + ' & Dark Upgrades give back its cost by total num of Achievements you have.';
                 else str = str + "."
                 return str;
             },
