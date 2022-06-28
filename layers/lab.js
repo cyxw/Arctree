@@ -62,6 +62,7 @@ addLayer("lab", {
         if (hasUpgrade('lab',173)) gain = gain.times(upgradeEffect('lab',173));
         if (hasUpgrade('storylayer',34)) gain = gain.times(upgradeEffect('storylayer',34));
         if (hasMilestone('ins',0)) gain = gain.times(layers.ins.insEffect().Eng());
+        if (hasUpgrade('storylayer',51)) gain = gain.times(upgradeEffect('storylayer',51));
         if (inChallenge('kou',72)) gain = gain.times(100) 
         else if (hasChallenge('kou',72)) gain = gain.times(challengeEffect('kou',72))
 
@@ -1313,14 +1314,14 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.light.points)+" / "+formatWhole(cost.fo)+" Light Tachyons"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',83)?("<br>Also boosts Light Tachyons gain"+((hasUpgrade('lab',164))?"&effect(÷10)":"")+" by x"+format(buyableEffect('lab',21))):"")+((inChallenge('kou',12)||inChallenge('kou',42)||inChallenge('saya',41))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
+                    let display = formatWhole(player.light.points)+" / "+formatWhole(cost.fo)+" Light Tachyons"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',83)?("<br>Also boosts Light Tachyons gain"+((hasUpgrade('lab',164))?"&effect(÷10)":"")+" by x"+format(buyableEffect('lab',21))):"")+((player.kou.activeChallenge != null ||inChallenge('saya',41))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',31); }, 
                 canAfford() {
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
-                    return player[this.layer].unlocked && player.light.points.gte(cost.fo)&&!inChallenge('kou',12)&&!inChallenge('kou',42)&&!inChallenge('saya',41);
+                    return player[this.layer].unlocked && player.light.points.gte(cost.fo)&& player.kou.activeChallenge == null &&!inChallenge('saya',41);
 				},
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
@@ -1344,7 +1345,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)&&!inChallenge('kou',42)&&!inChallenge('saya',41)},
+				autoed() { return hasUpgrade('lab',44)&& player.kou.activeChallenge == null &&!inChallenge('saya',41)},
 			},
             22: {
 				title: "Dark Transformer",
@@ -1357,14 +1358,14 @@ addLayer("lab", {
                     let data = tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
 					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.dark.points)+" / "+formatWhole(cost.fo)+" Dark Matters"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',84)?("<br>Also boosts Dark Matters gain"+((hasUpgrade('lab',164))?"&effect(÷10)":"")+" by x"+format(buyableEffect('lab',22))):"")+((inChallenge('kou',12)||inChallenge('kou',42)||inChallenge('saya',41))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
+                    let display = formatWhole(player.dark.points)+" / "+formatWhole(cost.fo)+" Dark Matters"+"<br><br>You've Transfromed "+formatWhole(amt) + " times, which gives you "+formatWhole(amt)+ " Research Points."+(hasUpgrade('lab',84)?("<br>Also boosts Dark Matters gain"+((hasUpgrade('lab',164))?"&effect(÷10)":"")+" by x"+format(buyableEffect('lab',22))):"")+((player.kou.activeChallenge != null||inChallenge('saya',41))?"<br><b>Unpurchaseable due to Challenge you are taking.</b>":"");
 					return display;
                 },
                 unlocked() { return hasUpgrade('lab',31); }, 
                 canAfford() {
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
-                    return player[this.layer].unlocked && player.dark.points.gte(cost.fo)&&!inChallenge('kou',12)&&!inChallenge('kou',42)&&!inChallenge('saya',41);
+                    return player[this.layer].unlocked && player.dark.points.gte(cost.fo)&& player.kou.activeChallenge == null &&!inChallenge('saya',41);
 				},
                 buy() { 
 					let cost = layers[this.layer].buyables[this.id].cost();
@@ -1388,7 +1389,7 @@ addLayer("lab", {
                     return eff;
                 },
                 style: {'height':'200px', 'width':'200px'},
-				autoed() { return hasUpgrade('lab',44)&&!inChallenge('kou',12)&&!inChallenge('kou',42)&&!inChallenge('saya',41)   },
+				autoed() { return hasUpgrade('lab',44)&& player.kou.activeChallenge == null &&!inChallenge('saya',41)   },
 			},
             23: {
 				title: "Church Transformer",

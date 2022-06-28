@@ -13,11 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.5.5",
+	num: "0.0.5.6",
 	name: "Define Aspects®",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.5.6</h3><br>
+		- Rewrite Institution layer UI.<br>
+		- Minor bug fix and balance adjustment.<br><br>
 	<h3>v0.0.5.5</h3><br>
 		- Add Awake layer stage 2.<br>
 		- Add a new story.<br><br>
@@ -76,7 +79,7 @@ function getPointGen() {
 	if(inChallenge('kou',62)) return challengeEffect('kou',62);
 
 	//ADD
-	if (hasAchievement("a", 11)) gain=gain.add(0.5);
+	if (hasAchievement("a", 11)) gain=gain.add(1);
 
 
 	//MULT
