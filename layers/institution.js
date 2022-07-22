@@ -36,12 +36,8 @@ addLayer("ins", {
     name: "Institution",
     resource: "Institution Funds",
     row: 5,
-<<<<<<< Updated upstream
-    displayRow:4,
-=======
     position:3,
     displayRow: 5,
->>>>>>> Stashed changes
     branches: ["lab"],
 
     baseResource: "Research Power",
@@ -726,16 +722,10 @@ addLayer("ins", {
                     },
                 }
             },
-<<<<<<< Updated upstream
-            Egy(){
-                return{
-                    Pos(){
-=======
             Egy() {
                 return {
                     Pos() {
                         if (player.ins.inslevel.Egy.lte(0)) return new Decimal(1);
->>>>>>> Stashed changes
                         let eff = player.ins.inslevel.Egy.times(0.15).plus(1);
                     //pos
                     eff=eff.times(layers.ins.insEffect().Usa().toLiner())
@@ -1978,8 +1968,6 @@ addLayer("ins", {
             unlocked(){return player.ins.unlocked},
         },
     },
-<<<<<<< Updated upstream
-=======
     grid: {
         rows: 22, // == insColors.length == insName.length
         cols: 5, // Select 
@@ -2233,5 +2221,4 @@ addLayer("ins", {
             return jss;
         }
     }
->>>>>>> Stashed changes
 })
