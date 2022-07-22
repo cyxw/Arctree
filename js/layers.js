@@ -136,7 +136,7 @@ addLayer("mem", {
 
     upgrades: {
         11: {
-            title: "Thought Collect",
+            title: "Thought Collection",
             description: "Speed up collecting your Fragments.",
             cost() { return new Decimal(1).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42) },
             effect() {
@@ -150,7 +150,7 @@ addLayer("mem", {
         },
         12: {
             title: "Memory Extraction",
-            description: "Memories gain is boosted by Memories.",
+            description: "Memory gain is boosted by Memories.",
             cost() { return new Decimal(3).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42) },
             unlocked() { return hasUpgrade("mem", 11) || hasMilestone('light', 1) },
             effect() {
@@ -164,7 +164,7 @@ addLayer("mem", {
         },
         13: {
             title: "Algorithm Managing",
-            description: "Lower Fragments requirement for further Memories",
+            description: "Lower further Memory's Fragment requirement",
             cost() { return new Decimal(10).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42) },
             unlocked() { return hasUpgrade("mem", 12) || hasMilestone('light', 1) },
             effect() {
@@ -177,8 +177,8 @@ addLayer("mem", {
             },
         },
         14: {
-            title: "Fragments Duplication",
-            description: "Fragments generation is boosted by Fragments",
+            title: "Fragment Duplication",
+            description: "Fragment generation is boosted by Fragments",
             cost() { return new Decimal(20).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42) },
             unlocked() { return hasUpgrade("mem", 13) || hasMilestone('light', 1) },
             effect() {
@@ -190,7 +190,7 @@ addLayer("mem", {
         },
         21: {
             title: "Thought Combination",
-            description: "Thought Collect is much faster",
+            description: "Thought Collection is much faster",
             cost() { return new Decimal(30).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42) },
             unlocked() { return hasUpgrade("mem", 14) || hasMilestone('light', 1) },
             effect() {
@@ -203,8 +203,8 @@ addLayer("mem", {
             },
         },
         22: {
-            title: "Fragments Prediction",
-            description: "Fragments generation is boosted by Memories",
+            title: "Fragment Prediction",
+            description: "Fragment generation is boosted by Memories",
             cost() { return new Decimal(50).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42) },
             unlocked() { return hasUpgrade("mem", 21) || hasMilestone('light', 1) },
             effect() {
@@ -228,7 +228,7 @@ addLayer("mem", {
         },
         24: {
             title: "Directly Drown",
-            description: "Memories gain is boosted by Fragments.",
+            description: "Memory gain is boosted by Fragments.",
             cost() { return new Decimal(1000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42) },
             unlocked() { return hasUpgrade("mem", 23) || hasMilestone('light', 1) },
             effect() {
@@ -276,9 +276,9 @@ addLayer("mem", {
         34: {
             title: "Conclusion",
             description() {
-                if (hasAchievement('a', 23)) return "Push Memory softcap starts later but with Fragments&Memories set to 1.";
+                if (hasAchievement('a', 23)) return "Push Memory softcap starts later, but Fragments & Memories are set to 1.";
                 if (hasAchievement('a', 22)) return "Useless and Fragments&Memories set to 1.";
-                return "Unlock two new layers, but with Memories gain decreased and Fragments&Memories set to 1.";
+                return "Unlock two new layers, but Memory gain decreased and Fragments & Memories are set to 1.";
             },
             cost() { return new Decimal(10000000).times(tmp["kou"].costMult42).pow(tmp["kou"].costExp42) },
             unlocked() { return (hasUpgrade("mem", 33) || hasUpgrade("dark", 23)) },
@@ -295,7 +295,7 @@ addLayer("mem", {
         41: {
             title: "Build Up The Core.",
             fullDisplay() {
-                if (hasAchievement('a', 21)) return "<b>Eternal Core</b></br>A core build up by massive Memories and a little Lights&Darks, which contains nearly endless energy.";
+                if (hasAchievement('a', 21)) return "<b>Eternal Core</b></br>A core built of masses of Memories, with a few Lightness and bits of Darkness. It contains nearly endless energy.";
                 return "<b>Build Up The Core.</b></br>Unlock two new layers, but sacrifice all your progresses.</br></br>Cost: 1e23 Memories</br>65 Light Tachyons</br>65 Dark Matters"
             },
             description: "Unlock two new layers, but sacrifice all your progresses.",
@@ -477,8 +477,8 @@ addLayer("light", {
             done() { return player.light.best.gte(1) && hasAchievement('a', 21) },
             unlocked() { return hasAchievement('a', 21) },
             effectDescription() {
-                let str = "This Layer no longer hidden";
-                if (player.awaken.current != this.layer) str = str + ' & Light Upgrades give back its cost by Achievements.';
+                let str = "This Layer is no longer hidden";
+                if (player.awaken.current != this.layer) str = str + ' & Light Upgrades return their cost by Achievements.';
                 else str = str + "."
                 return str;
             },
@@ -1036,8 +1036,8 @@ addLayer("dark", {
             done() { return player.dark.best.gte(1) && hasAchievement('a', 21) },
             unlocked() { return hasAchievement('a', 21) },
             effectDescription() {
-                let str = "This Layer no longer hidden";
-                if (player.awaken.current != this.layer) str = str + ' & Dark Upgrades give back its cost by Achievements.';
+                let str = "This Layer is no longer hidden";
+                if (player.awaken.current != this.layer) str = str + ' & Dark Upgrades return their cost by Achievements.';
                 else str = str + "."
                 return str;
             },
@@ -7381,7 +7381,7 @@ addLayer("a", {
             tooltip: "Have 25 Guiding Beacons.",
         },
         54: {
-            name: "Why I Watch This?",
+            name: "Why Did I Watch This?",
             done() { return hasChallenge('kou', 51) },
             tooltip: "Finish Red Comet challenge.<br>Rewards:You become more curious about what you are witnessing.",
         },
@@ -7396,7 +7396,7 @@ addLayer("a", {
             tooltip: "Build up your reputation among scientists.",
         },
         62: {
-            name: "Working Lab",
+            name: "A Working Lab",
             done() { return player.lab.points.gte(1000) },
             tooltip: "Gain 1000 Research Points.",
         },
@@ -7414,7 +7414,7 @@ addLayer("a", {
             tooltip: "Unlock World Layer.",
         },
         65: {
-            name: "The True Presbyter in The World",
+            name: "The True Presbyter of The World",
             done() { return player.rei.roses.gte(100) },
             tooltip: "Gain 100 Glowing Roses.<br>Rewards:Glowing Roses now boosts The Speed of World Steps gain.",
             effect() {
