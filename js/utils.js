@@ -118,6 +118,16 @@ function clickClickable(layer, id) {
 	updateClickableTemp(layer)
 }
 
+function hoveringClickable(layer, id) {
+	if (!player[layer].unlocked || tmp[layer].deactivated) return
+	if (!tmp[layer].clickables[id].unlocked) return
+	if (!tmp[layer].clickables[id].canClick) return
+
+	layers[layer].clickables[id].hovered = true;
+	tmp[layer].clickables[id].hovered = true;
+	updateClickableTemp(layer)
+}
+
 function clickGrid(layer, id) {
 	if (!player[layer].unlocked  || tmp[layer].deactivated) return
 	if (!run(layers[layer].grid.getUnlocked, layers[layer].grid, id)) return
