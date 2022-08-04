@@ -156,6 +156,11 @@ function updateClickableTemp(layer)
 	updateTempData(layers[layer].clickables, tmp[layer].clickables, funcs[layer].clickables)
 }
 
+function updateGridTemp(layer)
+{
+	updateTempData(layers[layer].grid, tmp[layer].grid, funcs[layer].grid)
+}
+
 function setupBuyables(layer) {
 	for (id in layers[layer].buyables) {
 		if (isPlainObject(layers[layer].buyables[id])) {

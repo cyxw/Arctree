@@ -13,7 +13,7 @@
 
 	<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
 
-	<script src="js/vue.js"></script><!--vue 2.6.12-->
+	<script src="js/vue.js"></script>
 	<script src="js/technical/break_eternity.js"></script>
 	<script src="js/technical/layerSupport.js"></script>
 
@@ -22,6 +22,7 @@
 
 	<script src="js/technical/temp.js"></script>
 	<script src="js/technical/displays.js"></script>
+	<script src="js/technical/color.js"></script>
 	
 	<script src="js/game.js"></script>
 	<script src="js/utils.js"></script>
@@ -38,7 +39,8 @@
 	<script src="layers/story.js"></script>
 	<script src="layers/lab.js"></script>
 	<script src="layers/institution.js"></script>
-	<!--<script src="layers/fracture.js"></script>-->
+	<script src="layers/fracture.js"></script>
+	<script src="layers/tempest.js"></script>
 
 </head>
 
@@ -117,7 +119,7 @@
 		<div class="popup-container">
 			<transition-group name="fade">
 				<div v-for="popup,index in activePopups" class="popup" v-bind:class="popup.type"
-					v-bind:key="'p' + popup.id" v-on:click="() => {activePopups.splice(index, 1)}" v-bind:style="popup.color ? {'background-color': popup.color} : {}">
+					v-bind:key="'p' + popup.id" v-on:click="() => {activePopups.splice(index, 1)}" v-bind:style="(popup.style != undefined)?popup.style:((popup.color) ? {'background-color': popup.color} : {})">
 					<h3>{{popup.title}}</h3><br>
 					<h2 v-html="popup.message"></h2>
 				</div>

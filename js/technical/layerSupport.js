@@ -139,7 +139,9 @@ function setupLayer(layer){
                 layers[layer].clickables[thing].id = thing
                 layers[layer].clickables[thing].layer = layer
                 if (layers[layer].clickables[thing].unlocked === undefined)
-                    layers[layer].clickables[thing].unlocked = true
+                    layers[layer].clickables[thing].unlocked = true;
+                if (layers[layer].clickables[thing].hovered === undefined)
+                    layers[layer].clickables[thing].hovered = false;
             }
         }  
     }

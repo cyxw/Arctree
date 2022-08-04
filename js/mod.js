@@ -13,11 +13,16 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.5.6",
-	name: "Define Aspects®",
+	num: "0.0.6.0",
+	name: "Define Aspects Co. Ltd",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.6.0</h3><br>
+		- Add Awake layer stage 3.<br>
+		- Add two new layers.<br>
+		- Bug fixes & typo fixes.<br>
+		- Lots of basic component optimization.<br><br>
 	<h3>v0.0.5.6</h3><br>
 		- Rewrite Institution layer UI.<br>
 		- Minor bug fix and balance adjustment.<br><br>
@@ -53,12 +58,12 @@ let changelog = `<h1>Changelog:</h1><br>
 	<h3>v0.0</h3><br>
 		- Added things.<br>
 		- Added stuff.(Convinced)`
-
+		
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
-var doNotCallTheseFunctionsEveryTick = ["blowUpEverything","startAwake","completeAwake"]
+var doNotCallTheseFunctionsEveryTick = ["blowUpEverything","startAwake","completeAwake","Equip_Check_And_Set","return_Equiped_Equipment_Num","Refresh_Shop"]
 
 function getStartPoints(){
     return new Decimal(modInfo.initialStartPoints)
@@ -76,10 +81,9 @@ function getPointGen() {
 
 		
 	let gain = new Decimal(1)
-	if(inChallenge('kou',62)) return challengeEffect('kou',62);
 
 	//ADD
-	if (hasAchievement("a", 11)) gain=gain.add(1);
+	if (hasAchievement("a", 11)) gain=gain.add(0.5);
 
 
 	//MULT
@@ -101,27 +105,29 @@ function getPointGen() {
 	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Can())
 	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Bra())
 	if (hasAchievement('a',113)) gain = gain.times(buyableEffect('lab',12).eff2());
+	if (player.fracture.unlocked) gain = gain.times(Decimal.pow(750,layers['fracture'].grid.return_Equiped_Equipment_Num(2)+layers['fracture'].grid.return_Equiped_Equipment_Num(5)))
 	
 	//POW
-	if (hasUpgrade('dark', 12))gain = gain.times(upgradeEffect('dark',12));
-	if (hasUpgrade('mem', 33)&& !hasMilestone('kou',2)) {
-		if(player['awaken'].current=='light'||player['awaken'].awakened.includes(this.layer)) gain=gain.times(upgradeEffect('mem',33))
-		else gain = gain.pow(hasUpgrade('light', 23)?0.75:0.5);
-	}//很抱歉上下两行并不是POW
-	if (hasUpgrade('mem', 33)&&hasMilestone('kou',2)&&(player['awaken'].current=='light'||player['awaken'].awakened.includes(this.layer))) gain=gain.times(upgradeEffect('mem',33))
+	if (hasUpgrade('dark', 12))gain = gain.times(tmp.dark.effect.pow(0.5));
+	if (hasUpgrade('mem', 33)&& !hasMilestone('kou',2)) gain = gain.pow(hasUpgrade('light', 23)?0.75:0.5);
 	if (hasChallenge("kou",21)) gain = gain.pow(1.025);
 	if (inChallenge("kou",11)) gain = gain.pow(0.75);
 	if (inChallenge("kou",21)) gain = gain.pow(1.05);
 	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12).eff1());
 	if (inChallenge('rei',11)) gain = gain.pow(0.5);
 	if (player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) gain = gain.pow(0.9);
-	if (challengeCompletions('saya',21)) gain=gain.pow(challengeEffect('saya',21))
+	if (challengeCompletions('saya',21)) gain=gain.pow(challengeEffect('saya',21));
+
+	if (player.tempest.activeChallenge!=null) gain = gain.pow(tmp.tempest.nerf_in_challenges.toFrag())
+
+	//上述不影响但是会被超指数运算影响的参数
+	if(player.tempest.grid[101].activated) gain = gain.times(gridEffect('tempest',101));
 
 	//tetrate
 	if (inChallenge('saya',21)) gain = gain.tetrate(layers.saya.challenges[21].debuff())
 
-	if (hasUpgrade('dark', 11)&&player.points.lt(new Decimal(upgradeEffect('dark',11)))&&!(player['awaken'].current=='dark'||player['awaken'].awakened.includes('dark'))) gain = gain.times(2);
-	if (hasUpgrade('dark', 11)&&player.points.gt(new Decimal(upgradeEffect('dark',11)))&&(player['awaken'].current=='dark'||player['awaken'].awakened.includes('dark'))) gain = gain.times(3);
+
+	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
 	if (isNaN(gain.toNumber())) return new Decimal(1);
         return gain
 }
@@ -136,7 +142,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e280000000"))
+	return player.awaken.points.gte(7)
 }
 
 
@@ -156,4 +162,6 @@ function maxTickLength() {
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
+	if (player.fracture.EquipmentsHold.length<fractureEquiupments.length) player.fracture.EquipmentsHold = player.fracture.EquipmentsHold.concat(Array(fractureEquiupments.length-player.fracture.EquipmentsHold.length).fill(0));
+	if (player.fracture.EquipmentsDiscovered.length<fractureEquiupments.length) player.fracture.EquipmentsDiscovered = player.fracture.EquipmentsDiscovered.concat(Array(fractureEquiupments.length-player.fracture.EquipmentsDiscovered.length).fill(false));
 }

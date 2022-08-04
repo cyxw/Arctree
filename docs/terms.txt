@@ -29,3 +29,8 @@ K:Everflashing Knives
 
 //row6
 I:Institution Funds
+AW:Awaken Cores
+GE:Genesis Vortexs
+GE.ElementEssence:Element Essences
+FO:Forbearance Endurances
+FO.milestonePoints.point:Eyes of Storm

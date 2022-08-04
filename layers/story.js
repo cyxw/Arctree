@@ -49,6 +49,7 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==18) return "LA-7";
                 if (player.storylayer.storycounter==19) return "I-2";
                 if (player.storylayer.storycounter==20) return "AW-1";
+                if (player.storylayer.storycounter==21) return "LA-8";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -522,7 +523,32 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==12){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "A rare holiday for Joana.";
+                    if (player[this.layer].storyTimer > 3)story += "<br>She needed to purchase something for herself in a hurry, for she seldom took care of her life since the research had started. She would act as she was tidy, but nobody would accept that if they visited her home."
+                    if (player[this.layer].storyTimer > 10)story += "<br>Fortunately, the shopping mall was close enough to her home, which she didn't need to drive to."
+
+                    if (player[this.layer].storyTimer > 20)story += "<br><br>She, for herself, wasn't a woman that was keen for excitement, which few knew. For her, only knowledge was eternal, and bustle was its enemy."
+                    if (player[this.layer].storyTimer > 25)story += "<br>She never went to clothes shop, 'cause shiny appearance did no benefit to sneak in abyss."
+                    if (player[this.layer].storyTimer > 30)story += "<br>She only ate outside, just beacuse cooking was time-consuming. Even that, she seldome came here, for she was not used to use money."
+                    if (player[this.layer].storyTimer > 35)story += "<br>But it wasn't nice not to reward herself, for it was holiday."
+
+                    if (player[this.layer].storyTimer > 45)story += "<br><br>She ordered a simple steak. The waitress went to the kitchen with the notes taken."
+                    if (player[this.layer].storyTimer > 50)story += "<br>She put her eyes to window, boring. With the sight of all the city, she could gain a feeling of opening. When she had no ideas, she usually liked to look out from the window at high."
+
+                    if (player[this.layer].storyTimer > 60)story += "<br><br>She glanced a piece of red. Thinking it was the sun, she took a better look."
+                    if (player[this.layer].storyTimer > 65)story += "<br>With a cloudy sky, there was no sun. So it wasn't the sun."
+                    if (player[this.layer].storyTimer > 70)story += "<br>When she got a clear look, she realized it was a pink-hair girl, blocking her sight."
+                    if (player[this.layer].storyTimer > 75)story += "<br>That girl looked bewildered, seemed to want to ask something but didn't have that courage."
+                    if (player[this.layer].storyTimer > 80)story += "<br>\"……Is there any problem to ask?\" she had to ask this."
+
+                    if (player[this.layer].storyTimer > 90)story += "<br><br>\"Ww-,well……I'm hungry, how do I pay……\"That girl sluttered. Her english is fluent <i>enough</i>, Joana thought."
+                    if (player[this.layer].storyTimer > 95)story += "<br>\"Well, there, ask for waitress.\"Joana answered."
+                    if (player[this.layer].storyTimer > 100)story += "<br>\"Thanks~\"That girl then ran away. So energetic, reminding Joana of her youth."
+                    if (player[this.layer].storyTimer > 105)story += "<br>Well, although she was still young."
+
+                    if (player[this.layer].storyTimer > 115)story +=  "<br><br>But when she was ready to leave, she could hear that girl muttering to herself:"
+                    if (player[this.layer].storyTimer > 120)story +=  "<br>\"……This world is much more colorful than that I saw before. Where should I start?……\""
+                    if (player[this.layer].storyTimer > 125)story +=  "<br>She felt strange. Her intuition told her something was wrong."
                     return story;
                 };
 
@@ -553,7 +579,20 @@ addLayer("storylayer", {
                 };
 
                 if (player.storylayer.storycounter==14){
-                    let story = "Story in Plan, haven't been written/translated.";
+                    let story = "A common man couldn't behave both flustering and formally in the same time.";
+                    if (player[this.layer].storyTimer > 5)story += "<br>So did you."
+
+                    if (player[this.layer].storyTimer > 15)story += "<br><br>\"Welcome to my tiny castle, young man. Although my home is indeed better than my colleagues, for me who have worked in this field for decades……\"The elder gave you a warm reception, \"There must be something you want to know, if I may guess……\""
+                    if (player[this.layer].storyTimer > 25)story += "<br>Whlie he was talking, he went to light the fireplace. Only a few house had fireplace those days, so it was rare to see someone used to it."
+                    if (player[this.layer].storyTimer > 30)story += "<br>You felt much more anxious standing in front of the flame. You were eager to tell him what you have found. For you, it was nearly apocalypse."
+                    if (player[this.layer].storyTimer > 40)story += "<br>\"……But as you are very nervous, you must want to say somrthing, 'urgent' ?\"He said with smile, \"I have seen many green hands feel this nervous when they saw anything 'unusual'. If so, there will be an End of The World everyday.\""
+                    if (player[this.layer].storyTimer > 50)story += "<br>You had to admit, he knew you very well."
+                    if (player[this.layer].storyTimer > 55)story += "<br>\"So, may I have a speculation that there's someone, form the world you research, has come to our world?\"The elder gave you a laugh, \"Nothing serious. You don't even need to interpose their behavior. There will be a department taking eyes on them to make sure everything is right.\""
+                    if (player[this.layer].storyTimer > 65)story += "<br>You didn't even know whether you should sigh in relief after you have heard the word he said."
+
+                    if (player[this.layer].storyTimer > 75)story += "<br><br>\"But, as there is a connection between spaces……Well, a good excuse.\"The elder walked around, \"At least you can ask more money from the government, isn't it?\""
+                    if (player[this.layer].storyTimer > 85)story += "<br>You nodded, stunned."
+                    if (player[this.layer].storyTimer > 90)story += "<br>\"Then you can think of it.\" He smiled, \"Oh, there's a good steak restaurant nearby. Take launch there? I'll pay the bill.\""
                     return story;
                 };
 
@@ -608,6 +647,11 @@ addLayer("storylayer", {
                     return story;
                 };
 
+                if (player.storylayer.storycounter==21){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
                 if (player.storylayer.storycounter>=player.storylayer.points.toNumber()){
                     return "You have read all existing stories!"
                 }
@@ -641,7 +685,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==9) req = 60;
         if (player.storylayer.storycounter==10) req = 135;
         if (player.storylayer.storycounter==11) req = 150;
-        if (player.storylayer.storycounter==12) req = 60;
+        if (player.storylayer.storycounter==12) req = 135;
         if (player.storylayer.storycounter==13) req = 120;
         if (player.storylayer.storycounter==14) req = 120;
         if (player.storylayer.storycounter==15) req = 120;
@@ -650,6 +694,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==18) req = 120;
         if (player.storylayer.storycounter==19) req = 120;
         if (player.storylayer.storycounter==20) req = 120;
+        if (player.storylayer.storycounter==21) req = 120;
         return req;
     },
 
@@ -676,6 +721,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==18) color = "#00bdf9";
         if (player.storylayer.storycounter==19) color = "#45b5d3";
         if (player.storylayer.storycounter==20) color = "#e3dbf7";
+        if (player.storylayer.storycounter==21) color = "#00bdf9";
         return color;
     },
 
@@ -879,7 +925,7 @@ addLayer("storylayer", {
         },
         effect(){
             let eff = player.etoluna.starPoint.plus(player.etoluna.moonPoint).plus(1).log(7.5).sqrt();
-            return eff;
+            return eff.max(1);
         },
         canAfford(){return player.storylayer.storycounter==11&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.etoluna.points.gte(40)},
         pay(){
@@ -1005,6 +1051,16 @@ addLayer("storylayer", {
         canAfford(){return player.storylayer.storycounter==20&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.awaken.points.gte(4)},
         unlocked() { return (player.storylayer.storycounter==20&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',51)},
         onPurchase(){player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        52:{ title: "Instruction Construction",
+        fullDisplay(){
+            let des = "<b>Instruction Construction</b><br>Unlock Institution Upgrades."
+            des += "<br><br>Cost:1e165 Research Points"
+            return des;
+        },
+        canAfford(){return player.storylayer.storycounter==21&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(1e165)},
+        unlocked() { return (player.storylayer.storycounter==21&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',52)},
+        onPurchase(){player.lab.points = player.lab.points.sub(1e165);player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }
 })

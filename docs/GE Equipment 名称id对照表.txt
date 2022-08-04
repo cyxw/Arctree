@@ -1,0 +1,11 @@
+0: Element Capacity
+1: Bottled Growth
+2: Enjoyment Puzzle
+3: Element Capacity+
+4: Bottled Growth+
+5: Enjoyment Puzzle+
+6: Compute Matrix
+7: Essence Collector
+8: Compute Matrix+
+9: Essence Collector+
+10: Genesis Overload
