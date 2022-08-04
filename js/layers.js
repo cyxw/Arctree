@@ -7220,6 +7220,9 @@ addLayer("awaken", {
             "outline": "rgb(200,184,239) solid 4px",
         }
     },
+    canReset(){
+        return player.mem.points.gte(getNextAt(this.layer,canMax=false))&&player.kou.activeChallenge==null;
+    },
 
     doReset(resettingLayer) { },
     gainMult() { // Calculate the multiplier for main currency from bonuses
