@@ -1,4 +1,4 @@
-const insColors = ["#00bdf9", "#ededed", "#383838", "#ff1a1a", "ff8080", "#ef2b2d", "#0038a5", "#fcf788", "#016c36", "#103e8c", "#fdb8e0", "#f08b2f", "#00b0c7", "#ee1c25", "#fe0000", "#3c3b6e", "#009641", "#74acdf", "#008651", "#ffb612", "#fb5bf1", "#6bfb60"]
+const insColors = ["#00bdf9", "#ededed", "#383838", "#ff1a1a", "#ff8080", "#ef2b2d", "#0038a5", "#fcf788", "#016c36", "#103e8c", "#fdb8e0", "#f08b2f", "#00b0c7", "#ee1c25", "#fe0000", "#3c3b6e", "#009641", "#74acdf", "#008651", "#ffb612", "#fb5bf1", "#6bfb60"]
 const insName = ["Eng", "Fra", "Deu", "Che", "Pol", "Nor", "Rus", "Egy", "Sau", "Isr", "Jpn", "Ind", "Kaz", "Chn", "Can", "Usa", "Bra", "Arg", "Nga", "Zaf", "Aus", "Nzl"]
 
 addLayer("ins", {
@@ -33,6 +33,7 @@ addLayer("ins", {
                 Nzl: new Decimal(0),
             },
             select: null,
+            upgTotalCost: new Decimal(0),
         }
     },
 
@@ -76,6 +77,7 @@ addLayer("ins", {
         if (!canReset('ins')) return false;
         else return true;
     },
+    resetsNothing() { return hasMilestone('fracture',1) },
 
     tabFormat: {
         "Milestones": {
@@ -139,6 +141,33 @@ addLayer("ins", {
                 ["infobox", "give"],
                 ["infobox", "receive"],
             ]
+        },
+        "Upgrades":{
+            unlocked() { return (hasUpgrade('storylayer', 52)) },
+            content:[
+                "main-display",
+                "blank",
+                "prestige-button",
+                "blank",
+                ["display-text","When Respecing Upgrades, Site levels exceeding its max won't be respeced to its max."],
+                ["clickable",12],
+                "blank",
+                ["upgrade",11],
+                ["blank",["20px","20px"]],
+                ["row",[
+                    ["upgrade",21],
+                    ["blank",["10px","20px"]],
+                    ["upgrade",22],
+                ]],
+                ["blank",["20px","20px"]],
+                ["row",[
+                    ["upgrade",31],
+                    ["upgrade",32],
+                    ["blank",["10px","20px"]],
+                    ["upgrade",33],
+                    ["upgrade",34],
+                ]],
+            ]
         }
     },
 
@@ -147,7 +176,7 @@ addLayer("ins", {
     ],
 
     doReset(resettinglayer) {
-        //nothing
+        //Currently nothing
     },
 
     insCost() {//costing Funds
@@ -182,36 +211,44 @@ addLayer("ins", {
             Eng() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',33)) lhcp = lhcp.plus(2);
                 return lhcp;
             },
             Fra() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',33)) lhcp = lhcp.plus(2);
                 return lhcp;
             },
             Deu() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',33)) lhcp = lhcp.plus(2);
                 return lhcp;
             },
             Che() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',33)) lhcp = lhcp.plus(2);
                 return lhcp;
             },
             Pol() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',33)) lhcp = lhcp.plus(2);
                 return lhcp;
             },
             Nor() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',33)) lhcp = lhcp.plus(2);
                 return lhcp;
             },
             Rus() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',31)) lhcp = lhcp.plus(1);
+                if (hasUpgrade('ins',33)) lhcp = lhcp.plus(2);
                 return lhcp;
             },
             Egy() {
@@ -237,16 +274,19 @@ addLayer("ins", {
             Ind() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',31)) lhcp = lhcp.plus(1);
                 return lhcp;
             },
             Kaz() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',31)) lhcp = lhcp.plus(1);
                 return lhcp;
             },
             Chn() {
                 let lhcp = new Decimal(10);
                 if (inChallenge('kou', 71) || hasChallenge('kou', 71)) lhcp = new Decimal(12);
+                if (hasUpgrade('ins',31)) lhcp = lhcp.plus(1);
                 return lhcp;
             },
             Can() {
@@ -297,6 +337,7 @@ addLayer("ins", {
             Eng() {
                 if (player.ins.inslevel.Eng.lte(0)) return new Decimal(1);
                 let eff = Decimal.pow(4, player.ins.inslevel.Eng);
+                if (hasUpgrade('ins',11)) eff = Decimal.pow(6, player.ins.inslevel.Eng);
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 return eff;
             },
@@ -314,8 +355,10 @@ addLayer("ins", {
                     },
                     Neg() {
                         if (player.ins.inslevel.Fra.lte(0)) return new Decimal(1);
-                        let eff = new Decimal(1).sub(player.ins.inslevel.Fra.plus(2).ln().log(5));
-                        return eff.max(0);
+                        let debuff = player.ins.inslevel.Fra.plus(2).ln().log(5);
+                        if (hasUpgrade('ins',22))debuff = debuff.div(2);
+                        let eff = new Decimal(1).sub(debuff);
+                        return eff.max(0).min(1);
                     }
                 }
             },
@@ -336,8 +379,10 @@ addLayer("ins", {
                     },
                     Neg() {
                         if (player.ins.inslevel.Deu.lte(0)) return new Decimal(1);
-                        let eff = new Decimal(1).sub(player.ins.inslevel.Deu.plus(2).ln().log(5));
-                        return eff.max(0);
+                        let debuff = player.ins.inslevel.Deu.plus(2).ln().log(5)
+                        if (hasUpgrade('ins',22))debuff = debuff.div(2);
+                        let eff = new Decimal(1).sub(debuff);
+                        return eff.max(0).min(1);
                     }
                 }
             },
@@ -437,6 +482,7 @@ addLayer("ins", {
                 return {
                     Pos() {
                         let effbase = new Decimal(0);
+                        if (player.ins.inslevel.Sau.lte(0)) return new Decimal(1);
                         effbase = effbase.plus(player.points.max(1).log(10));
                         effbase = effbase.plus(player.mem.points.max(1).log(10));
                         effbase = effbase.plus(player.light.points.max(1).log(10));
@@ -452,6 +498,17 @@ addLayer("ins", {
                         effbase = effbase.plus(player.saya.points.max(1).log(10));
                         effbase = effbase.plus(player.ins.points.max(1).log(10));
                         effbase = effbase.plus(player.awaken.points.max(1).log(10));
+                        effbase = effbase.plus(player.fracture.points.max(1).log(10));
+                        effbase = effbase.plus(player.tempest.points.max(1).log(10));
+
+                        if (hasUpgrade('ins',21)){
+                            effbase = effbase.plus(player.lab.power.max(1).log(10));
+                            effbase = effbase.plus(player.rei.roses.max(1).log(10));
+                            effbase = effbase.plus(player.etoluna.starPoint.max(1).log(10));
+                            effbase = effbase.plus(player.etoluna.moonPoint.max(1).log(10));
+                            effbase = effbase.plus(player.fracture.ElementEssence.max(1).log(10));
+                            effbase = effbase.plus(player.tempest.milestonePoints.point.max(1).log(10));
+                        };
 
                         let eff = new Decimal(effbase.times(player.ins.inslevel.Sau).div(50));
                         if (inChallenge('kou', 71)) eff = eff.log10().max(1);
@@ -488,6 +545,8 @@ addLayer("ins", {
                         if (!layers['saya'].deactivated()) effbase = effbase.plus(player.saya.milestones.length);
                         effbase = effbase.plus(player.ins.milestones.length);
                         effbase = effbase.plus(player.awaken.milestones.length);
+                        if (!layers['fracture'].deactivated()) effbase = effbase.plus(player.fracture.milestones.length);
+                        if (!layers['tempest'].deactivated()) effbase = effbase.plus(player.tempest.milestones.length);
 
                         let eff = effbase.pow(player.ins.inslevel.Isr.times(0.8));
                         if (inChallenge('kou', 71)) eff = eff.log10().max(1);
@@ -631,7 +690,7 @@ addLayer("ins", {
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
                 eff = eff.times(layers.ins.insEffect().Usa().toLiner())
-                return eff.max(1);
+                return softcap(eff,new Decimal(5e20),0.75).max(1);
             },
             Arg() {
                 if (player.ins.inslevel.Arg.lte(0)) return new Decimal(0);
@@ -670,6 +729,7 @@ addLayer("ins", {
                 let effbase = new Decimal(0);
                 effbase = new Decimal(challengeCompletions('kou', 11) + challengeCompletions('kou', 12) + challengeCompletions('kou', 21) + challengeCompletions('kou', 22) + challengeCompletions('kou', 31) + challengeCompletions('kou', 32) + challengeCompletions('kou', 41) + challengeCompletions('kou', 42) + challengeCompletions('kou', 51))
                 effbase = effbase.plus(challengeCompletions('saya', 11) + challengeCompletions('saya', 12) + challengeCompletions('saya', 21) + challengeCompletions('saya', 22) + challengeCompletions('saya', 31) + challengeCompletions('saya', 32) + challengeCompletions('saya', 41) + challengeCompletions('saya', 42))
+                effbase = effbase.plus(challengeCompletions('tempest', 11));
 
                 let eff = effbase.pow(player.ins.inslevel.Zaf.times(0.5));
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
@@ -702,6 +762,8 @@ addLayer("ins", {
                 if (player.saya.unlocked && !layers['saya'].deactivated()) effbase = effbase.plus(1);
                 if (player.ins.unlocked) effbase = effbase.plus(1);
                 if (player.awaken.unlocked) effbase = effbase.plus(1);
+                if (player.fracture.unlocked && !layers['fracture'].deactivated()) effbase = effbase.plus(1);
+                if (player.tempest.unlocked && !layers['tempest'].deactivated()) effbase = effbase.plus(1);
                 let eff = Decimal.pow(effbase, player.ins.inslevel.Nzl.times(0.75))
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
@@ -717,6 +779,7 @@ addLayer("ins", {
         if (hasAchievement('a', 112)) gm = gm.div(achievementEffect('a', 112));
         if (hasAchievement('lab', 33)) gm = gm.div(achievementEffect('lab', 33));
         if (hasMilestone('ins', 7)) gm = gm.div(layers.ins.insEffect().Aus())
+        if (hasUpgrade('ins',34)) gm = gm.div(upgradeEffect('ins',34));
         return gm;
     },
     gainExp() {
@@ -726,6 +789,122 @@ addLayer("ins", {
     layerShown() { return hasUpgrade('storylayer', 35) },
 
     upgrades: {
+        11: {
+            title: "Nature Paper",
+            fullDisplay(){
+                let disp = "<b>Nature Paper</b><br>England Site formula become better"
+                disp += "<br>Cost: 65,000 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(65000)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(65000);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(65000)
+            },
+        },
+        21: {
+            title: "Petroleum Exploitation",
+            fullDisplay(){
+                let disp = "<b>Petroleum Exploitation</b>"
+                disp += "<br>All Secondary Currency now count into Saudi Arabia Site Effect formula"
+                disp += "<br>Cost: 6,400 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(6400)&&hasUpgrade('ins',11)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(6400);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(6400)
+            },
+            branches:[11],
+        },
+        22: {
+            title: "Fra-Deu Core",
+            fullDisplay(){
+                let disp = "<b>Fra-Deu Core</b>"
+                disp += "<br>Reduce nerf between France Site & Germany Site"
+                disp += "<br>Cost: 8,000 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(8000)&&hasUpgrade('ins',11)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(8000);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(8000)
+            },
+            branches:[11],
+        },
+        31: {
+            title: "SCO",
+            fullDisplay(){
+                let disp = "<b>SCO</b>"
+                disp += "<br>Chn, Rus, Kaz, Ind Site max level +1"
+                disp += "<br>Cost: 4,500 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(4500)&&hasUpgrade('ins',21)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(4500);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(4500)
+            },
+            branches:[21],
+        },
+        32: {
+            title: "Database",
+            fullDisplay(){
+                let disp = "<b>Database</b>"
+                disp += "<br>4th Institution Milestone now based on total Institution Funds you gained."
+                disp += "<br>Cost: 8,500 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(8500)&&hasUpgrade('ins',21)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(8500);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(8500)
+            },
+            branches:[21],
+        },
+        33: {
+            title: "Euratom",
+            fullDisplay(){
+                let disp = "<b>Euratom</b>"
+                disp += "<br>Europe Sites' max level +2"
+                disp += "<br>Cost: 8,500 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(8500)&&hasUpgrade('ins',22)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(8500);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(8500)
+            },
+            branches:[22],
+        },
+        34: {
+            title: "Progress Stack",
+            fullDisplay(){
+                let disp = "<b>Progress Stack</b>"
+                disp += "<br>Institution Funds you Cost in Upgrades boost Institution Fund gain"
+                if (hasUpgrade(this.layer,this.id)) disp += "<br>Currently: " + format(upgradeEffect(this.layer,this.id)) +"x"
+                disp += "<br>Cost: 4,500 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(4500)&&hasUpgrade('ins',22)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(4500);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(4500)
+            },
+            effect(){
+                if (!hasUpgrade(this.layer,this.id)) return new Decimal(1);
+                let eff = player[this.layer].upgTotalCost.sqrt().times(1.25);
+                return eff.max(1);
+            },
+            branches:[22],
+        },
     },
     milestones: {
         0: {
@@ -757,7 +936,8 @@ addLayer("ins", {
             },
             effect() {//tmp
                 if (player.ins.points.lte(0)) return new Decimal(1);
-                let eff = Decimal.pow(3, player.ins.points.max(0.5).ln().plus(0.75).max(1))
+                let eff = Decimal.pow(3, player.ins.points.max(0.5).ln().plus(0.75).max(1));
+                if (hasUpgrade('ins',32)) eff = Decimal.pow(3, player.ins.total.max(0.5).ln().plus(0.75).max(1));
                 if (hasUpgrade('storylayer', 41)) eff = eff.times(upgradeEffect('storylayer', 41));
                 return eff;
             },
@@ -824,7 +1004,20 @@ addLayer("ins", {
                 player.ins.inslevel.Nzl = new Decimal(0);
                 //---------
                 //player.ins.best = player.ins.total;
-                player.ins.points = player.ins.total;
+                player.ins.points = player.ins.total.sub(player.ins.upgTotalCost);
+            },
+            style: { "height": "50px", "width": "100px", "min-height": "50px", },
+        },
+        12:{
+            title: "",
+            display: "Respec Upgrade",
+            unlocked() { return hasUpgrade('storylayer',52) },
+            canClick() { return true },
+            onClick(){
+                if (!confirm('Are you sure to respec all Institution Upgrades?')) return;
+                player[this.layer].points = player[this.layer].points.plus(player[this.layer].upgTotalCost);
+                player[this.layer].upgrades = [];
+                player[this.layer].upgTotalCost = new Decimal(0);
             },
             style: { "height": "50px", "width": "100px", "min-height": "50px", },
         }

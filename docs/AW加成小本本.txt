@@ -52,3 +52,13 @@ Upg24（Joyful Memories）：x0.01->x1
 Upg25（Joyful-Black Synergy）：x0.5->x2
 Upg45（Dark-Red Synergy）：x0.5->x2
 解锁超镰刀
+
+LC:
+获取指数 ：1.5 -> 1.4
+玫瑰加效果
+解锁创世层
+
+FL:
+获取指数 ：1.5 -> 1.4
+解锁方向协同器
+解锁忍耐层

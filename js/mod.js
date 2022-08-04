@@ -13,39 +13,52 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.5.0",
-	name: "Worldwide Paces",
+	num: "0.0.6.0",
+	name: "Define Aspects Co. Ltd",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.6.0</h3><br>
+		- Add Awake layer stage 3.<br>
+		- Add two new layers.<br>
+		- Bug fixes & typo fixes.<br>
+		- Lots of basic component optimization.<br><br>
+	<h3>v0.0.5.6</h3><br>
+		- Rewrite Institution layer UI.<br>
+		- Minor bug fix and balance adjustment.<br><br>
+	<h3>v0.0.5.5</h3><br>
+		- Add Awake layer stage 2.<br>
+		- Add a new story.<br><br>
+	<h3>v0.0.5.3</h3><br>
+		- Add Awake layer stage 1.<br><br>
 	<h3>v0.0.5.0</h3><br>
 		- Add Institution layer.<br>
 		- Some balance rework.<br>
 		- Add some achievements' images, thanks to River咕咕酱 for drawing raw images.<br>
-		……and Sxy62146214 on Antimatter-dimensions related achievement image.<br>
+		……and Sxy62146214 on Antimatter-dimensions related achievement image.<br><br>
 	<h3>v0.0.4.0</h3><br>
 		- All row4 QoL added.<br>
-		- Call row5 done.<br>
+		- Call row5 done.<br><br>
 	<h3>v0.0.3.5</h3><br>
 		- All row5 layers added with basic stuff.<br>
-		- Not all row4 QoL added.<br>
+		- Not all row4 QoL added.<br><br>
 	<h3>v0.0.3.2</h3><br>
-		- Add first branch of stories, now it's time to check my writing skill(lol).<br>
+		- Add first branch of stories, now it's time to check my writing skill(lol).<br><br>
 	<h3>v0.0.3.0</h3><br>
-		- Call row4 done.<br>
+		- Call row4 done.<br><br>
 	<h3>v0.0.2.5</h3><br>
 		- All row4 layers added with basic stuff.<br>
-		- All row3 QoL added.<br>
+		- All row3 QoL added.<br><br>
 	<h3>v0.0.2.0</h3><br>
-		- Call row3 completed.<br>
+		- Call row3 completed.<br><br>
 	<h3>v0.0.1.1</h3><br>
-		- Call row2 completed.(Convinced)<br>
+		- Call row2 completed.(Convinced)<br><br>
 	<h3>v0.0.1</h3><br>
-		- Call row2 completed.(Part of)<br>
+		- Call row2 completed.(Part of)<br><br>
 	<h3>v0.0</h3><br>
 		- Added things.<br>
 		- Added stuff.(Convinced)`
-
+		
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -92,6 +105,7 @@ function getPointGen() {
 	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Can())
 	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Bra())
 	if (hasAchievement('a',113)) gain = gain.times(buyableEffect('lab',12).eff2());
+	if (player.fracture.unlocked) gain = gain.times(Decimal.pow(750,layers['fracture'].grid.return_Equiped_Equipment_Num(2)+layers['fracture'].grid.return_Equiped_Equipment_Num(5)))
 	
 	//POW
 	if (hasUpgrade('dark', 12))gain = gain.times(tmp.dark.effect.pow(0.5));
@@ -102,10 +116,16 @@ function getPointGen() {
 	if (hasUpgrade('lab',73)) gain = gain.pow(buyableEffect('lab',12).eff1());
 	if (inChallenge('rei',11)) gain = gain.pow(0.5);
 	if (player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) gain = gain.pow(0.9);
-	if (challengeCompletions('saya',21)) gain=gain.pow(challengeEffect('saya',21))
+	if (challengeCompletions('saya',21)) gain=gain.pow(challengeEffect('saya',21));
+
+	if (player.tempest.activeChallenge!=null) gain = gain.pow(tmp.tempest.nerf_in_challenges.toFrag())
+
+	//上述不影响但是会被超指数运算影响的参数
+	if(player.tempest.grid[101].activated) gain = gain.times(gridEffect('tempest',101));
 
 	//tetrate
 	if (inChallenge('saya',21)) gain = gain.tetrate(layers.saya.challenges[21].debuff())
+
 
 	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
 	if (isNaN(gain.toNumber())) return new Decimal(1);
@@ -122,7 +142,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e280000000"))
+	return player.awaken.points.gte(7)
 }
 
 
@@ -142,4 +162,6 @@ function maxTickLength() {
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
+	if (player.fracture.EquipmentsHold.length<fractureEquiupments.length) player.fracture.EquipmentsHold = player.fracture.EquipmentsHold.concat(Array(fractureEquiupments.length-player.fracture.EquipmentsHold.length).fill(0));
+	if (player.fracture.EquipmentsDiscovered.length<fractureEquiupments.length) player.fracture.EquipmentsDiscovered = player.fracture.EquipmentsDiscovered.concat(Array(fractureEquiupments.length-player.fracture.EquipmentsDiscovered.length).fill(false));
 }

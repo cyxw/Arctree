@@ -1,59 +1,148 @@
 const fractureEquiupments = [
     {
-        EquipmentTitle: "T1",
-        EffectDisplay : "test equipment please ignore",
-        shapeArray: [0],
-        Color:"#FF00FF",
-        UpgradeTo:3,
-        defaultPosition:303,
-        CanBuyProgress: 0,
-        BasePrize: new Decimal(100),
+        EquipmentTitle: "Element Capacity",//不要拿数字打头
+        EffectDisplay : "Each adds Element Essence Capacity by 0.5",//这个看不懂就砍死你丫的
+        shapeArray: [0],//相对于中心点的grid id偏移量数组，表示这个装备的形状
+        Color:"#FFE4B5",//颜色
+        UpgradeTo:3,//升级到的目标装备的id,没有的话填负数
+        defaultPosition:303,//在商店显示时默认中心点的grid id
+        CanBuyProgress: 0,//解锁池
+        BasePrize: new Decimal(9.5),//baseprice*, 基础价格
+        UpgradeCost: new Decimal(30),//花费多少数目来升级
+        UpgradeCurrency: 'player.fracture.ElementEssence',//与上一条配合使用, 花费的货币种类
+        //UpgradeReq                //需求多少数目的货币来升级
+        //UpgradeReqCurrency        //与上一条配合使用, 需求的货币种类
+        //UpgradeEquipNum           //需求多少个装备来升级
+                                    //上述升级相关字段如果不需要直接不用写, 轮子甚至不会读到undefined
+        UpgradeType: ['cost'],      //升级种类, 目前可以传入 cost, require, equipnum, none
     },
     {
-        EquipmentTitle: "T2",
-        EffectDisplay : "another test equipment please ignore",
+        EquipmentTitle: "Bottled Growth",
+        EffectDisplay : "Each Boosts Glowing Roses gain by x2",
         shapeArray: [0,1],
-        Color:"#666666",
+        Color:"#ffe6f6",
         UpgradeTo:4,
         defaultPosition:303,
         CanBuyProgress: 0,
-        BasePrize: new Decimal(100),
+        BasePrize: new Decimal(10),
+        UpgradeCost: new Decimal(50),
+        UpgradeCurrency: 'player.fracture.ElementEssence',
+        UpgradeType: ['cost'],
     },
     {
-        EquipmentTitle: "T3",
-        EffectDisplay : "third test equipment please ignore",
+        EquipmentTitle: "Enjoyment Puzzle",
+        EffectDisplay : "Each boosts Fragment generation 750x",
         shapeArray: [0,100],
-        Color:"#FF0000",
-        UpgradeTo:-1,
+        Color:"#AAAAAA",
+        UpgradeTo:5,
         defaultPosition:303,
         CanBuyProgress: 0,
-        BasePrize: new Decimal(100),
+        BasePrize: new Decimal(10),
+        UpgradeCost: new Decimal(50),
+        UpgradeCurrency: 'player.fracture.ElementEssence',
+        UpgradeType: ['cost'],
     },
     {
-        EquipmentTitle: "T1+",
-        EffectDisplay : "Upgraded test equipment please ignore",
+        EquipmentTitle: "Element Capacity+",
+        EffectDisplay : "Each adds Element Essence Capacity by 1",
         shapeArray: [0],
-        Color:"#FF00FF",
+        Color:"#FFE4B5",
         UpgradeTo:-1,
         defaultPosition:303,
         CanBuyProgress: 0,
-        BasePrize: new Decimal(100),
+        BasePrize: new Decimal(40),
+        //UpgradeCost: new Decimal(0),
+        //UpgradeCurrency: null,
+        UpgradeType: ['none'],
     },
     {
-        EquipmentTitle: "T2+",
-        EffectDisplay : "Upgraded another test equipment please ignore",
+        EquipmentTitle: "Bottled Growth+",
+        EffectDisplay : "Each Boosts Glowing Roses gain by x2",
         shapeArray: [0],
-        Color:"#666666",
+        Color:"#ffe6f6",
         UpgradeTo:-1,
         defaultPosition:303,
         CanBuyProgress: 0,
-        BasePrize: new Decimal(100),
+        BasePrize: new Decimal(50),
+        //UpgradeCost: new Decimal(0),
+        //UpgradeCurrency: null,
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Enjoyment Puzzle+",
+        EffectDisplay : "Each boosts Fragment generation 750x",
+        shapeArray: [0],
+        Color:"#AAAAAA",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: 0,
+        BasePrize: new Decimal(55),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Compute Matrix",
+        EffectDisplay : "Each Boosts Research Power gain by x200",
+        shapeArray: [0,-100,1],
+        Color:"#00bdf9",
+        UpgradeTo:8,
+        defaultPosition:303,
+        CanBuyProgress: 1,
+        BasePrize: new Decimal(15),
+        UpgradeCost: new Decimal(1e150),
+        UpgradeCurrency: 'player.lab.points',
+        UpgradeType: ['cost'],
+    },
+    {
+        EquipmentTitle: "Essence Collector",
+        EffectDisplay : "Each Boosts Research Element Essence gain by x1.05",
+        shapeArray: [0,-1,100],
+        Color:"#9dfe6b",
+        UpgradeTo:9,
+        defaultPosition:303,
+        CanBuyProgress: 1,
+        BasePrize: new Decimal(15),
+        UpgradeCost: new Decimal(50),
+        UpgradeCurrency: 'player.fracture.ElementEssence',
+        UpgradeType: ['cost'],
+    },
+    {
+        EquipmentTitle: "Compute Matrix+",
+        EffectDisplay : "Each Boosts Research Power gain by x250",
+        shapeArray: [0,-100,1],
+        Color:"#00bdf9",
+        UpgradeTo:8,
+        defaultPosition:303,
+        CanBuyProgress: 1,
+        BasePrize: new Decimal(50),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Essence Collector+",
+        EffectDisplay : "Each Boosts Research Element Essence gain by x1.1",
+        shapeArray: [0,-1,100],
+        Color:"#9dfe6b",
+        UpgradeTo:9,
+        defaultPosition:303,
+        CanBuyProgress: 1,
+        BasePrize: new Decimal(50),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Genesis Overload",
+        EffectDisplay : "Push Memory softcap by x1e100, but reduce Element Essence gain to x0.01",
+        shapeArray: [0,1,100,101],
+        Color:"#c939db",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: 1,
+        BasePrize: new Decimal(150),
+        UpgradeType: ['none'],
     },
 ];
 
 addLayer("fracture", {
     startData() { return {                  // startData is a function that returns default data for a layer. 
-        unlocked: true,                     // You can add more variables here to add them to your layer.
+        unlocked: false,                     // You can add more variables here to add them to your layer.
         points: new Decimal(0),             // "points" is the internal name for the main resource of the layer.
         gridcol:2,
         gridrow:2,
@@ -64,9 +153,11 @@ addLayer("fracture", {
         EquipmentsDiscovered:Array(fractureEquiupments.length).fill(false),//这玩意从一开始就得keep
         EquipmentsEquiped:[],               //EquipNum 和 PositionId
         DeEquipt:false,                     //是否是卸载/装载模式
-        BuyProgress:0,                      //这个数值随着里程碑的增加而增加
+        BuyProgress:0,                      //这个数值随着里程碑的增加而增加<--可能还有升级
         BuyCooldown:60,
-        EquipmentsForSale:[{index:-1,prize:new Decimal(0)},{index:-1,prize:new Decimal(0)},{index:-1,prize:new Decimal(0)}],       //要是哪一天这玩意length<3了就说明后面编程出问题了
+        EquipmentsForSale:[{index:-1,prize:new Decimal(0)},{index:-1,prize:new Decimal(0)},{index:-1,prize:new Decimal(0)}], //price*      //要是哪一天这玩意length<3了就说明后面编程出问题了
+        demile:[],
+        ElementEssence: new Decimal(0),
     }},
 
     name:"Genesis",
@@ -81,12 +172,15 @@ addLayer("fracture", {
     baseResource: "Glowing Roses",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.rei.roses },  // A function to return the current amount of baseResource.
 
-    requires: new Decimal(1e280),              // The amount of the base needed to  gain 1 of the prestige currency.
+    requires: new Decimal("5e630"),              // The amount of the base needed to  gain 1 of the prestige currency.
                                             // Also the amount required to unlock the layer.
 
     type: "static",                         // Determines the formula used for calculating prestige currency.
-    exponent: 0.5,                          // "normal" prestige gain is (currency^exponent).
-    roundUpCost: true,
+    exponent: 2.5,                          // "normal" prestige gain is (currency^exponent).
+    //roundUpCost: true,
+    hotkeys: [
+        { key: "G", description: "Shift+G: Reset for Genesis Vortexs", onPress() { if (canReset(this.layer)) doReset(this.layer) } },
+    ],
 
     gainMult() {                            // Returns your multiplier to your gain of the prestige resource.
         return new Decimal(1)               // Factor in any bonuses multiplying gain here.
@@ -95,8 +189,25 @@ addLayer("fracture", {
         return new Decimal(1)
     },
 
-    layerShown() { return true },          // Returns a bool for if this layer's node should be visible in the tree.
+    layerShown() { return player['awaken'].awakened.includes('rei')},          // Returns a bool for if this layer's node should be visible in the tree.
 
+    deactivated() {
+        let bol = false;
+        bol = (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer))
+        if (bol) {
+            if (player[this.layer].demile.length == 0) player[this.layer].demile = player[this.layer].milestones;
+        }
+        else {
+            if (player[this.layer].demile.length != 0) { player[this.layer].milestones = player[this.layer].demile; player[this.layer].demile = [] };
+        }
+        return bol;
+    },
+    marked() {
+        if (player.awaken.awakened.includes(this.layer)) return true;
+        else return false;
+    },
+
+    //装备与商店相关
     Check_Discoverd(){//每刻叫
         for (index in player[this.layer].EquipmentsHold)
             if (player[this.layer].EquipmentsHold[index]>0) player[this.layer].EquipmentsDiscovered[index] = true;
@@ -110,9 +221,10 @@ addLayer("fracture", {
 
             if (fractureEquiupments[Randomindex].CanBuyProgress > ProgressNum) continue;
             else{
+                let price = fractureEquiupments[Randomindex].BasePrize.times(0.9+Math.random()*0.2).max(0);
                 Vue.set(player['fracture'].EquipmentsForSale,counter,{
                     index: Randomindex,
-                    prize: fractureEquiupments[Randomindex].BasePrize //暂且如此，之后在这里加修正值
+                    prize: price,
                 })
 
                 counter++;
@@ -124,15 +236,57 @@ addLayer("fracture", {
 
     },
 
+    ElementCap(){//K
+        let K = new Decimal(10).plus(player.fracture.points.sub(1).max(0))
+        K = K.plus(layers['fracture'].grid.return_Equiped_Equipment_Num(0)*0.5+layers['fracture'].grid.return_Equiped_Equipment_Num(3));
+        if (hasAchievement('a',133)) K = K.plus(player.fracture.ElementEssence.sqrt().max(1).log10());
+        return K;
+    },
+
+    Element_Gain(){//logestic, 返回每秒增加数目，用的时候记得乘diff
+        if (!player['fracture'].unlocked) return new Decimal(0);
+        let r = new Decimal(1);
+
+        //sth changes r
+        r = r.times(Decimal.pow(1.05,layers['fracture'].grid.return_Equiped_Equipment_Num(7))).times(Decimal.pow(1.1,layers['fracture'].grid.return_Equiped_Equipment_Num(9)));
+        r = r.times(Decimal.pow(0.01,layers['fracture'].grid.return_Equiped_Equipment_Num(10)))
+
+        let K = layers.fracture.ElementCap();
+
+        let gain = (K.sub(player['fracture'].ElementEssence)).div(K).times(player['fracture'].ElementEssence.max(K.div(1e10))).times(r);
+        return gain.max(0);
+    },
+
+    return_ALL_Equipments_Have(){//返回已装备+背包里的装备总数
+        return eval(player[this.layer].EquipmentsHold.join("+"))+layers['fracture'].grid.return_Equiped_Equipment_Num('all');
+    },
+
+    Refresh_Cost(){
+        return new Decimal(100).times(Decimal.sqrt(layers['fracture'].return_ALL_Equipments_Have()).max(1));
+    },
+
     update(diff){
-        tmp[this.layer].fractureEquiupments = fractureEquiupments;
+        tmp[this.layer].fractureEquiupments = fractureEquiupments;//?
         if (player[this.layer].BuyCooldown > 0) player[this.layer].BuyCooldown-=diff;
+        player['fracture'].ElementEssence = player['fracture'].ElementEssence.plus(layers['fracture'].Element_Gain().times(diff));
     },
 
     tabFormat:{
+        "Milestones": {
+            content: [
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                ["display-text",()=>{return (player['fracture'].unlocked)?"Each Milestone will unlock more Equipments.":""}],
+                "milestones",
+            ]
+        },
         "Equipments":{
+            unlocked(){return player['fracture'].unlocked},
             content:[
-                ["display-text","Currently nothing here"],
+                "main-display",
                 "blank",
                 ["display-text",() => {return "Now you are holding: " + ((player.fracture.TempEquipmentId <= -1)?"None":fractureEquiupments[player.fracture.TempEquipmentId].EquipmentTitle)},{}],
                 "blank",
@@ -142,8 +296,9 @@ addLayer("fracture", {
             ],
         },
         "BlackSmith":{
+            unlocked(){return player['fracture'].unlocked},
             content:[
-                ["display-text","Currently nothing here"],
+                "main-display",
                 "blank",
                 ["infobox","Upginfo",{}],
                 ["row",[
@@ -151,27 +306,33 @@ addLayer("fracture", {
                     ["clickable",14],
                 ]],
                 "blank",
+                ["display-text",()=>{return "You have " + format(player.fracture.ElementEssence) + " Element Essences."}],
+                "blank",
                 ["display-text","<b style='color: #00ff00;'>Green</b> block will be wiped when upgrade, while <b style='color: #ff0000;'>Red</b> block will stay still."],
                 "blank",
                 ["layer-proxy",['ghostGE',["grid"]]]
             ]
         },
         "Inventory":{
+            unlocked(){return player['fracture'].unlocked},
             content:[
-                ["display-text","Currently nothing here"],
+                "main-display",
                 "blank",
                 ["row",[
                     ["column",[["display-text",()=>{return ("Equipment Name:<br>"+((player['fracture'].CheckingEquipmentId >=0)?((player['fracture'].EquipmentsDiscovered[player['fracture'].CheckingEquipmentId])?fractureEquiupments[player['fracture'].CheckingEquipmentId].EquipmentTitle:"???"):"None"))}]]],
                     ["blank",["20px","17px"]],
                     ["column",[["display-text",()=>{return ("Equipment ID:<br>"+((player['fracture'].CheckingEquipmentId >=0)?player['fracture'].CheckingEquipmentId:"None"))}]]],
                     ["blank",["20px","17px"]],
-                    ["column",[["display-text",()=>{return ("Amount You Have in Backpack:<br>"+((player['fracture'].CheckingEquipmentId >=0)?player['fracture'].EquipmentsHold[player['fracture'].CheckingEquipmentId]:"None"))}]]],
+                    ["column",[["display-text",()=>{return ("Amount You Have in Inventory:<br>"+((player['fracture'].CheckingEquipmentId >=0)?player['fracture'].EquipmentsHold[player['fracture'].CheckingEquipmentId]:"None"))}]]],
                 ]],
                 ["row",[
                     ["clickable",14],
                     ["clickable",15],
                     ["clickable",16],
+                    ["clickable",17],
                 ]],
+                "blank",
+                ["display-text",()=>{return "You have " + format(player.fracture.ElementEssence) + " Element Essences."}],
                 "blank",
                 ["row",[
                     ["clickable",21],
@@ -181,14 +342,18 @@ addLayer("fracture", {
             ],
         },
         "Shop":{
+            unlocked(){return player['fracture'].unlocked},
             content:[
-                ["display-text","Currently nothing here"],
+                "main-display",
                 "blank",
                 ["row",[
                     ["clickable",31],
                     "blank",
                     ["clickable",32],
                 ]],
+                "blank",
+                ["display-text",()=>{return "You have " + format(player.fracture.ElementEssence) + " Element Essences."}],
+                ["display-text",()=>{return "Your Element Essence cap is "+format(layers.fracture.ElementCap())}],
                 "blank",
                 ["row",[
                     ["column",[
@@ -227,6 +392,29 @@ addLayer("fracture", {
     upgrades: {
         // Look in the upgrades docs to see what goes here!
     },
+
+    milestones: {
+        0: {
+            requirementDescription: "1 Genesis Vortex",
+            done() { return player.fracture.best.gte(1) },
+            unlocked() { return player.fracture.unlocked },
+            effectDescription() {
+                return "Keep Celebration Ends challenges when reset."
+            },
+        },
+        1: {
+            requirementDescription: "4 Genesis Vortexs",
+            done() { return player.fracture.best.gte(4) },
+            unlocked() { return player.fracture.unlocked },
+            effectDescription() {
+                return "Institution resets nothing."
+            },
+            onComplete(){
+                player[this.layer].BuyProgress+=1;
+            },
+        },
+    },
+
     clickables:{
         11: {
             title: "Equipment Adjustment Mode",
@@ -239,7 +427,7 @@ addLayer("fracture", {
         },
         12: {
             title: "",
-            display:"Put Holding Equipment Back to Backpack",
+            display:"Put Holding Equipment Back to Inventory",
             unlocked() { return player.fracture.unlocked },
             canClick() { return player[this.layer].TempEquipmentId>=0 },
             onClick() { 
@@ -249,19 +437,65 @@ addLayer("fracture", {
         },
         13: {
             title: "Upgrade this Equipment",
-            display:"",
+            display(){
+
+                const CurrencyList ={
+                    'player.points':'Fragments',
+                    'player.mem.points':'Memories',
+                    'player.light.points':'Light Tachyons',
+                    'player.dark.points':'Dark Matters',
+                    'player.red.points':'Red Dolls',
+                    'player.lethe.points':'Forgotten Drops',
+                    'player.lab.points':'Research Points',
+                    'player.lab.power':'Research Power',
+                    'player.rei.points':'Luminous Churches',
+                    'player.rei.roses':'Glowing Roses',
+                    'player.yugamu.points':'Flourish Labyrinths',
+                    'player.yugamu.timesmoved':'Times moved in Maze',
+                    'player.world.points':'World Steps',
+                    'player.storylayer.points':'Stories',//我怀疑是不是真的有这个需求
+                    'player.etoluna.points':'Gemini Bounds',
+                    'player.etoluna.starPoint':'Star Points',
+                    'player.etoluna.moonPoint':'Moon Points',
+                    'player.saya.points':'Everflashing Knives',
+                    'player.ins.points':'Institution Funds',
+                    'player.awaken.points':'Awaken Cores',
+                    'player.fracture.points':'Genesis Vortexs',
+                    'player.fracture.ElementEssence':'Element Essences',
+                    'player.tempest.points':'Forbearance Endurances',
+                    'player.tempest.milestonePoints.point':'Eyes of Storm',
+                }
+
+                if(!(player[this.layer].CheckingEquipmentId>=0&&player[this.layer].EquipmentsDiscovered[player[this.layer].CheckingEquipmentId]))return "";
+                let disp = "";
+                if (fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('cost')) disp += ("Cost: "+fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeCost + " " + CurrencyList[fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeCurrency])
+                if (fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('require')) disp += ("<br>Req: "+fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeReq+" "+CurrencyList[fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeReqCurrency])
+                if (fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('equipnum')) disp +=("<br>Need "+fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeEquipNum+" of this Equipment to Upgrade")
+                return disp;
+            },
             unlocked() { return player.fracture.unlocked },
             canClick() { 
-                //CheckingEquipmentId有效&&已发现装备&&装备能够升级&&装备存货数目>0 <--这个改起来不难
-                return player[this.layer].CheckingEquipmentId>=0&&player[this.layer].EquipmentsDiscovered[player[this.layer].CheckingEquipmentId]&&fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeTo>=0&&player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId]>0
+                if (player[this.layer].CheckingEquipmentId<0) return false;//之前卡短路，现在需要这样防止undefined
+                let ValidCheck = player[this.layer].CheckingEquipmentId>=0&&player[this.layer].EquipmentsDiscovered[player[this.layer].CheckingEquipmentId];//装备索引号合法且已发现装备
+                let CanUpgradeCheck = fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeTo>=0&&(fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType!=undefined&&!fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('none'));//是否能够升级
+                let EquipNumCheck = player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId]>0;//不论是否需求多个装备，至少得有一个吧
+
+                let UpgradeCostCheck = true;//之后主要是拿false来与
+                if (fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('none')) UpgradeCostCheck = false;
+                if (fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('cost')) UpgradeCostCheck = UpgradeCostCheck&&(eval(fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeCurrency+".gte("+fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeCost+")"))
+                if (fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('require')) UpgradeCostCheck = UpgradeCostCheck&&(eval(fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeReqCurrency+".gte("+fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeReq+")"))
+                if (fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('equipnum'))UpgradeCostCheck = UpgradeCostCheck&&(player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId]>=fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeEquipNum)
+                return ValidCheck&&CanUpgradeCheck&&EquipNumCheck&&UpgradeCostCheck;
              },
             onClick() { 
+                if (fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('cost')) eval(fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeCurrency + "=" + fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeCurrency+".sub("+fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeCost+")");
                 player[this.layer].EquipmentsHold[fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeTo] += 1;
-                player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId] -= 1;
+                if (fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeType.includes('equipnum')) player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId] -= fractureEquiupments[player[this.layer].CheckingEquipmentId].UpgradeEquipNum;
+                else player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId] -= 1;
             },
         },
         14: {
-            title: "Chage Equipmrnt You Want To Check",
+            title: "Chage Equipment You Want To Check",
             display(){
                 let disp = "Currently checking: "
                 if (player[this.layer].CheckingEquipmentId <0) disp +="None"
@@ -288,12 +522,17 @@ addLayer("fracture", {
         },
         15: {
             title: "Scrap One of This Equipment",
-            display:"",
+            display(){
+                if (player[this.layer].EquipmentsDiscovered[player[this.layer].CheckingEquipmentId]==true) return ("Return " + format(fractureEquiupments[player[this.layer].CheckingEquipmentId].BasePrize.times(0.75)) + " Element Essences")
+                else return ""
+            },
             unlocked() { return player.fracture.unlocked },
             canClick() { return player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId]>0 },
             onClick() { 
                 //记得吐钱
-                player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId] -= 1;
+                player[this.layer].ElementEssence = player[this.layer].ElementEssence.plus(fractureEquiupments[player[this.layer].CheckingEquipmentId].BasePrize.times(0.75))
+                //player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId] -= 1;
+                Vue.set(player[this.layer].EquipmentsHold,player[this.layer].CheckingEquipmentId,player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId]-1)
             },
         },
         16: {
@@ -303,7 +542,30 @@ addLayer("fracture", {
             canClick() { return player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId]>0 && player[this.layer].TempEquipmentId<0 },
             onClick() { 
                 player[this.layer].TempEquipmentId = player[this.layer].CheckingEquipmentId;
-                player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId] -= 1;
+                //player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId] -= 1;
+                Vue.set(player[this.layer].EquipmentsHold,player[this.layer].CheckingEquipmentId,player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId]-1)
+            },
+        },
+        17: {
+            title: "Scrap All Items in Inventory",
+            display(){return "Return "+format(this.Return_All_Prices())+" Element Essences"},
+            unlocked() { return player.fracture.unlocked },
+            Return_All_Prices(){
+                
+                let prices = new Decimal(0) 
+                for (index in player[this.layer].EquipmentsHold)
+                    prices = prices.plus(fractureEquiupments[index].BasePrize.times(player[this.layer].EquipmentsHold[index]));
+
+                let mult = new Decimal(0.75);//<--修正值
+
+                return prices.times(mult);
+            },
+            canClick() { return this.Return_All_Prices().gt(0)},
+            onClick() { 
+                if (!confirm("Are you sure to Scrap All Items in Inventory?")) return;
+                player[this.layer].ElementEssence = player[this.layer].ElementEssence.plus(this.Return_All_Prices())
+                for (index in player[this.layer].EquipmentsHold)
+                Vue.set(player[this.layer].EquipmentsHold,index,0);
             },
         },
         21: {
@@ -311,7 +573,7 @@ addLayer("fracture", {
             display:"←",
             unlocked() { return player.fracture.unlocked },
             canClick() { return player[this.layer].CheckPage>0 },
-            onClick() { 
+            onClick() {
                 player[this.layer].CheckPage -=1;
             },
             style: {"height": "50px", "width": "50px","min-height":"50px",},
@@ -338,46 +600,53 @@ addLayer("fracture", {
         },
         32: {
             title: "Refresh Shop by Money",
-            display(){return "Currently, no money needed."},
+            display(){
+                return "Cost: " + format(layers[this.layer].Refresh_Cost()) + " Element Essence"
+            },
             unlocked() { return player.fracture.unlocked },
-            canClick() { return true },
+            canClick() { return player.fracture.ElementEssence.gte(layers['fracture'].Refresh_Cost()) },
             onClick() {
+                
+                player.fracture.ElementEssence = player.fracture.ElementEssence.sub(layers['fracture'].Refresh_Cost());
+
                 layers[this.layer].Refresh_Shop(player[this.layer].BuyProgress);
-                //记得花钱!
             },
         },
         33: {//[0]
             title: "Buy",
-            display(){return "Currently, no money needed."},
+            display(){return "Cost: " + format(player[this.layer].EquipmentsForSale[0].prize)+ " Elemet Essences"},
             unlocked() { return player.fracture.unlocked },
             canClick() { 
-                return player[this.layer].EquipmentsForSale[0].index >=0;//我这里就不做上界检查了
+                return player[this.layer].EquipmentsForSale[0].index >=0 && player[this.layer].ElementEssence.gte(player[this.layer].EquipmentsForSale[0].prize);//我这里就不做上界检查了
              },
             onClick() {
+                player[this.layer].ElementEssence = player[this.layer].ElementEssence.sub(player[this.layer].EquipmentsForSale[0].prize)
                 player[this.layer].EquipmentsHold[player[this.layer].EquipmentsForSale[0].index] +=1;
                 player[this.layer].EquipmentsForSale[0].index = -1;
             },
         },
         34: {//[1]
             title: "Buy",
-            display(){return "Currently, no money needed."},
+            display(){return "Cost: " + format(player[this.layer].EquipmentsForSale[1].prize)+ " Elemet Essences"},
             unlocked() { return player.fracture.unlocked },
             canClick() { 
-                return player[this.layer].EquipmentsForSale[1].index >=0;//我这里就不做上界检查了
+                return player[this.layer].EquipmentsForSale[1].index >=0 && player[this.layer].ElementEssence.gte(player[this.layer].EquipmentsForSale[1].prize);//我这里就不做上界检查了
              },
             onClick() {
+                player[this.layer].ElementEssence = player[this.layer].ElementEssence.sub(player[this.layer].EquipmentsForSale[1].prize)
                 player[this.layer].EquipmentsHold[player[this.layer].EquipmentsForSale[1].index] +=1;
                 player[this.layer].EquipmentsForSale[1].index = -1;
             },
         },
         35: {//[2]
             title: "Buy",
-            display(){return "Currently, no money needed."},
+            display(){return "Cost: " + format(player[this.layer].EquipmentsForSale[2].prize)+ " Elemet Essences"},
             unlocked() { return player.fracture.unlocked },
             canClick() { 
-                return player[this.layer].EquipmentsForSale[2].index >=0;//我这里就不做上界检查了
+                return player[this.layer].EquipmentsForSale[2].index >=0 && player[this.layer].ElementEssence.gte(player[this.layer].EquipmentsForSale[2].prize);//我这里就不做上界检查了
              },
             onClick() {
+                player[this.layer].ElementEssence = player[this.layer].ElementEssence.sub(player[this.layer].EquipmentsForSale[2].prize)
                 player[this.layer].EquipmentsHold[player[this.layer].EquipmentsForSale[2].index] +=1;
                 player[this.layer].EquipmentsForSale[2].index = -1;
             },
@@ -405,7 +674,7 @@ addLayer("fracture", {
             }
         },
         return_Equiped_Equipment_Num(Equipid){
-            if ((Equipid<0 || Equipid == undefined)&&Equipid!='all') return 0;
+            if ((Equipid<0 || Equipid == undefined)&&Equipid!='all'||player['fracture'].deactivated) return 0;
             let TempEquipArray = [];
             for (Gid in player[this.layer].grid)
                 if (player[this.layer].grid[Gid].BelongTo >= 0 && player[this.layer].grid[Gid].Central)
@@ -468,8 +737,8 @@ addLayer("fracture", {
                 borderColor: "#555555",
                 backgroundColor: "#55555540",
                 borderWidth: '2px',
-                height: '100px',
-	            width: '100px',
+                height: '120px',
+	            width: '120px',
             };
 
             if (id%100 ==1 && Math.floor(id/100)==1) jss.borderRadius = '10px 0px 0px 0px';
@@ -664,31 +933,40 @@ addNode("ghostGE2",{
         },
 
         getStyle(data,id){
+            let rowNum = Math.floor(id/100)//从1开始
+            let colNum = id % 100;
             const jss = {
                 margin: '1px',
                 borderRadius: 0,
-                color: layers[this.layer].color,
+                color: 'white',
                 borderColor: layers[this.layer].color,
                 backgroundColor: `${layers[this.layer].color}40`,
                 borderWidth: '2px',
                 height: '100px',
 	            width: '150px',
             };
+
+            if (rowNum == 1) jss.height = '50px';
+            else {
+                let indexNum = player.fracture.CheckPage*10 + rowNum - 2;//从0开始 
+                if (player.fracture.EquipmentsDiscovered[indexNum] && colNum == 1) jss.color = fractureEquiupments[indexNum].Color;
+            }
+
             return jss;
         }
     }
 
 })
 
-addNode("ghostGEShop",{
+addLayer("ghostGEShop",{
     name: "ghostGEShop", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "GE", // This appears on the layer's node. Default is the id with the first letter capitalized
-    position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     canclick() { return false },
     row: 5,
     displayRow:5,
     color: "#555555",
-    layerShown() { return false; },
+    layerShown() { return (tmp["fracture"].layerShown) ? false : "ghost"; },
 
     grid: {
         rows: 5, 

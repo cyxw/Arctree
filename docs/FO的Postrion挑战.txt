@@ -1,0 +1,10 @@
+frag: ^0.75
+mem: ^0.75
+L.eff: ^0.5
+D.eff: ^0.5
+R.eff: ^0.75
+F.eff: ^0.5
+LC.Rose.gain: ^0.5
+FL.maze.eff: ^0.5
+
+每60秒砍frag与mem至1

@@ -38,6 +38,7 @@ addLayer("lab", {
         if (hasUpgrade('lab',64)) mult = mult.times(upgradeEffect('lab',64));
         if (hasUpgrade('world',11)) mult = mult.times(upgradeEffect('world',11));
         if (hasMilestone('ins',0)) mult = mult.times(layers.ins.insEffect().Eng());
+        if (player.fracture.unlocked) mult = mult.times(Decimal.pow(200,layers['fracture'].grid.return_Equiped_Equipment_Num(6))).times(Decimal.pow(250,layers['fracture'].grid.return_Equiped_Equipment_Num(8)));
         mult = mult.pow(tmp["lab"].powerexp)
         return mult;
     },
@@ -84,17 +85,35 @@ addLayer("lab", {
 
     update(diff) {
 
+        
+
+        
+        if (layers.lab.buyables[11].autoed()&&player.lab.power.gte(layers['lab'].buyables[11].cost().fo)) layers.lab.buyables[11].buy();
+        if (layers.lab.buyables[12].autoed()&&player.points.gte(layers['lab'].buyables[12].cost().fo)) layers.lab.buyables[12].buy();
+        if (layers.lab.buyables[13].autoed()&&player.mem.points.gte(layers['lab'].buyables[13].cost().fo)) layers.lab.buyables[13].buy();
+        if (layers.lab.buyables[21].autoed()&&player.light.points.gte(layers['lab'].buyables[21].cost().fo)) layers.lab.buyables[21].buy();
+        if (layers.lab.buyables[22].autoed()&&player.dark.points.gte(layers['lab'].buyables[22].cost().fo)) layers.lab.buyables[22].buy();
+        if (layers.lab.buyables[23].autoed()&&player.rei.points.gte(layers['lab'].buyables[23].cost().fo)) layers.lab.buyables[23].buy();
+        if (layers.lab.buyables[31].autoed()&&player.kou.points.gte(layers['lab'].buyables[31].cost().fo)) layers.lab.buyables[31].buy();
+        if (layers.lab.buyables[32].autoed()&&player.lethe.points.gte(layers['lab'].buyables[32].cost().fo)) layers.lab.buyables[32].buy();
+        if (layers.lab.buyables[33].autoed()&&player.yugamu.points.gte(layers['lab'].buyables[33].cost().fo)) layers.lab.buyables[33].buy();
+        if (layers.lab.buyables[41].autoed()&&player.lab.points.gte(layers['lab'].buyables[41].cost().fo)) layers.lab.buyables[41].buy();
+        if (layers.lab.buyables[42].autoed()&&player.lab.power.gte(layers['lab'].buyables[42].cost().fo)) layers.lab.buyables[42].buy();
+        if (layers.lab.buyables[43].autoed()&&player.world.points.gte(layers['lab'].buyables[43].cost().fo)) layers.lab.buyables[43].buy();
+        
+
+        /*
         let auto=[11,12,13,21,22,23,31,32,33,43];
         if (hasUpgrade('lab',122)) auto =auto.concat([41,42]);
         for(var i = 0; i < auto.length; i++){
             if (layers.lab.buyables[auto[i]].canAfford()&&layers.lab.buyables[auto[i]].autoed()){
                 layers.lab.buyables[auto[i]].buy()
             };
-        }
+        }*///<--时代的眼泪
 
 
         player.lab.points = player.lab.points.plus(tmp["lab"].pointgain.times(diff));
-        if (player.lab.points.gt(tmp["lab"].pointsoftcap)) player.lab.points = player.lab.points.sub(player.lab.points.sub(tmp["lab"].pointsoftcap).times(0.01).times(diff));
+        if (player.lab.points.gt(tmp["lab"].pointsoftcap)) player.lab.points = player.lab.points.sub(tmp["lab"].pointsoftcap).times(new Decimal(1).sub(diff*0.01)).plus(tmp["lab"].pointsoftcap);
 
         if (player.lab.points.gte(player.lab.best)) player.lab.best = player.lab.points;
         if (player.lab.unlocked) player.lab.power = player.lab.power.plus(tmp["lab"].powermult.times(diff));
@@ -102,7 +121,7 @@ addLayer("lab", {
         //每秒减少
         let powerminus=new Decimal(0.01);
         if (inChallenge('kou',72)) powerminus = new Decimal(0.1);
-        player.lab.power = player.lab.power.sub(player.lab.power.times(powerminus).times(diff));
+        player.lab.power = player.lab.power.times(new Decimal(1).sub(powerminus.times(diff)));
         
         
         if (player.lab.power.lt(0)) player.lab.power = new Decimal(0);
@@ -1178,6 +1197,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',21); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.lab.power.gte(cost.fo);
@@ -1220,6 +1240,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',22); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.points.gte(cost.fo);
@@ -1270,6 +1291,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',23); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.mem.points.gte(cost.fo);
@@ -1319,6 +1341,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',31); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.light.points.gte(cost.fo)&& player.kou.activeChallenge == null &&!inChallenge('saya',41);
@@ -1363,6 +1386,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',31); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.dark.points.gte(cost.fo)&& player.kou.activeChallenge == null &&!inChallenge('saya',41);
@@ -1407,6 +1431,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',163); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.rei.points.gte(cost.fo);
@@ -1448,6 +1473,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',32); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.kou.points.gte(cost.fo);
@@ -1470,7 +1496,7 @@ addLayer("lab", {
                     if (hasUpgrade('lab',93)) eff = player.lab.buyables[this.id].div(5);
                     if (eff.lt(1)) eff = new Decimal(1);
                     if (layers['kou'].deactivated()) eff = new Decimal(1);
-                    return eff;
+                    return softcap(eff,new Decimal(2e6),new Decimal(1/3));
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return hasUpgrade('lab',44)  },
@@ -1491,6 +1517,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',33); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.lethe.points.gte(cost.fo);
@@ -1535,6 +1562,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',163); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.yugamu.points.gte(cost.fo);
@@ -1576,6 +1604,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasMilestone('lab',7); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.lab.points.gte(cost.fo);
@@ -1613,6 +1642,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasMilestone('lab',8); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.lab.power.gte(cost.fo);
@@ -1652,6 +1682,7 @@ addLayer("lab", {
                 },
                 unlocked() { return hasUpgrade('lab',163); }, 
                 canAfford() {
+                    if (this.autoed()) return false;
 					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
 					let cost = layers[this.layer].buyables[this.id].cost();
                     return player[this.layer].unlocked && player.world.points.gte(cost.fo);
