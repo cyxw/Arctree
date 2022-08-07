@@ -515,7 +515,7 @@ addLayer("fracture", {
                 else//输入的是数字
                 {
                     let temp = parseInt(input);
-                    debugger
+                    //debugger
                     temp = Math.min(Math.max(temp,-1),fractureEquiupments.length-1);
                     Vue.set( player['fracture'],'CheckingEquipmentId',temp)
                     //player['fracture'].CheckingEquipmentId = temp;
