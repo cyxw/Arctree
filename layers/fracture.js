@@ -538,8 +538,8 @@ addLayer("fracture", {
             },
         },
         16: {
-            title: "Put One of This Equipment in Your Hand",
-            display:"",
+            title: "",
+            display:"Put One of This Equipment in Your Hand",
             unlocked() { return player.fracture.unlocked },
             canClick() { return player[this.layer].EquipmentsHold[player[this.layer].CheckingEquipmentId]>0 && player[this.layer].TempEquipmentId<0 },
             onClick() { 
