@@ -515,8 +515,10 @@ addLayer("fracture", {
                 else//输入的是数字
                 {
                     let temp = parseInt(input);
-                    if (temp >=0&& temp<=fractureEquiupments.length) player[this.layer].CheckingEquipmentId = temp;
-                    else player[this.layer].CheckingEquipmentId = -1;
+                    debugger
+                    temp = Math.min(Math.max(temp,-1),fractureEquiupments.length-1);
+                    Vue.set( player['fracture'],'CheckingEquipmentId',temp)
+                    //player['fracture'].CheckingEquipmentId = temp;
                 }
             },
         },
@@ -832,10 +834,13 @@ addNode("ghostGE",{
 	            width: '50px',
             };
 
-            if (tmp.fracture.clickables[13].canClick){
+            if (player['fracture'].CheckingEquipmentId>=0&&player['fracture'].EquipmentsDiscovered[player['fracture'].CheckingEquipmentId]){
+                //debugger;
                 let subset = []//差集
                 let set1 = fractureEquiupments[player['fracture'].CheckingEquipmentId].shapeArray
-                let set2 = fractureEquiupments[fractureEquiupments[player['fracture'].CheckingEquipmentId].UpgradeTo].shapeArray
+                let set2 = [];
+                if (tmp.fracture.clickables[13].canClick)
+                set2 = fractureEquiupments[fractureEquiupments[player['fracture'].CheckingEquipmentId].UpgradeTo].shapeArray
 
                     set1.forEach(function(val, index) {
                         if (!set2.includes(val)) {
