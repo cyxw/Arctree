@@ -242,7 +242,30 @@ function HexMinLight(Hexinput,minLight){
     else return Hexinput;
 }
 
-function GlowingColor(input, timefactor = 1){
+function HexMaxLight(Hexinput,maxLight){
+    //目标：输入16进制颜色，如果颜色亮度高于hsl的数值则减暗至对应数值，输出16进制颜色
+
+    // 16进制颜色值的正则
+    let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+    // 把颜色值变成小写
+    Hexinput = Hexinput.toLowerCase();
+    if(reg.test(Hexinput)&&maxLight<=100){
+        let RGBString = HexToRGBString(Hexinput);
+        let RGBArray = RGBStringToArray(RGBString);
+        let hslArray = rgbtohsl(RGBArray[0],RGBArray[1],RGBArray[2]);
+
+        if (hslArray[2]>maxLight) hslArray[2]=maxLight;
+
+        RGBArray = hsltorgb(hslArray[0],hslArray[1],hslArray[2]);
+        RGBString = RGBArrayToString(RGBArray);
+
+        return RGBToHexString(RGBString);
+
+    }
+    else return Hexinput;
+}
+
+function GlowingColor(input, timefactor = 1, basecolor = "#000000"){
 	//目标：通过正弦函数实现颜色的浮动, 输出16进制, 输入既可以是16进制，也可以是rgb
 	let RGBArray = [0,0,0];
 	if (typeof(input)==='object') RGBArray = input;
@@ -251,11 +274,64 @@ function GlowingColor(input, timefactor = 1){
 		RGBArray = RGBStringToArray(input);
 	};
 
+	let basecolorArray = [0,0,0]
 	let outputArray = [0,0,0];
+
+	if (typeof(basecolor)==='object') basecolorArray = input;
+	if (typeof(basecolor)==='string') {
+		if (basecolor != HexToRGBString(basecolor)) basecolor = HexToRGBString(basecolor);
+		basecolorArray = RGBStringToArray(basecolor);
+	};
+
 	for (index in RGBArray)
 	{
-		outputArray[index] = Math.min(Math.round(RGBArray[index]/2+RGBArray[index]/2*Math.sin(player.timePlayed*timefactor)),255);
+		outputArray[index] = Math.min(Math.round((basecolorArray[index]+RGBArray[index])/2+(RGBArray[index]-basecolorArray[index])/2*Math.sin(player.timePlayed/timefactor*2*Math.PI)),255);
 	}
 
 	return RGBToHexString(RGBArrayToString(outputArray))
+}
+
+function GetLuminance(r,g,b) {//from tinycolor.js https://github.com/bgrins/TinyColor
+	//http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+	var RsRGB, GsRGB, BsRGB, R, G, B;
+	RsRGB = r/255;
+	GsRGB = g/255;
+	BsRGB = b/255;
+
+	if (RsRGB <= 0.03928) {R = RsRGB / 12.92;} else {R = Math.pow(((RsRGB + 0.055) / 1.055), 2.4);}
+	if (GsRGB <= 0.03928) {G = GsRGB / 12.92;} else {G = Math.pow(((GsRGB + 0.055) / 1.055), 2.4);}
+	if (BsRGB <= 0.03928) {B = BsRGB / 12.92;} else {B = Math.pow(((BsRGB + 0.055) / 1.055), 2.4);}
+	return (0.2126 * R) + (0.7152 * G) + (0.0722 * B);
+}
+
+function Readability(color1, color2) {//可传入RGB数组，不传入16进制与RGB字符串
+	//from tinycolor.js https://github.com/bgrins/TinyColor
+    return (Math.max(GetLuminance(color1[0],color1[1],color1[2]),GetLuminance(color2[0],color2[1],color2[2]))+0.05) / (Math.min(GetLuminance(color1[0],color1[1],color1[2]),GetLuminance(color2[0],color2[1],color2[2]))+0.05);
+};
+
+function MostReadable(modifiedColor=[0,0,0],fixedColor=[255,255,255],targetContrast = 1,mode = 0){
+	//mode = 
+	//		0: 要修改的颜色应当比不被修改的颜色暗
+	//		1: 要修改的颜色应当比不被修改的颜色亮
+	//		采用GetLuminance()作为明度的变量
+
+	//目标: 返回与modifiedcolor色相相同，但对比度相较于fixedcolor趋近于目标值的颜色
+	let modifiedhsv = rgbtohsv(modifiedColor[0],modifiedColor[1],modifiedColor[2]);
+	let fixedLuminance = GetLuminance(fixedColor[0],fixedColor[1],fixedColor[2]);
+
+	if (mode <= 0) {
+		while (modifiedhsv[2] > 0 &&//下面那个无需判断是否变成负数，因为短路了。
+			(Math.abs(Readability(hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2] - 1), fixedColor) - targetContrast) < Math.abs(Readability(hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2]), fixedColor) - targetContrast) ||
+				GetLuminance(hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2])[0], hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2])[1], hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2])[2]) > fixedLuminance)) {
+			modifiedhsv[2] -= 1;
+		}
+	}
+	else if (mode >= 1) {
+		while (modifiedhsv[2] < 100 &&//同理。
+			(Math.abs(Readability(hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2] + 1), fixedColor) - targetContrast) < Math.abs(Readability(hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2]), fixedColor) - targetContrast) ||
+				GetLuminance(hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2])[0], hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2])[1], hsvtorgb(modifiedhsv[0], modifiedhsv[1], modifiedhsv[2])[2]) < fixedLuminance)) {
+			modifiedhsv[2] += 1;
+		}
+	}
+	return hsvtorgb(modifiedhsv[0],modifiedhsv[1],modifiedhsv[2]);
 }

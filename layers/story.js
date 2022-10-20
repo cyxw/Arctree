@@ -50,6 +50,8 @@ addLayer("storylayer", {
                 if (player.storylayer.storycounter==19) return "I-2";
                 if (player.storylayer.storycounter==20) return "AW-1";
                 if (player.storylayer.storycounter==21) return "LA-8";
+                
+                if (player.storylayer.storycounter==22) return "I-3";
                 return "Stories";
             },
             body() { //insert stories here //这不利于维护
@@ -652,6 +654,11 @@ addLayer("storylayer", {
                     return story;
                 };
 
+                if (player.storylayer.storycounter==22){
+                    let story = "Story in Plan, haven't been written/translated.";
+                    return story;
+                };
+
                 if (player.storylayer.storycounter>=player.storylayer.points.toNumber()){
                     return "You have read all existing stories!"
                 }
@@ -695,6 +702,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==19) req = 120;
         if (player.storylayer.storycounter==20) req = 120;
         if (player.storylayer.storycounter==21) req = 120;
+        if (player.storylayer.storycounter==22) req = 120;
         return req;
     },
 
@@ -722,6 +730,7 @@ addLayer("storylayer", {
         if (player.storylayer.storycounter==19) color = "#45b5d3";
         if (player.storylayer.storycounter==20) color = "#e3dbf7";
         if (player.storylayer.storycounter==21) color = "#00bdf9";
+        if (player.storylayer.storycounter==22) color = "#45b5d3";
         return color;
     },
 
@@ -1061,6 +1070,21 @@ addLayer("storylayer", {
         canAfford(){return player.storylayer.storycounter==21&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(1e165)},
         unlocked() { return (player.storylayer.storycounter==21&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',52)},
         onPurchase(){player.lab.points = player.lab.points.sub(1e165);player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
+        },
+        53:{ title: "Objective Optimization Algorithm",
+        effect(){
+            return {EffectToMA: new Decimal(100).pow(new Decimal(player.ins.upgrades.length)).max(1),
+            EffectToSD: new Decimal(1-new Decimal(player.ins.upgrades.length).times(0.002))}
+        },
+        fullDisplay(){
+            let des = "<b>Objective Optimization Algorithm</b><br>The number of Institution Upgrades now slightly reduce the goal of Merge Attachment & Star/Moon Power's exhaustion rate."
+            if (hasUpgrade('storylayer',53)) des += ("<br>Currently:<br>-"+format(upgradeEffect('storylayer',53).EffectToMA,0)+"x to MA goals<br>"+format(upgradeEffect('storylayer',53).EffectToSD,3)+"x to SD exhaustion rate")
+            des += "<br><br>Cost:1e200 Research Points"
+            return des;
+        },
+        canAfford(){return player.storylayer.storycounter==22&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement()&&player.lab.points.gte(1e200)},
+        unlocked() { return (player.storylayer.storycounter==22&&player.storylayer.storyTimer>=layers.storylayer.currentRequirement())||hasUpgrade('storylayer',53)},
+        onPurchase(){player.lab.points = player.lab.points.sub(1e200);player.storylayer.storyTimer = 0;player.storylayer.storycounter+=1;player.storylayer.points = player.storylayer.points.plus(1);},
         },
     }
 })

@@ -45,6 +45,7 @@ function format(decimal, precision = 2, small) {
     decimal = new Decimal(decimal)
     if (isNaN(decimal.sign) || isNaN(decimal.layer) || isNaN(decimal.mag)) {
         player.hasNaN = true;
+        console.error('We meet an NaN at '+ decimal);
         return "NaN"
     }
     if (decimal.sign < 0) return "-" + format(decimal.neg(), precision, small)

@@ -167,6 +167,18 @@ addLayer("ins", {
                     ["upgrade",33],
                     ["upgrade",34],
                 ]],
+                ["blank",["20px","20px"]],
+                ["row",[
+                    ["upgrade",41],
+                    ["upgrade",42],
+                    ["blank",["5px","10px"]],
+                    ["upgrade",43],
+                    ["blank",["10px","20px"]],
+                    ["upgrade",44],
+                    ["upgrade",45],
+                    ["blank",["5px","10px"]],
+                    ["upgrade",46],
+                ]],
             ]
         }
     },
@@ -348,9 +360,14 @@ addLayer("ins", {
                         let eff = Decimal.pow(200, player.ins.inslevel.Fra.max(1).log(1.5).plus(1));
                         if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                         //pos
-                        eff = eff.times(layers.ins.insEffect().Usa().toLiner())
+                        if (hasUpgrade('ins',45)) eff = eff.times(layers.ins.insEffect().Usa().toLiner()).times(3)
+                        else eff = eff.times(layers.ins.insEffect().Usa().toLiner());
+                        eff = eff.times(layers.ins.insEffect().Chn().Pos41());
                         //nerf
                         eff = eff.times(layers.ins.insEffect().Deu().Neg())
+
+                        //pow
+                        if(hasUpgrade('ins',44)) eff = eff.pow(layers.ins.insEffect().Pol())
                         return eff.max(1);
                     },
                     Neg() {
@@ -369,7 +386,9 @@ addLayer("ins", {
                         let eff = Decimal.pow(100, player.ins.inslevel.Deu.max(1).log(1.5).plus(1));
                         if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                         //pos
-                        eff = eff.times(layers.ins.insEffect().Usa().toLiner())
+                        if (hasUpgrade('ins',45)) eff = eff.times(layers.ins.insEffect().Usa().toLiner()).times(3)
+                        else eff = eff.times(layers.ins.insEffect().Usa().toLiner());
+                        eff = eff.times(layers.ins.insEffect().Chn().Pos41());
                         eff = eff.pow(layers.ins.insEffect().Pol())
 
                         //nerf
@@ -401,10 +420,15 @@ addLayer("ins", {
                 let eff = Decimal.pow(2, exponent).times(player.ins.inslevel.Che);
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
-                eff = eff.times(layers.ins.insEffect().Usa().toLiner());
+                if (hasUpgrade('ins',45)) eff = eff.times(layers.ins.insEffect().Usa().toLiner()).times(3)
+                else eff = eff.times(layers.ins.insEffect().Usa().toLiner());
+                eff = eff.times(layers.ins.insEffect().Chn().Pos41());
                 
                 //nerf
                 if (eff.gte(500)) eff = eff.sub(500).pow(0.75).plus(500);
+
+                //pow
+                if(hasUpgrade('ins',44)) eff = eff.pow(layers.ins.insEffect().Pol())
                 return eff.max(1);
             },
             Pol() {
@@ -413,7 +437,8 @@ addLayer("ins", {
                 if (eff.gt(1.50)) eff = eff.sub(1.50).times(100).plus(1).ln().div(100).plus(1.50);
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
-                eff = eff.times(layers.ins.insEffect().Usa().toExponent())
+                if (hasUpgrade('ins',45)) eff = eff.times(layers.ins.insEffect().Usa().toPolExponentAfter45())
+                else eff = eff.times(layers.ins.insEffect().Usa().toExponent());
                 //nerf
                 eff = eff.times(layers.ins.insEffect().Rus().Neg());
                 return eff.max(1);
@@ -423,7 +448,9 @@ addLayer("ins", {
                 let eff = Decimal.pow(2.5, player.ins.inslevel.Nor).times(player.ins.points).max(1);
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
-                eff = eff.times(layers.ins.insEffect().Usa().toLiner())
+                if (hasUpgrade('ins',45)) eff = eff.times(layers.ins.insEffect().Usa().toLiner()).times(3)
+                else eff = eff.times(layers.ins.insEffect().Usa().toLiner());
+                eff = eff.times(layers.ins.insEffect().Chn().Pos41());
                 eff = eff.pow(layers.ins.insEffect().Pol())
                 //nerf
                 eff = eff.times(layers.ins.insEffect().Rus().Neg());
@@ -441,7 +468,9 @@ addLayer("ins", {
                         let eff = Decimal.pow(player.ins.inslevel.Rus.plus(1), effbase).div(10);
                         if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                         //pos
-                        eff = eff.times(layers.ins.insEffect().Usa().toLiner())
+                        if (hasUpgrade('ins',45)) eff = eff.times(layers.ins.insEffect().Usa().toLiner()).times(3)
+                        else eff = eff.times(layers.ins.insEffect().Usa().toLiner());
+                        eff = eff.times(layers.ins.insEffect().Chn().Pos41());
                         eff = eff.pow(layers.ins.insEffect().Pol())
                         //nerf
 
@@ -511,8 +540,10 @@ addLayer("ins", {
                         };
 
                         let eff = new Decimal(effbase.times(player.ins.inslevel.Sau).div(50));
+                        if (hasUpgrade('ins',42)) eff = new Decimal(effbase.times(Decimal.pow(effbase,0.05)).times(player.ins.inslevel.Sau));
                         if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                         //pos
+                        if (hasUpgrade('ins',42)) eff = eff.times(new Decimal(5).times(player.ins.inslevel.Nga).max(1))
                         eff = eff.times(layers.ins.insEffect().Usa().toLiner())
                         //nerf
                         eff = eff.times(layers.ins.insEffect().Isr().Neg())
@@ -524,6 +555,10 @@ addLayer("ins", {
                         let neg = new Decimal(0.25);
                         return new Decimal(1).sub(neg);
                     },
+                    Pos42(){
+                        if (!hasUpgrade('ins',42)) return 1;
+                        return new Decimal(5).times(player.ins.inslevel.Sau).max(1);
+                    }
                 }
             },
             Isr() {//每加一个层都要回来看一遍
@@ -617,7 +652,7 @@ addLayer("ins", {
                 //pos
                 eff = eff.times(layers.ins.insEffect().Usa().toLiner())
                 //nerf
-                eff = eff.pow(layers.ins.insEffect().Chn().Neg())
+                if (!hasUpgrade('ins',41)) eff = eff.pow(layers.ins.insEffect().Chn().Neg())
                 eff = eff.times(layers.ins.insEffect().Rus().Neg());
                 return eff.times(player.ins.inslevel.Kaz).max(1);
 
@@ -644,6 +679,11 @@ addLayer("ins", {
                         let neg = new Decimal(0.75);
                         return new Decimal(1).sub(neg);
                     },
+                    Pos41(){
+                        if (!hasUpgrade('ins',41)) return new Decimal(1);
+                        let pos41=new Decimal(2).pow(player.ins.inslevel.Chn);
+                        return pos41;
+                    },
                 }
             },
             Can() {
@@ -652,7 +692,8 @@ addLayer("ins", {
                 eff = eff.div(eff.plus(1).log(10))
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
-                eff = eff.times(layers.ins.insEffect().Usa().toLiner())
+                if (hasUpgrade('ins',45)) eff = eff.times(layers.ins.insEffect().Usa().toLiner()).times(3)
+                else eff = eff.times(layers.ins.insEffect().Usa().toLiner());
                 //nerf
                 return eff.times(player.ins.inslevel.Can.div(2).plus(0.5)).max(1);
             },
@@ -682,6 +723,19 @@ addLayer("ins", {
 
                         return eff.max(1);
                     },
+                    toPolExponentAfter45(){
+                        if (player.ins.inslevel.Usa.lte(0)) return new Decimal(1);
+                        let eff = player.ins.inslevel.Usa.div(100).plus(1);
+                        if (eff.gt(1.25)) eff = eff.sub(1.25).times(100).sqrt().div(100).plus(1.25);
+                        if (inChallenge('kou', 71)) eff = eff.log10().max(1);
+                        //pos
+                        eff = eff.plus(0.01);
+                        //nerf
+                        eff = eff.times(layers.ins.insEffect().Chn().fixedNeg());
+                        eff = eff.times(layers.ins.insEffect().Rus().Neg());
+
+                        return eff.max(1);
+                    }
                 }
             },
             Bra() {
@@ -719,9 +773,11 @@ addLayer("ins", {
                 effbase = effbase.plus(player.awaken.upgrades.length);
 
                 let eff = effbase.pow(player.ins.inslevel.Nga.times(0.8));
+                if (hasUpgrade('ins',42)) eff = effbase.pow(player.ins.inslevel.Nga);
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
-                eff = eff.times(layers.ins.insEffect().Usa().toLiner())
+                eff = eff.times(layers.ins.insEffect().Usa().toLiner());
+                if (hasUpgrade('ins',42)) eff = eff.times(layers.ins.insEffect().Sau().Pos42());
                 return eff.max(1);
             },
             Zaf() {
@@ -780,6 +836,8 @@ addLayer("ins", {
         if (hasAchievement('lab', 33)) gm = gm.div(achievementEffect('lab', 33));
         if (hasMilestone('ins', 7)) gm = gm.div(layers.ins.insEffect().Aus())
         if (hasUpgrade('ins',34)) gm = gm.div(upgradeEffect('ins',34));
+        if (player['tempest'].grid[302].activated) gm = gm.div(gridEffect('tempest',303))
+        if (hasUpgrade('ins',46)) gm = gm.div(upgradeEffect('ins',46));
         return gm;
     },
     gainExp() {
@@ -905,6 +963,117 @@ addLayer("ins", {
             },
             branches:[22],
         },
+
+        //sxy part
+        41: {
+            title: "The Silk Road",
+            fullDisplay(){
+                let disp = "<b>The Silk Road</b>"
+                disp += "<br>Chn no longer nerf Kaz, and slightly boosts Europe sites<br>(Except Eng & Pol)"
+                if (hasUpgrade(this.layer,this.id)) disp += "<br>Currently: " + format(upgradeEffect(this.layer,this.id)) +"x"
+                disp += "<br>Cost: 37,500 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(37500)&&hasUpgrade('ins',31)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(37500);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(37500)
+            },
+            effect(){
+                return 1;
+            },
+            branches:[31],
+        },
+        42: {
+            title: "OPEC",
+            fullDisplay(){
+                let disp = "<b>OPEC</b>"
+                disp += "<br>Sau & Ngl sites formulas become better, and they boost each other"
+                disp += "<br>Cost: 35,000 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(35000)&&hasUpgrade('ins',31)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(35000);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(35000)
+            },
+            branches:[31],
+        },
+        43: {
+            title: "Data Type Conversion",
+            fullDisplay(){
+                let disp = "<b>Data Type Conversion</b>"
+                disp += "<br>Unused Institution Funds will add Element Essence Capacity"
+                if (hasUpgrade(this.layer,this.id)) disp += "<br>Currently: +" + format(upgradeEffect(this.layer,this.id))
+                disp += "<br>Cost: 30,000 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(30000)&&hasUpgrade('ins',32)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(30000);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(30000)
+            },
+            effect(){
+                return player.ins.points.div(200);
+            },
+            branches:[32],
+        },
+        44: {
+            title: "European Crossroads",
+            fullDisplay(){
+                let disp = "<b>European Crossroads</b>"
+                disp += "<br>Poland site now affects Fra & Che sites"
+                disp += "<br>Cost: 40,000 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(40000)&&hasUpgrade('ins',33)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(40000);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(40000)
+            },
+            branches:[33],
+        },
+        45: {
+            title: "NATO",
+            fullDisplay(){
+                let disp = "<b>NATO</b>"
+                disp += "<br>USA site now Boosts Europe sites & North America sites x3<br>(Poland site boost +0.01 instead)"
+                disp += "<br>Cost: 35,000 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(35000)&&hasUpgrade('ins',33)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(35000);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(35000)
+            },
+            branches:[33],
+        },
+        46: {
+            title: "Energy Modernization",
+            fullDisplay(){
+                let disp = "<b>Energy Modernization</b>"
+                disp += "<br>Awaken Cores themselves now boosts Institution Funds gain"
+                if (hasUpgrade(this.layer,this.id)) disp += "<br>Currently: " + format(upgradeEffect(this.layer,this.id)) +"x"
+                disp += "<br>Cost: 32,500 Institution Funds"
+                return disp;
+            },
+            canAfford(){return player[this.layer].points.gte(32500)&&hasUpgrade('ins',34)},
+            unlocked(){return hasUpgrade('storylayer',52)},
+            onPurchase(){
+                player[this.layer].points = player[this.layer].points.sub(32500);
+                player[this.layer].upgTotalCost = player[this.layer].upgTotalCost.plus(32500)
+            },
+            effect(){
+                return new Decimal(5).pow(player.awaken.points).max(1);
+            },
+            branches:[34],
+        },
+
     },
     milestones: {
         0: {
@@ -1004,7 +1173,7 @@ addLayer("ins", {
                 player.ins.inslevel.Nzl = new Decimal(0);
                 //---------
                 //player.ins.best = player.ins.total;
-                player.ins.points = player.ins.total.sub(player.ins.upgTotalCost);
+                player.ins.points = player.ins.total.sub(player.ins.upgTotalCost).sub(player[this.layer].upgTotalCost);
             },
             style: { "height": "50px", "width": "100px", "min-height": "50px", },
         },
@@ -1063,34 +1232,62 @@ addLayer("ins", {
                     case 'Eng': return "This site won't receive any effect from other sites."
                     case 'Fra': {
                         let des = ("Effect nerfed by Germany site by <h3 style='color: #383838;'>x" + format(layers.ins.insEffect().Deu().Neg()) + "</h3>")
-                        if (hasMilestone('ins', 5)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        if (hasMilestone('ins', 5)) {
+                            if (hasUpgrade('ins',45)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner().times(3)) + "</h3>")
+                            else des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        }
+                        if (hasUpgrade('ins',41)) des += (des = "<br>Boosted by China site by <h3 style='color: rgb(238,28,37);'>x" + format(layers.ins.insEffect().Chn().Pos41()) + "</h3>")
+
+                        if (hasUpgrade('ins', 44)) des += "<br>Boosted by Poland site by <h3 style='color: rgb(255,128,128);'>^" + format(layers.ins.insEffect().Pol()) + "</h3>"
                         return des;
                     }
                     case 'Deu': {
                         let des = ("Effect nerfed by France site by <h3 style='color: #ededed;'>x" + format(layers.ins.insEffect().Fra().Neg()) + "</h3>")
+                        if (hasMilestone('ins', 5)) {
+                            if (hasUpgrade('ins',45)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner().times(3)) + "</h3>")
+                            else des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        }
+                        if (hasUpgrade('ins',41)) des += (des = "<br>Boosted by China site by <h3 style='color: rgb(238,28,37);'>x" + format(layers.ins.insEffect().Chn().Pos41()) + "</h3>")
                         if (hasMilestone('ins', 2)) des += "<br>Boosted by Poland site by <h3 style='color: rgb(255,128,128);'>^" + format(layers.ins.insEffect().Pol()) + "</h3>"
-                        if (hasMilestone('ins', 5)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
                         return des;
                     }
                     case 'Che': {
                         let des = "This site hasn't receive any effects yet."
-                        if (hasMilestone('ins', 5)) des = ("Effect Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>");
+                        if (hasMilestone('ins', 5)) {
+                            if (hasUpgrade('ins',45)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner().times(3)) + "</h3>")
+                            else des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        }
+                        if (hasUpgrade('ins',41)) des += (des = "<br>Boosted by China site by <h3 style='color: rgb(238,28,37);'>x" + format(layers.ins.insEffect().Chn().Pos41()) + "</h3>")
+                        
+                        if (hasUpgrade('ins', 44)) des += "<br>Boosted by Poland site by <h3 style='color: rgb(255,128,128);'>^" + format(layers.ins.insEffect().Pol()) + "</h3>"
                         return des;
                     }
                     case 'Pol': {
                         let des = "Effect nerfed by Russia site by <h3 style='color: rgb(0,56,165);'>x" + format(layers.ins.insEffect().Rus().Neg()) + "</h3>"
-                        if (hasMilestone('ins', 5)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toExponent()) + "</h3>")
+                        if (hasMilestone('ins', 5)) {
+                            if (hasUpgrade('ins',45)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toPolExponentAfter45()) + "</h3>")
+                            else des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toExponent()) + "</h3>")
+                        }
                         return des;
                     }
                     case 'Nor': {
-                        let des = "Boosted by Poland site by <h3 style='color: rgb(255,128,128);'>^" + format(layers.ins.insEffect().Pol()) + "</h3>"
-                        des += "<br>Effect nerfed by Russia site by <h3 style='color: rgb(0,56,165);'>x" + format(layers.ins.insEffect().Rus().Neg()) + "</h3>"
-                        if (hasMilestone('ins', 5)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        let des = ""//我调个序
+                        des += "Effect nerfed by Russia site by <h3 style='color: rgb(0,56,165);'>x" + format(layers.ins.insEffect().Rus().Neg()) + "</h3>"
+                        if (hasMilestone('ins', 5)) {
+                            if (hasUpgrade('ins',45)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner().times(3)) + "</h3>")
+                            else des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        }
+                        if (hasUpgrade('ins',41)) des += (des = "<br>Boosted by China site by <h3 style='color: rgb(238,28,37);'>x" + format(layers.ins.insEffect().Chn().Pos41()) + "</h3>")
+                        des += "<br>Boosted by Poland site by <h3 style='color: rgb(255,128,128);'>^" + format(layers.ins.insEffect().Pol()) + "</h3>"
                         return des;
                     }
                     case 'Rus': {
                         let des = "Boosted by Poland site by <h3 style='color: rgb(255,128,128);'>^" + format(layers.ins.insEffect().Pol()) + "</h3>"
-                        if (hasMilestone('ins', 5)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        if (hasMilestone('ins', 5)) {
+                            if (hasUpgrade('ins',45)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner().times(3)) + "</h3>")
+                            else des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        }
+                        if (hasUpgrade('ins',41)) des += (des = "<br>Boosted by China site by <h3 style='color: rgb(238,28,37);'>x" + format(layers.ins.insEffect().Chn().Pos41()) + "</h3>")
                         return des;
                     }
                     case 'Egy': {
@@ -1100,6 +1297,7 @@ addLayer("ins", {
                     }
                     case 'Sau': {
                         let des = "Effect nerfed by Isreal site by <h3 style='color: rgb(16,62,140);'>x" + format(layers.ins.insEffect().Isr().Neg()) + "</h3>"
+                        if (hasUpgrade('ins', 42)) des += ("<br>Boosted by Nigeria site by <h3 style='color: #008651;'>x" + format(/*定位符*/new Decimal(5).times(player.ins.inslevel.Nga).max(1)) + "</h3>")
                         if (hasMilestone('ins', 5)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
                         return des;
                     }
@@ -1121,7 +1319,7 @@ addLayer("ins", {
                     }
                     case 'Kaz': {
                         let des = "Effect nerfed by Russia site by <h3 style='color: rgb(0,56,165);'>x" + format(layers.ins.insEffect().Rus().Neg()) + "</h3>"
-                        des += "<br>Nerfed by China site by <h3 style='color: rgb(238,28,37);'>^" + format(layers.ins.insEffect().Chn().Neg()) + "</h3>"
+                        if (!hasUpgrade('ins',41)) des += "<br>Nerfed by China site by <h3 style='color: rgb(238,28,37);'>^" + format(layers.ins.insEffect().Chn().Neg()) + "</h3>"
                         if (hasMilestone('ins', 5)) des += ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
                         return des;
                     }
@@ -1132,6 +1330,7 @@ addLayer("ins", {
                     }
                     case 'Can': {
                         let des = ("Effect Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        if (hasUpgrade('ins',45)) des = ("<br>Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner().times(3)) + "</h3>")
                         return des;
                     }
                     case 'Usa': {
@@ -1149,6 +1348,7 @@ addLayer("ins", {
                     }
                     case 'Nga': {
                         let des = ("Effect Boosted by USA site by <h3 style='color: rgb(60,59,110);'>x" + format(layers.ins.insEffect().Usa().toLiner()) + "</h3>")
+                        if (hasUpgrade('ins', 42)) des += ("<br>Boosted by Saudi Arabia site by <h3 style='color: #016c36;'>x" + format(layers.ins.insEffect().Sau().Pos42()) + "</h3>")
                         return des;
                     }
                     case 'Zaf': {
@@ -1272,7 +1472,7 @@ addLayer("ins", {
                         }
                         case 5: {
                             disp = "<h2>Poland</h2>";
-                            disp += "<br><h3>Traffic</h3>: Neighbor-boosting"
+                            disp += "<br><h3>Traffic</h3><a style = 'color: #ffffff'>: Neighbor-boosting</a>"
                             disp += "<br>Current Effect: Boost neighbor sites by ^" + format(layers.ins.insEffect().Pol());
                             return disp;
                         }

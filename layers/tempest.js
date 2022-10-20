@@ -50,7 +50,11 @@ addLayer("tempest", {
     ],                    
 
     gainMult() {                            // Returns your multiplier to your gain of the prestige resource.
-        return new Decimal(1)               // Factor in any bonuses multiplying gain here.
+        let mult = new Decimal(1)               // Factor in any bonuses multiplying gain here.
+
+        if (player['awaken'].awakened.includes('saya')) mult = mult.div(tmp.saya.grid.ChallengeEffect.toGEFO);
+
+        return mult;
     },
     gainExp() {                             // Returns the exponent to your gain of the prestige resource.
         return new Decimal(1)
@@ -112,11 +116,7 @@ addLayer("tempest", {
             'toMem':()=>{return 0.75},
             'toLEff':()=>{return 0.5},
             'toDEff':()=>{return 0.5},
-            'toREff':()=>{
-                let eff = 0.5;
-                if(player.tempest.grid[201].activated) eff += gridEffect('tempest',201);
-                return eff;
-            },
+            'toREff':()=>{return 0.5},
             'toFEff':()=>{return 0.5},
             'toRoseGain':()=>{return 0.5},
             'toMazeEff':()=>{return 0.5},
@@ -183,6 +183,18 @@ addLayer("tempest", {
                 player[this.layer].milestonePoints.point = player[this.layer].milestonePoints.point.add(1);
             },
         },
+        2: {
+            requirementDescription: "4 Forbearance Endurances",
+            done() { return player.tempest.best.gte(4) },
+            unlocked() { return player.tempest.unlocked },
+            effectDescription() {
+                return "Fragment and Memories nerf in Merge Attachment ^0.95 & Keep Merge Attachment when reset"//想不出来该补什么QoL了←你个智障
+            },
+            onComplete(){
+                player[this.layer].milestonePoints.total = player[this.layer].milestonePoints.total.add(1);
+                player[this.layer].milestonePoints.point = player[this.layer].milestonePoints.point.add(1);
+            },
+        },
     },
 
         challenges: {
@@ -206,7 +218,9 @@ addLayer("tempest", {
                     player[this.layer].milestonePoints.point = player[this.layer].milestonePoints.point.add(1);
                 },
                 goal(){
-                    return Decimal.pow(10,challengeCompletions(this.layer,this.id)*50).times("1e1650");
+                    let goal = Decimal.pow(10,challengeCompletions(this.layer,this.id)*50).times("1e1650");
+                    if (player[this.layer].grid[201].activated) goal = goal.pow(gridEffect(this.layer,201));
+                    return goal
                 },
                 canComplete: function() {return player.points.gte(this.goal())},
                 completionLimit(){return player[this.layer].total.round().toNumber()},
@@ -228,12 +242,17 @@ addLayer("tempest", {
             };
         },
         getUnlocked(id) { // Default
-            if (Math.floor(id/100)>2) return false;//目前
+            if (Math.floor(id/100)>3) return false;//目前
             else return true;
         },
         getCanClick(data, id) {
             let colNum = id%100;
             let rowNum = Math.floor(id/100);
+
+            //特例区
+            if (id == 301 && !player.awaken.awakened.includes('saya')) return false
+            if (id == 302 && !player.awaken.awakened.includes('etoluna')) return false
+            //特例区结束
             
             let Upper = (rowNum == 1)?true:player['tempest'].grid[id-100].activated;
             let Beneath = (rowNum == this.rows)?false:player['tempest'].grid[id+100].activated;
@@ -262,13 +281,24 @@ addLayer("tempest", {
                     return "Push Memory softcap by " + format(gridEffect(this.layer,id)) + "x";
                 }
                 case 201:{
-                    return "Reduce Overwhelming Growth Challenge's nerf to Red Effect by ^+"+formatSmall(gridEffect(this.layer,id));
+                    return "Overwhelming Growth's goal ^"+format(gridEffect(this.layer,id));
                 }
                 case 202:{
                     return "Give " + formatWhole(gridEffect(this.layer,id)) + " Free Hyper Guilding Scythes."
                 }
                 case 203:{
-                    return "World Step Speed x"+format(gridEffect(this.layer,id))+" when enduring Random World Step."
+                    return "Fixed World Step Effect's softcap starts x"+format(gridEffect(this.layer,id))+" later"
+                }
+                case 301:{
+                    if (!player.awaken.awakened.includes('saya')) return "Awake Knife layer to unlock this."
+                    return "Genesis Vortexs lower Memory goal of Merge Attachment by ^"+format(gridEffect(this.layer,id))
+                }
+                case 302:{
+                    if (!player.awaken.awakened.includes('etoluna')) return "Awake Gemini layer to unlock this."
+                    return "Star/Moon power decrease rate x"+format(gridEffect(this.layer,id))
+                }
+                case 303:{
+                    return "Forbearance Endurances boost Institution Funds gain by x"+format(gridEffect(this.layer,id))
                 }
                 default : return data.activated;
             }
@@ -318,9 +348,9 @@ addLayer("tempest", {
                     return softcap(eff,Decimal.pow(10,player[this.layer].total.times(2).plus(4)),0.75);
                 }
                 case 201:{
-                    if (layers[this.layer].deactivated()) return 0;
-                    let eff = player[this.layer].points.min(challengeCompletions(this.layer,11)).div(100).min(0.25);
-                    return eff.toNumber();
+                    if (layers[this.layer].deactivated()) return new Decimal(1);
+                    let eff = new Decimal(1).div(player[this.layer].points.plus(challengeCompletions(this.layer,11)).div(100).pow(0.2).plus(1)).pow(0.5)
+                    return eff.min(1);
                 }
                 case 202:{
                     if (layers[this.layer].deactivated()) return new Decimal(0);
@@ -331,6 +361,19 @@ addLayer("tempest", {
                     if (layers[this.layer].deactivated()) return new Decimal(1);
                     let eff = Decimal.pow(challengeCompletions(this.layer,11)+1,player[this.layer].total.div(100).plus(1).sqrt()).max(1);
                     return eff;
+                }
+                case 301:{
+                    if (layers[this.layer].deactivated()) return new Decimal(1);
+                    let basepower = player.fracture.points.div(50).plus(1).pow(new Decimal(1).plus(challengeCompletions(this.layer,11)/50))
+                    return Decimal.pow(0.8,basepower);
+                }
+                case 302:{
+                    if (layers[this.layer].deactivated()) return 1;
+                    return Math.pow(0.99,challengeCompletions(this.layer,11))//此处返回的是普通数字
+                }
+                case 303:{
+                    if (layers[this.layer].deactivated()) return new Decimal(1);
+                    return Decimal.pow(7.5,player[this.layer].points.times(1.5));
                 }
                 default: return new Decimal(1);
             };
