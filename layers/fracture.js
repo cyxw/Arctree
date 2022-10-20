@@ -47,37 +47,43 @@ const fractureEquiupments = [
         EffectDisplay : "Each adds Element Essence Capacity by 1",
         shapeArray: [0],
         Color:"#FFE4B5",
-        UpgradeTo:-1,
+        UpgradeTo:11,
         defaultPosition:303,
         CanBuyProgress: 0,
         BasePrize: new Decimal(40),
         //UpgradeCost: new Decimal(0),
         //UpgradeCurrency: null,
-        UpgradeType: ['none'],
+        UpgradeCost: new Decimal(100),
+        UpgradeCurrency: 'player.fracture.ElementEssence',
+        UpgradeType: ['cost'],
     },
     {
         EquipmentTitle: "Bottled Growth+",
         EffectDisplay : "Each Boosts Glowing Roses gain by x2",
         shapeArray: [0],
         Color:"#ffe6f6",
-        UpgradeTo:-1,
+        UpgradeTo:12,
         defaultPosition:303,
         CanBuyProgress: 0,
         BasePrize: new Decimal(50),
         //UpgradeCost: new Decimal(0),
         //UpgradeCurrency: null,
-        UpgradeType: ['none'],
+        UpgradeCost: new Decimal(100),
+        UpgradeCurrency: 'player.fracture.ElementEssence',
+        UpgradeType: ['cost'],
     },
     {
         EquipmentTitle: "Enjoyment Puzzle+",
         EffectDisplay : "Each boosts Fragment generation 750x",
         shapeArray: [0],
         Color:"#AAAAAA",
-        UpgradeTo:-1,
+        UpgradeTo:13,
         defaultPosition:303,
         CanBuyProgress: 0,
         BasePrize: new Decimal(55),
-        UpgradeType: ['none'],
+        UpgradeCost: new Decimal(100),
+        UpgradeCurrency: 'player.fracture.ElementEssence',
+        UpgradeType: ['cost'],
     },
     {
         EquipmentTitle: "Compute Matrix",
@@ -94,7 +100,7 @@ const fractureEquiupments = [
     },
     {
         EquipmentTitle: "Essence Collector",
-        EffectDisplay : "Each Boosts Research Element Essence gain by x1.05",
+        EffectDisplay : "Each Boosts Element Essence gain by x1.05",
         shapeArray: [0,-1,100],
         Color:"#9dfe6b",
         UpgradeTo:9,
@@ -110,22 +116,26 @@ const fractureEquiupments = [
         EffectDisplay : "Each Boosts Research Power gain by x250",
         shapeArray: [0,-100,1],
         Color:"#00bdf9",
-        UpgradeTo:8,
+        UpgradeTo:14,
         defaultPosition:303,
         CanBuyProgress: 1,
         BasePrize: new Decimal(50),
-        UpgradeType: ['none'],
+        UpgradeCost: new Decimal(1e195),
+        UpgradeCurrency: 'player.lab.points',
+        UpgradeType: ['cost'],
     },
     {
         EquipmentTitle: "Essence Collector+",
-        EffectDisplay : "Each Boosts Research Element Essence gain by x1.1",
+        EffectDisplay : "Each Boosts Element Essence gain by x1.1",
         shapeArray: [0,-1,100],
         Color:"#9dfe6b",
-        UpgradeTo:9,
+        UpgradeTo:15,
         defaultPosition:303,
         CanBuyProgress: 1,
         BasePrize: new Decimal(50),
-        UpgradeType: ['none'],
+        UpgradeCost: new Decimal(100),
+        UpgradeCurrency: 'player.fracture.ElementEssence',
+        UpgradeType: ['cost'],
     },
     {
         EquipmentTitle: "Genesis Overload",
@@ -136,6 +146,133 @@ const fractureEquiupments = [
         defaultPosition:303,
         CanBuyProgress: 1,
         BasePrize: new Decimal(150),
+        UpgradeType: ['none'],
+    },
+    
+    //sxy part
+    {
+        EquipmentTitle: "Element Capacity++",
+        EffectDisplay : "Each adds Element Essence Capacity by 15",
+        shapeArray: [0],
+        Color:"#FFE4B5",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: -1,
+        BasePrize: new Decimal(125),
+        //UpgradeCost: new Decimal(0),
+        //UpgradeCurrency: null,
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Bottled Growth++",
+        EffectDisplay : "Each Boosts Glowing Roses gain by x10",
+        shapeArray: [0],
+        Color:"#ffe6f6",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: -1,
+        BasePrize: new Decimal(125),
+        //UpgradeCost: new Decimal(0),
+        //UpgradeCurrency: null,
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Enjoyment Puzzle++",
+        EffectDisplay : "Each boosts Fragment generation 2500x",
+        shapeArray: [0],
+        Color:"#AAAAAA",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: -1,
+        BasePrize: new Decimal(125),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Compute Matrix++",
+        EffectDisplay : "Each Boosts Research Power gain by x500",
+        shapeArray: [0,-100,1],
+        Color:"#00bdf9",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: -1,
+        BasePrize: new Decimal(125),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Essence Collector++",
+        EffectDisplay : "Each Boosts Element Essence gain by x5",
+        shapeArray: [0,-1,100],
+        Color:"#9dfe6b",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: 2,
+        BasePrize: new Decimal(50),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "NE Synergy booster",
+        EffectDisplay : "Each Boosts NorthEast Direction Synergy effect by x1.25",
+        shapeArray: [0,-99],
+        Color:"#716F5E",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: 2,
+        BasePrize: new Decimal(25),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "SE Synergy booster",
+        EffectDisplay : "Each Boosts SouthEast Direction Synergy effect by x5",
+        shapeArray: [0,101],
+        Color:"#716F5E",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: 1,
+        BasePrize: new Decimal(25),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "SW Synergy booster",
+        EffectDisplay : "Each Boosts SouthWest Direction Synergy effect by x5",
+        shapeArray: [0,99],
+        Color:"#716F5E",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: 2,
+        BasePrize: new Decimal(25),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "NW Synergy booster",
+        EffectDisplay : "Each Boosts NorthWest Direction Synergy effect by x20",
+        shapeArray: [0,-101],
+        Color:"#716F5E",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: 2,
+        BasePrize: new Decimal(25),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Light Regurgita- -tion",
+        EffectDisplay : "Element Essences itself will boost Luminous Churches gains, Each will +10x",
+        shapeArray: [0,-100,-200,1],
+        Color:"#FFE6F6",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: 2,
+        BasePrize: new Decimal(100),
+        UpgradeType: ['none'],
+    },
+    {
+        EquipmentTitle: "Dark Potency",
+        EffectDisplay : "Total Eyes of Storm itself will boost Flourish Labyrinths gains, Each will +25x",
+        shapeArray: [0,100,200,-1],
+        Color:"#716F5E",
+        UpgradeTo:-1,
+        defaultPosition:303,
+        CanBuyProgress: 2,
+        BasePrize: new Decimal(100),
         UpgradeType: ['none'],
     },
 ];
@@ -183,7 +320,11 @@ addLayer("fracture", {
     ],
 
     gainMult() {                            // Returns your multiplier to your gain of the prestige resource.
-        return new Decimal(1)               // Factor in any bonuses multiplying gain here.
+        let mult = new Decimal(1)               // Factor in any bonuses multiplying gain here.
+
+        if (player['awaken'].awakened.includes('saya')) mult = mult.div(tmp.saya.grid.ChallengeEffect.toGEFO);
+
+        return mult;
     },
     gainExp() {                             // Returns the exponent to your gain of the prestige resource.
         return new Decimal(1)
@@ -219,7 +360,7 @@ addLayer("fracture", {
         while (counter<3){
             let Randomindex = Math.floor(Math.random()*fractureEquiupments.length)
 
-            if (fractureEquiupments[Randomindex].CanBuyProgress > ProgressNum) continue;
+            if ((fractureEquiupments[Randomindex].CanBuyProgress > ProgressNum)||(fractureEquiupments[Randomindex].CanBuyProgress <=-1)) continue;
             else{
                 let price = fractureEquiupments[Randomindex].BasePrize.times(0.9+Math.random()*0.2).max(0);
                 Vue.set(player['fracture'].EquipmentsForSale,counter,{
@@ -238,7 +379,8 @@ addLayer("fracture", {
 
     ElementCap(){//K
         let K = new Decimal(10).plus(player.fracture.points.sub(1).max(0))
-        K = K.plus(layers['fracture'].grid.return_Equiped_Equipment_Num(0)*0.5+layers['fracture'].grid.return_Equiped_Equipment_Num(3));
+        K = K.plus(layers['fracture'].grid.return_Equiped_Equipment_Num(0)*0.5+layers['fracture'].grid.return_Equiped_Equipment_Num(3)+layers['fracture'].grid.return_Equiped_Equipment_Num(11)*15);
+        if (hasUpgrade('ins',43)) K=K.plus(upgradeEffect('ins',43));
         if (hasAchievement('a',133)) K = K.plus(player.fracture.ElementEssence.sqrt().max(1).log10());
         return K;
     },
@@ -248,7 +390,7 @@ addLayer("fracture", {
         let r = new Decimal(1);
 
         //sth changes r
-        r = r.times(Decimal.pow(1.05,layers['fracture'].grid.return_Equiped_Equipment_Num(7))).times(Decimal.pow(1.1,layers['fracture'].grid.return_Equiped_Equipment_Num(9)));
+        r = r.times(Decimal.pow(1.05,layers['fracture'].grid.return_Equiped_Equipment_Num(7))).times(Decimal.pow(1.1,layers['fracture'].grid.return_Equiped_Equipment_Num(9))).times(Decimal.pow(5,layers['fracture'].grid.return_Equiped_Equipment_Num(15)));
         r = r.times(Decimal.pow(0.01,layers['fracture'].grid.return_Equiped_Equipment_Num(10)))
 
         let K = layers.fracture.ElementCap();
@@ -413,6 +555,19 @@ addLayer("fracture", {
                 player[this.layer].BuyProgress+=1;
             },
         },
+        2: {
+            requirementDescription: "10 Genesis Vortexs",
+            done() { return player.fracture.best.gte(10) },
+            unlocked() { return player.fracture.unlocked },
+            effectDescription() {
+                return "Equipment slot expands to 3x3 & Shop's refresh CD set to 30s."
+            },
+            onComplete(){
+                player[this.layer].BuyProgress+=1;
+                player[this.layer].gridrow=3;
+                player[this.layer].gridcol=3;
+            },
+        },
     },
 
     clickables:{
@@ -439,7 +594,7 @@ addLayer("fracture", {
             title: "Upgrade this Equipment",
             display(){
 
-                const CurrencyList ={
+                const CurrencyList ={//每次新加一种货币就回来看一下
                     'player.points':'Fragments',
                     'player.mem.points':'Memories',
                     'player.light.points':'Light Tachyons',
@@ -598,6 +753,7 @@ addLayer("fracture", {
             onClick() {
                 layers[this.layer].Refresh_Shop(player[this.layer].BuyProgress);
                 player[this.layer].BuyCooldown = 60;
+                if (hasMilestone('fracture', 2)) player[this.layer].BuyCooldown = 30;
             },
         },
         32: {
@@ -909,9 +1065,23 @@ addNode("ghostGE2",{
 
         },
         getCanClick(data, id) {
-            return false
+            let rowNum = Math.floor(id/100)//从1开始
+            let colNum = id % 100;
+            if (rowNum == 1||colNum>2)return false
+            else
+                {
+                    let indexNum = player.fracture.CheckPage*10 + rowNum - 2;
+                    if (player.fracture.EquipmentsDiscovered[indexNum]) return true;
+                    else return false;
+                }
         },
         onClick(data, id) { 
+            let rowNum = Math.floor(id/100)//从1开始
+            let colNum = id % 100;
+            let indexNum = player.fracture.CheckPage*10 + rowNum - 2;
+            if (player.fracture.EquipmentsDiscovered[indexNum]){
+                player['fracture'].CheckingEquipmentId = indexNum;
+            }
         },
         getDisplay(data, id) {
             let rowNum = Math.floor(id/100)//从1开始

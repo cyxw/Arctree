@@ -70,9 +70,10 @@ addLayer("mem", {
         if (inChallenge("kou", 11)) mult = mult.pow(0.75);
         if (inChallenge('rei', 11)) mult = mult.pow(0.5);
         if (player.world.restrictChallenge && !hasUpgrade('storylayer', 14)) mult = mult.pow(0.9);
+        if (player.saya.CurrentPairChallenge != null) mult = mult.pow(tmp.saya.grid.ChallengeDebuff.mem);
         if (player.tempest.activeChallenge!=null) mult = mult.pow(tmp.tempest.nerf_in_challenges.toMem());  
 
-        if (inChallenge('saya', 22)) mult = mult.tetrate(layers.saya.challenges[22].debuff())
+        if (inChallenge('saya', 22) || tmp['saya'].grid.ChallengeDepth[4]>-1) mult = mult.tetrate(layers.saya.challenges[22].debuff())
 
         return mult
     },
@@ -415,7 +416,7 @@ addLayer("light", {
         if (hasUpgrade('lab', 83)) mult = mult.div(buyableEffect('lab', 21));
         if (hasUpgrade('storylayer', 21)) mult = mult.div(upgradeEffect('storylayer', 21));
         if (hasUpgrade('storylayer', 22)) mult = mult.div(player.rei.points.div(2).max(1));
-        if (inChallenge('saya', 42)) mult = mult.times(tmp["dark"].effect.log(layers.saya.challenges[42].debuff()));
+        if (inChallenge('saya', 42) || tmp['saya'].grid.ChallengeDepth[8]>-1) mult = mult.times(tmp["dark"].effect.log(layers.saya.challenges[42].debuff()));
         if (hasMilestone('ins', 1)) mult = mult.div(layers.ins.insEffect().Fra().Pos());
         if (hasMilestone('ins', 2)) mult = mult.div(layers.ins.insEffect().Rus().Pos());
         if (inChallenge('kou', 62) || hasChallenge('kou', 62)) mult = mult.div(challengeEffect('kou', 62));
@@ -440,7 +441,7 @@ addLayer("light", {
         if (hasAchievement('a', 43)) dm = dm.times(player.dark.points.div(player.light.points.max(1)).max(1).min(5));
         if (inChallenge("kou", 31) && player.dark.points.lt(player[this.layer].points)) dm = dm.times(0.1);
         if (inChallenge('kou', 42)) dm = dm.times(2);
-        if (inChallenge('saya', 42)) dm = dm.div(tmp["dark"].effect.log(layers.saya.challenges[42].debuff()));
+        if (inChallenge('saya', 42) || tmp['saya'].grid.ChallengeDepth[8]>-1) dm = dm.div(tmp["dark"].effect.log(layers.saya.challenges[42].debuff()));
         if (hasUpgrade('light', 41)) dm = dm.times(upgradeEffect('light', 41));
         return dm;
     },
@@ -551,7 +552,7 @@ addLayer("light", {
 
         //pow
         if (inChallenge('kou', 32)) eff = eff.pow(Math.random());
-        if (inChallenge('saya', 11)) eff = eff.pow(layers.saya.challenges[11].debuff());
+        if (inChallenge('saya', 11) || tmp['saya'].grid.ChallengeDepth[1]>-1) eff = eff.pow(layers.saya.challenges[11].debuff());
         if (player.tempest.activeChallenge!=null) eff = eff.pow(tmp.tempest.nerf_in_challenges.toLEff())
 
         //AW
@@ -1120,7 +1121,7 @@ addLayer("dark", {
 
         //pow
         if (inChallenge('kou', 32)) eff = eff.pow(Math.random());
-        if (inChallenge('saya', 12)) eff = eff.pow(layers.saya.challenges[12].debuff());
+        if (inChallenge('saya', 12) || tmp['saya'].grid.ChallengeDepth[2]>-1) eff = eff.pow(layers.saya.challenges[12].debuff());
         if (player.tempest.activeChallenge!=null) eff = eff.pow(tmp.tempest.nerf_in_challenges.toDEff());
 
         //AW
@@ -1472,7 +1473,7 @@ addLayer("dark", {
             pseudoUnl() { return player.awaken.awakened.includes(this.layer) },
             /*pseudoReq: "Req: Can gain 1e2295 Memories if Memory reset in Rationalism challenge",*/
             pseudoCan() {
-                let bol = getResetGain('mem').gte("1e2245") && inChallenge('saya', 22);
+                let bol = getResetGain('mem').gte("1e2245") && (inChallenge('saya', 22)||tmp['saya'].grid.ChallengeDepth[4]>-1);
                 if (bol && !player[this.layer].pseudoDone.includes(this.id)) player[this.layer].pseudoDone.push(this.id)
                 return bol || player[this.layer].pseudoDone.includes(this.id)
             },
@@ -1571,6 +1572,7 @@ addLayer("kou", {
 
     update(diff) {
         if (!layers.kou.tabFormat["Happiness Challenges"].unlocked() && player.subtabs.kou.mainTabs == "Happiness Challenges") player.subtabs.kou.mainTabs = "Milestones";
+        if (!layers.kou.tabFormat["Celebration Ends"].unlocked() && player.subtabs.kou.mainTabs == "Celebration Ends") player.subtabs.kou.mainTabs = "Milestones";
         if (player['awaken'].current == 'kou' && player.kou.auto == true) player.kou.auto = false;
         else if ((player['awaken'].current != 'kou' && player['awaken'].current != 'lethe') && hasUpgrade('lab', 164)) player.kou.auto = true;
     },
@@ -1591,7 +1593,7 @@ addLayer("kou", {
         if (inChallenge('kou', 32)) eff = eff.pow(1 + Math.random() * 0.1);
         //if (hasChallenge('kou',32)) eff=eff.pow(1+((!hasMilestone('rei',2))?(Math.random()*0.05):0.05));
         if (hasChallenge('kou', 32)) eff = eff.pow(challengeEffect('kou', 32));
-        if (inChallenge('saya', 31)) eff = eff.pow(layers.saya.challenges[31].debuff())
+        if (inChallenge('saya', 31) || tmp['saya'].grid.ChallengeDepth[5]>-1) eff = eff.pow(layers.saya.challenges[31].debuff())
         if (player.tempest.activeChallenge!=null) eff = eff.pow(tmp.tempest.nerf_in_challenges.toREff());
 
         //↓这个永远放在最后
@@ -1729,7 +1731,7 @@ addLayer("kou", {
                 "milestones",]
         },
         "Happiness Challenges": {
-            unlocked() { return hasMilestone('kou', 7) && (player.saya.activeChallenge == null) },
+            unlocked() { return hasMilestone('kou', 7) && (player.saya.activeChallenge == null) && (player.saya.CurrentPairChallenge == null) },
             buttonStyle() { return { 'background-color': '#bd003c' } },
             content: [
                 "main-display",
@@ -1748,7 +1750,7 @@ addLayer("kou", {
             ]
         },
         "Celebration Ends": {
-            unlocked() { return player['awaken'].awakened.includes('kou') && (player.saya.activeChallenge == null) },
+            unlocked() { return player['awaken'].awakened.includes('kou') && (player.saya.activeChallenge == null) && (player.saya.CurrentPairChallenge == null) },
             buttonStyle() { return { 'background-color': '#96002e' } },
             content: [
                 "main-display",
@@ -1870,6 +1872,14 @@ addLayer("kou", {
                 let gol = new Decimal(5e54);
                 if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1175');
                 return gol;
+            },
+            onEnter(){
+                if (hasChallenge(this.layer,this.id))
+                {
+                    alert('You have already completed this challenge!')
+                    player[this.layer].activeChallenge = null;
+                    return;
+                }
             },
             onExit() {
                 player.points = new Decimal(0);
@@ -2215,7 +2225,8 @@ addLayer("kou", {
                 player.ins.inslevel.Nzl = new Decimal(0);
                 //---------
                 //player.ins.best = player.ins.total;
-                player.ins.points = player.ins.total;
+                //player.ins.upgrades = [];
+                player.ins.points = player.ins.total.sub(player.ins.upgTotalCost);
             },
             fullDisplay() {
                 let show = "The maxnum of Site level sets to 12, but all Sites' effects are taken logarithmically.<br>Goal: " + format(this.goal()) + " Fragments<Br>Reward: The maxnum of Site level sets to 12.<br>(Reset Institution Sites when exit)"
@@ -2670,7 +2681,7 @@ addLayer("lethe", {
                 for (index in auto)
                 if (!hasUpgrade('lethe', auto[index])) player.lethe.upgrades.push(auto[index]);
             }
-            if (inChallenge('saya', 32)) player[this.layer].upgrades = tempupgrades;
+            if (inChallenge('saya', 32) || tmp['saya'].grid.ChallengeDepth[6]>-1) player[this.layer].upgrades = tempupgrades;
         }
     },
 
@@ -3032,12 +3043,13 @@ addLayer("lethe", {
     nodeSlots() {
         if (inChallenge('kou',82)) return 3;
         let node = player.lethe.buyables[11].floor().min(hasChallenge('kou', 42) ? 25 : 17);
-        if (inChallenge('saya', 32)) node = node.min(layers.saya.challenges[32].debuff());
+        if (inChallenge('saya', 32) || tmp['saya'].grid.ChallengeDepth[6]>-1) node = node.min(layers.saya.challenges[32].debuff());
         return node.toNumber()
     },
     HypernodeSlots() {
         if (inChallenge('kou',82)) return 3;
         let node = player.lethe.buyables[21].floor().min(hasChallenge('kou', 82) ? 25 : 16);
+        if (inChallenge('saya', 32) || tmp['saya'].grid.ChallengeDepth[6]>-1) node = node.min(layers.saya.challenges[32].debuff());
         return node.toNumber()
     },
 
@@ -4498,7 +4510,7 @@ addLayer("lethe", {
             },
             fullDisplay() {
                 if (!this.roundbol()) return "<b>Unrevealed</b>"
-                let show = "<b>The Personality Disaster Tower</b><br>World Step Height softcap starts later by e(K÷12-log10(Move)÷2).";
+                let show = "<b>The Personality Disaster Tower</b><br>World Step Height softcap starts later by e(K÷12-log10(Moved)÷2).";
                 show += "<br>Currently: " + format(this.effect()) + "x";
                 show += "<br>Cost: " + formatWhole(this.pricefunction().worldprice()) + " World Steps"
                 show += " 　Req: " + formatWhole(this.pricefunction().sayaeffreq()) + "x Knives effect";
@@ -4525,7 +4537,7 @@ addLayer("lethe", {
                 return price && req && this.roundbol() && (layers['lethe'].HyperBeaconLength() < tmp.lethe.HypernodeSlots)
             },
             effect() {
-                let eff = Decimal.pow(10,player.saya.points.div(12).sub(layers['yugamu'].movetimes().max(1).log10().div(2)).max(1).sub(1));
+                let eff = Decimal.pow(10,player.saya.points.div(12).sub(player['yugamu'].timesmoved.max(1).log10().div(2)).max(1).sub(1));
                 return eff;
             }
         },
@@ -4741,7 +4753,7 @@ addLayer("lethe", {
             },
             fullDisplay() {
                 if (!this.roundbol()) return "<b>Unrevealed</b>"
-                let show = "<b>The Comet Disaster Tower</b><br>World Step Height softcap starts later by e(log10(G)-log10(Move)).";
+                let show = "<b>The Comet Disaster Tower</b><br>World Step Height softcap starts later by e(log10(G)-log10(Moved)).";
                 show += "<br>Currently: " + format(this.effect()) + "x";
                 show += "<br>Cost: " + formatWhole(this.pricefunction().worldprice()) + " World Steps"
                 show += " 　Req: " + formatWhole(this.pricefunction().lunareq()) + " Moon Points";
@@ -4768,7 +4780,7 @@ addLayer("lethe", {
                 return price && req && this.roundbol() && (layers['lethe'].HyperBeaconLength() < tmp.lethe.HypernodeSlots)
             },
             effect() {
-                let eff = Decimal.pow(10,player.etoluna.points.max(1).log10().sub(layers['yugamu'].movetimes().max(1).log10()).max(1).sub(1));
+                let eff = Decimal.pow(10,player.etoluna.points.max(1).log10().sub(player['yugamu'].timesmoved.max(1).log10()).max(1).sub(1));
                 return eff;
             }
         },
@@ -5132,6 +5144,9 @@ addLayer("rei", {
         if (hasMilestone('ins', 1)) mult = mult.div(layers.ins.insEffect().Fra().Pos());
         if (player['awaken'].current == 'rei'||player['awaken'].awakened.includes('rei')) mult = mult.div(tmp["rei"].challenges[11].effectAWtoLCFL); 
         if (player['awaken'].current == 'yugamu'||player['awaken'].awakened.includes('yugamu')) mult = mult.div(tmp['yugamu'].AWeffect.SWeffect); 
+        if(player.fracture.unlocked) {
+            if (layers['fracture'].grid.return_Equiped_Equipment_Num(20)>=1) mult=mult.div(player.fracture.ElementEssence).div(layers['fracture'].grid.return_Equiped_Equipment_Num(20)).div(10);
+        };
         return mult;
     },
     gainExp() {
@@ -5224,7 +5239,8 @@ addLayer("rei", {
                 gain = gain.times(this.gainMult().max(1));
                 gain = gain.times(challengeEffect('saya', 41).max(1));
                 if (hasUpgrade('light', 43)) gain = gain.times(upgradeEffect('light', 43));
-                gain = gain.times(Decimal.pow(2,layers['fracture'].grid.return_Equiped_Equipment_Num(1)+layers['fracture'].grid.return_Equiped_Equipment_Num(4)))
+                gain = gain.times(Decimal.pow(2,layers['fracture'].grid.return_Equiped_Equipment_Num(1)+layers['fracture'].grid.return_Equiped_Equipment_Num(4)));
+                gain = gain.times(Decimal.pow(10,layers['fracture'].grid.return_Equiped_Equipment_Num(12)));
                 return gain;
             },
             onEnter() {
@@ -5237,7 +5253,7 @@ addLayer("rei", {
                 doReset("lethe", true);
             },
             onExit() {
-                if (inChallenge('saya', 41)) { player.rei.roses = new Decimal(0); player.saya.bestroses41 = new Decimal(0); }
+                if (inChallenge('saya', 41) || tmp.saya.grid.ChallengeDepth[7]!=-1) { player.rei.roses = new Decimal(0); player.saya.bestroses41 = new Decimal(0); }
             },
             fullDisplay() {
                 let show = "Fragment generation & Memory gain ^0.5, and losing 10% of your Fragments, Memories, Light Tachyons, Dark Matters, Red Dolls, Forgotten Drops per second.<br>" + "<br><h3>Glowing Roses</h3>: " + format(player.rei.roses) + " (" + ((inChallenge('rei', 11) || hasMilestone('etoluna', 2)) ? formatWhole(tmp["rei"].challenges[11].amt) : 0) + "/s)" + (hasAchievement('a', 65) ? ("<br>Which are boosting The Speed of World steps gain by " + format(achievementEffect('a', 65)) + "x") : "");
@@ -5255,7 +5271,7 @@ addLayer("rei", {
             },
             effecttoRF() {
                 //AW
-                if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return new Decimal(1);
+                if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer) || player[this.layer].roses.lte(0)) return new Decimal(1);
                 let eff = player.rei.roses.plus(1).log10().times(2).max(1).times(hasAchievement('a', 93) ? tmp.etoluna.starPointeffect : 1).times(challengeEffect('saya', 41));
                 if (hasUpgrade('lethe', 63)) eff = eff.times(upgradeEffect('lethe', 63));
                 if (hasUpgrade('lethe', 64)) eff = eff.times(upgradeEffect('lethe', 64));
@@ -5266,7 +5282,7 @@ addLayer("rei", {
             },
             effecttoFragMem() {
                 //AW
-                if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return new Decimal(1);
+                if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer) || player[this.layer].roses.lte(0)) return new Decimal(1);
                 if (!hasUpgrade('storylayer', 12)) return new Decimal(1);
                 let eff = upgradeEffect('storylayer', 12);
                 if (hasUpgrade('lethe', 63)) eff = eff.times(upgradeEffect('lethe', 63));
@@ -5278,7 +5294,7 @@ addLayer("rei", {
             },
             effecttoLD() {
                 //AW
-                if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return new Decimal(1);
+                if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer) || player[this.layer].roses.lte(0)) return new Decimal(1);
                 if (!hasUpgrade('storylayer', 21)) return new Decimal(1);
                 let eff = upgradeEffect('storylayer', 21);
                 if (hasUpgrade('lethe', 63)) eff = eff.times(upgradeEffect('lethe', 63));
@@ -5291,6 +5307,7 @@ addLayer("rei", {
             effectAWtoLD(){
                 if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return new Decimal(1);//别的层AW时的反应
                 if (!(player['awaken'].current == this.layer||player['awaken'].awakened.includes(this.layer))) return new Decimal (1);//只有AW了才有效
+                if (player[this.layer].roses.lte(0)) return new Decimal(1);
                 let eff = Decimal.pow(10,player.rei.roses.max(1).log10().div(100).max(0));
                 if (hasUpgrade('lethe', 63)) eff = eff.times(upgradeEffect('lethe', 63));
                 if (hasUpgrade('lethe', 64)) eff = eff.times(upgradeEffect('lethe', 64));
@@ -5302,6 +5319,7 @@ addLayer("rei", {
             effectAWtoRF(){
                 if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return new Decimal(1);//别的层AW时的反应
                 if (!(player['awaken'].current == this.layer||player['awaken'].awakened.includes(this.layer))) return new Decimal (1);//只有AW了才有效
+                if (player[this.layer].roses.lte(0)) return new Decimal(1);
                 let eff = player.rei.roses.max(1).log(20);
                 if (hasUpgrade('lethe', 63)) eff = eff.times(upgradeEffect('lethe', 63));
                 if (hasUpgrade('lethe', 64)) eff = eff.times(upgradeEffect('lethe', 64));
@@ -5313,6 +5331,7 @@ addLayer("rei", {
             effectAWtoGK(){
                 if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return new Decimal(1);//别的层AW时的反应
                 if (!(player['awaken'].current == this.layer||player['awaken'].awakened.includes(this.layer))) return new Decimal (1);//只有AW了才有效
+                if (player[this.layer].roses.lte(0)) return new Decimal(1);
                 let eff = player.rei.roses.max(1).log10().sqrt().times(1.5);
                 if (hasUpgrade('lethe', 63)) eff = eff.times(upgradeEffect('lethe', 63));
                 if (hasUpgrade('lethe', 64)) eff = eff.times(upgradeEffect('lethe', 64));
@@ -5324,6 +5343,7 @@ addLayer("rei", {
             effectAWtoLCFL(){
                 if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return new Decimal(1);//别的层AW时的反应
                 if (!(player['awaken'].current == this.layer||player['awaken'].awakened.includes(this.layer))) return new Decimal (1);//只有AW了才有效
+                if (player[this.layer].roses.lte(0)) return new Decimal(1);
                 let eff = player.rei.roses.max(1).log10().pow(1/1.5).div(10);
                 if (hasUpgrade('lethe', 63)) eff = eff.times(upgradeEffect('lethe', 63));
                 if (hasUpgrade('lethe', 64)) eff = eff.times(upgradeEffect('lethe', 64));
@@ -5335,6 +5355,7 @@ addLayer("rei", {
             effectAWtoRose(){
                 if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return new Decimal(1);//别的层AW时的反应
                 if (!(player['awaken'].current == this.layer||player['awaken'].awakened.includes(this.layer))) return new Decimal (1);//只有AW了才有效
+                if (player[this.layer].roses.lte(0)) return new Decimal(1);
                 let eff = player.rei.roses.max(1).log(20).div(2.5);
                 if (hasUpgrade('lethe', 63)) eff = eff.times(upgradeEffect('lethe', 63));
                 if (hasUpgrade('lethe', 64)) eff = eff.times(upgradeEffect('lethe', 64));
@@ -5491,6 +5512,9 @@ addLayer("yugamu", {
         if (hasMilestone('ins', 1)) mult = mult.div(layers.ins.insEffect().Deu().Pos());
         if (player['awaken'].current == 'rei'||player['awaken'].awakened.includes('rei')) mult = mult.div(tmp["rei"].challenges[11].effectAWtoLCFL);
         if (player['awaken'].current == 'yugamu'||player['awaken'].awakened.includes('yugamu')) mult = mult.div(tmp['yugamu'].AWeffect.SEeffect); 
+        if (player.fracture.unlocked){
+            if (layers['fracture'].grid.return_Equiped_Equipment_Num(21)>=1) mult=mult.div(player['tempest'].milestonePoints.total).div(layers['fracture'].grid.return_Equiped_Equipment_Num(21)).div(25);
+        };
         return mult;
     },
     gainExp() {
@@ -5614,6 +5638,13 @@ addLayer("yugamu", {
         let SWeff = SWtime.times(20);//LC获得
 
         let SEeff = SEtime.times(20);//FL获得
+
+        if(player.fracture.unlocked) {
+            NEeff = NEeff.times(Decimal.pow(1.25,layers['fracture'].grid.return_Equiped_Equipment_Num(16)));
+            SEeff = SEeff.times(Decimal.pow(5,layers['fracture'].grid.return_Equiped_Equipment_Num(17)));
+            SWeff = SWeff.times(Decimal.pow(5,layers['fracture'].grid.return_Equiped_Equipment_Num(18)));
+            NWeff = NWeff.times(Decimal.pow(20,layers['fracture'].grid.return_Equiped_Equipment_Num(19)));
+        };
 
         return {
             NWeffect:NWeff,
@@ -5982,7 +6013,6 @@ addLayer("world", {
         if (player.world.currentStepType < 87 && player.world.currentStepType >= 75) {
             if (hasUpgrade('storylayer', 13)) speed = speed.times(2);
             else speed = speed.times(1 + player.world.Worldrandomnum);
-            if(player.tempest.grid[203].activated) speed = speed.times(gridEffect('tempest',203));
         };
         if (player.world.currentStepType < 99 && player.world.currentStepType >= 87) {
             if (hasUpgrade('storylayer', 13)) speed = speed.times(0.75);
@@ -6004,6 +6034,7 @@ addLayer("world", {
     fixedsoftcap() {
         let softcap = new Decimal(500);
         if (hasUpgrade('etoluna', 13)) softcap = softcap.times(upgradeEffect('etoluna', 13));
+        if (player['tempest'].grid[203].activated) softcap = softcap.times(gridEffect('tempest',203))
         return softcap;
     },
     fixedsoftcapexp() {
@@ -6322,6 +6353,8 @@ addLayer("saya", {
             auto: false,
             demile: [],
             decha: [],
+            CurrentPairChallenge:null,
+            FallbackPair:false,
         }
     },
 
@@ -6367,12 +6400,14 @@ addLayer("saya", {
     effect() {
         let eff = new Decimal(1);
         eff = eff.plus(player[this.layer].points.div(10));
+        if (player['awaken'].awakened.includes(this.layer)||player['awaken'].current == this.layer ) eff = eff.times(1.25);
         if (hasUpgrade('dark', 44)) eff = eff.times(upgradeEffect('dark', 44))
         if (hasUpgrade('lethe', 61)) eff = eff.times(upgradeEffect('lethe', 61))
         if (hasUpgrade('lethe', 62)) eff = eff.times(upgradeEffect('lethe',62))
         if (hasUpgrade('lethe', 71)) eff = eff.times(upgradeEffect('lethe',71))
         if (hasChallenge('kou', 91)) eff = eff.times(challengeEffect('kou',91))
         if (player['awaken'].current == 'yugamu'||player['awaken'].awakened.includes('yugamu')) eff = eff.times(tmp['yugamu'].AWeffect.NEeffect); 
+        if (player['awaken'].awakened.includes(this.layer)) eff = eff.times(tmp.saya.grid.ChallengeEffect.toKeff);
 
         //AW
         if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return new Decimal(1);
@@ -6387,8 +6422,14 @@ addLayer("saya", {
         return show;
     },
 
+    shouldNotify(){
+        if (player[this.layer].CurrentPairChallenge !=null)
+            if (player.points.gte(tmp.saya.grid.ChallengeTarget.frag)||player.mem.points.gte(tmp.saya.grid.ChallengeTarget.mem))
+                return true;
+    },
+
     update(diff) {
-        if (inChallenge('saya', 41)) {
+        if (inChallenge('saya', 41) || tmp.saya.grid.ChallengeDepth[7]!=-1) {
             if (player.rei.roses.gt(player.saya.bestroses41) && !inChallenge('rei', 11)) player.saya.bestroses41 = player.rei.roses;
             player.saya.Timer41 = player.saya.Timer41.plus(diff);
             if (player.saya.Timer41.gte(layers.saya.challenges[41].debuff())) {
@@ -6399,7 +6440,7 @@ addLayer("saya", {
         }
         else player.saya.Timer41 = new Decimal(0);
 
-        if (inChallenge('saya', 42)) {
+        if (inChallenge('saya', 42) || tmp.saya.grid.ChallengeDepth[8]!=-1) {
             if (!player.light.auto) player.light.auto = true;
             if (!player.dark.auto) player.dark.auto = true;
         }
@@ -6409,6 +6450,7 @@ addLayer("saya", {
         if (hasMilestone('ins', 0)) keep.push('milestones');
         if (hasMilestone('ins', 1)) keep.push('challenges');
         if (hasMilestone('ins', 4)) keep.push('auto');
+        if (hasMilestone('tempest', 2)) keep.push('grid');
         if (layers[resettingLayer].row > this.row) layerDataReset('saya', keep);
     },
     autoPrestige() {
@@ -6428,6 +6470,8 @@ addLayer("saya", {
         else {
             if (player[this.layer].demile.length != 0) { player[this.layer].milestones = player[this.layer].demile; player[this.layer].demile = [] };
             if (player[this.layer].decha.length != 0) { player[this.layer].challenges = player[this.layer].decha; player[this.layer].decha = [] };
+            for (id in player[this.layer].challenges)
+                if (player[this.layer].challenges[id]==null) player[this.layer].challenges[id] = 0;
         }
         return bol;
     },
@@ -6447,7 +6491,7 @@ addLayer("saya", {
                 "milestones",]
         },
         "Memories Adjustment": {
-            unlocked() { return player.saya.unlocked },
+            unlocked() { return player.saya.unlocked&&player.saya.CurrentPairChallenge==null },
             content: [
                 "main-display",
                 "blank",
@@ -6455,6 +6499,55 @@ addLayer("saya", {
                 "blank",
                 "resource-display",
                 "blank", "challenges"]
+        },
+        "Merge Attachment":{
+            unlocked() { return player['awaken'].awakened.includes('saya') },
+            buttonStyle() { return { 'background-color': '#0a4d25' } },
+            content:[
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                ["display-text",function () {
+                    let desc = ""
+                    if (player.saya.CurrentPairChallenge == null){
+                        desc = "Choose a Merge Attachment below."
+                        desc += "<br>The number 'ab' means you will endure Memory Adjustment Challenge a 4 times, and b the times you completed this Merge Attachment."
+                        desc += "<br>Right now, you have completed <h3>"+formatWhole(tmp.saya.grid.Sum_All_times)+"</h3> Merge Attachment in total."
+                        desc += "<br>Which..."
+                        desc += ("<br><br>Boosts Everflashing Knives' Effect by x"+format(tmp.saya.grid.ChallengeEffect.toKeff));
+                        desc += ("<br>Boosts GE & FO gain by x"+format(tmp.saya.grid.ChallengeEffect.toGEFO));
+                        desc += ("<br>Boosts All (Except <b>Searching For Essence</b>) Memory Adjustments' Effect by x"+format(tmp.saya.grid.ChallengeEffect.toKcha));
+                    }
+                    else{
+                        let rowNum = Math.floor(player.saya.CurrentPairChallenge/100)
+                        let colNum = player.saya.CurrentPairChallenge % 100;
+                        desc = "Now you are Enduring Merge Attachment <h2>" + rowNum + colNum + "</h2>x"+player.saya.grid[player.saya.CurrentPairChallenge]
+                        desc += "<br>Which means...<br>"
+                        for (index in tmp.saya.grid.ChallengeDepth)
+                            if (tmp.saya.grid.ChallengeDepth[index]>-1)
+                            switch(index){
+                                case '1':desc+=("<br>Light Tachyons effect ^" + format(layers['saya'].challenges[11].debuff())); break;
+                                case '2':desc+=("<br>Dark Matters effect ^" + format(layers['saya'].challenges[12].debuff())); break;
+                                case '3':desc+=("<br>Fragment generation ^^" + format(layers['saya'].challenges[21].debuff())); break;
+                                case '4':desc+=("<br>Memory gain ^^" + format(layers['saya'].challenges[22].debuff())); break;
+                                case '5':desc+=("<br>Red Dolls effect ^" + format(layers['saya'].challenges[31].debuff())); break;
+                                case '6':desc+=("<br>Remove all your Guilding Beacons, and you can have " + formatWhole(layers['saya'].challenges[32].debuff()) + " Guilding Beacons at most."); break;
+                                case '7':desc+=("<br>Force a row5 reset every " + format(layers['saya'].challenges[41].debuff()) + " seconds"); break;
+                                case '8':desc+=("<br>Dark Matter effect reduces Light Tachyons gain&direct gain by log" + format(layers['saya'].challenges[42].debuff()) + " and force open L&D's autobuyer."); break;
+                                default:desc+="<br>I don't know what's this."
+                            }
+                        desc +=("<br><br>...Also:<br>^"+format(tmp.saya.grid.ChallengeDebuff.frag)+" on Fragment generation<br>^"+format(tmp.saya.grid.ChallengeDebuff.mem)+" on Memory gain<br>Due to <h3>"+formatWhole(tmp.saya.grid.Sum_All_times)+"</h3> Merge Attachment you completed in total.");
+                        desc +=("<br>You need to reach "+format(tmp.saya.grid.ChallengeTarget.frag)+" Fragments or "+format(tmp.saya.grid.ChallengeTarget.mem)+" Memories to complete this Merge Attachment.")
+
+                    }
+                    return desc;
+                },{}],
+                "blank",
+                "grid",
+                ["clickable",11],
+            ]
         },
     },
 
@@ -6524,13 +6617,32 @@ addLayer("saya", {
                 return des
             },
             debuff() {//layers
-                return 0.5 - (challengeCompletions(this.layer, this.id) * 0.05);
+                let ChallengeDepth = tmp['saya'].grid.ChallengeDepth[1]>-1?Math.max(tmp[this.layer].grid.ChallengeDepth[1],0):challengeCompletions(this.layer, this.id)
+                return 0.5 - (ChallengeDepth * 0.05);
             },
             rewardEffect() {
-                return Decimal.pow(2, challengeCompletions(this.layer, this.id));
+                let eff = Decimal.pow(2, challengeCompletions(this.layer, this.id));
+                if (player['awaken'].current == this.layer || player['awaken'].awakened.includes(this.layer)) eff = Decimal.pow(4, challengeCompletions(this.layer, this.id)).times(tmp.saya.grid.ChallengeEffect.toKcha);
+                return eff
             },
             unlocked() { return player.saya.unlocked || hasMilestone('ins', 1) },
-            goal() { return new Decimal(1e195).times(Decimal.pow(1e5, challengeCompletions(this.layer, this.id))) },
+            goal() { 
+                if (player['awaken'].current == this.layer) return new Decimal("1e4150").times(Decimal.pow(1e50, challengeCompletions(this.layer, this.id)))
+                return new Decimal(1e195).times(Decimal.pow(1e5, challengeCompletions(this.layer, this.id))) 
+            },
+            onEnter(){
+                if (player['awaken'].current == this.layer){
+                    player.points = new Decimal(0);
+                    player.mem.points = new Decimal(0);
+                    player.light.points = new Decimal(0);
+                    player.dark.points = new Decimal(0);
+                    player.kou.points = new Decimal(0);
+                    player.lethe.points = new Decimal(0);
+                    player.rei.points = new Decimal(0);
+                    player.rei.roses = new Decimal(0);
+                    player.yugamu.points = new Decimal(0);
+                }
+            },
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
             rewardDescription() { return "Light Tachyons effect x" + format(challengeEffect(this.layer, this.id)) },
@@ -6544,13 +6656,32 @@ addLayer("saya", {
                 return des
             },
             debuff() {//layers
-                return 0.5 - (challengeCompletions(this.layer, this.id) * 0.05);
+                let ChallengeDepth = tmp['saya'].grid.ChallengeDepth[2]>-1?Math.max(tmp[this.layer].grid.ChallengeDepth[2],0):challengeCompletions(this.layer, this.id)
+                return 0.5 - (ChallengeDepth * 0.05);
             },
             rewardEffect() {
-                return Decimal.pow(3, challengeCompletions(this.layer, this.id));
+                let eff = Decimal.pow(3, challengeCompletions(this.layer, this.id));
+                if (player['awaken'].current == this.layer || player['awaken'].awakened.includes(this.layer)) eff = Decimal.pow(5, challengeCompletions(this.layer, this.id)).times(tmp.saya.grid.ChallengeEffect.toKcha);
+                return eff
             },
             unlocked() { return player[this.layer].best.gte(2) || hasMilestone('ins', 1) },
-            goal() { return new Decimal(1e195).times(Decimal.pow(1e5, challengeCompletions(this.layer, this.id))) },
+            goal() { 
+                if (player['awaken'].current == this.layer) return new Decimal("1e4050").times(Decimal.pow(1e50, challengeCompletions(this.layer, this.id)))
+                return new Decimal(1e195).times(Decimal.pow(1e5, challengeCompletions(this.layer, this.id))) 
+            },
+            onEnter(){
+                if (player['awaken'].current == this.layer){
+                    player.points = new Decimal(0);
+                    player.mem.points = new Decimal(0);
+                    player.light.points = new Decimal(0);
+                    player.dark.points = new Decimal(0);
+                    player.kou.points = new Decimal(0);
+                    player.lethe.points = new Decimal(0);
+                    player.rei.points = new Decimal(0);
+                    player.rei.roses = new Decimal(0);
+                    player.yugamu.points = new Decimal(0);
+                }
+            },
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
             rewardDescription() { return "Dark Matters effect x" + format(challengeEffect(this.layer, this.id)) },
@@ -6564,13 +6695,32 @@ addLayer("saya", {
                 return des
             },
             debuff() {//layers
-                return 0.9 - (challengeCompletions(this.layer, this.id) * 0.05);
+                let ChallengeDepth = tmp['saya'].grid.ChallengeDepth[3]>-1?Math.max(tmp[this.layer].grid.ChallengeDepth[3],0):challengeCompletions(this.layer, this.id)
+                return 0.9 - (ChallengeDepth * 0.05);
             },
             rewardEffect() {
-                return new Decimal(1).plus(0.01 * challengeCompletions(this.layer, this.id));
+                let eff = new Decimal(1).plus(0.01 * challengeCompletions(this.layer, this.id));
+                if (player['awaken'].current == this.layer || player['awaken'].awakened.includes(this.layer)) eff = new Decimal(1).plus(0.02 * challengeCompletions(this.layer, this.id));
+                return eff
             },
             unlocked() { return player[this.layer].best.gte(5) || hasMilestone('ins', 1) },
-            goal() { return new Decimal(1e220).times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id))) },
+            goal() { 
+                if (player['awaken'].current == this.layer) return new Decimal("1e3750").times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id)))
+                return new Decimal(1e220).times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id))) 
+            },
+            onEnter(){
+                if (player['awaken'].current == this.layer){
+                    player.points = new Decimal(0);
+                    player.mem.points = new Decimal(0);
+                    player.light.points = new Decimal(0);
+                    player.dark.points = new Decimal(0);
+                    player.kou.points = new Decimal(0);
+                    player.lethe.points = new Decimal(0);
+                    player.rei.points = new Decimal(0);
+                    player.rei.roses = new Decimal(0);
+                    player.yugamu.points = new Decimal(0);
+                }
+            },
             currencyDisplayName: "Fragments",
             currencyInternalName: "points",
             rewardDescription() { return "Fragment generation ^" + format(challengeEffect(this.layer, this.id)) },
@@ -6584,13 +6734,32 @@ addLayer("saya", {
                 return des
             },
             debuff() {//layers
-                return 0.9 - (challengeCompletions(this.layer, this.id) * 0.05);
+                let ChallengeDepth = tmp['saya'].grid.ChallengeDepth[4]>-1?Math.max(tmp[this.layer].grid.ChallengeDepth[4],0):challengeCompletions(this.layer, this.id)
+                return 0.9 - (ChallengeDepth * 0.05);
             },
             rewardEffect() {
-                return Decimal.pow(10, challengeCompletions(this.layer, this.id));
+                let eff = Decimal.pow(10, challengeCompletions(this.layer, this.id));
+                if (player['awaken'].current == this.layer || player['awaken'].awakened.includes(this.layer)) eff = Decimal.pow(15, challengeCompletions(this.layer, this.id)).times(tmp.saya.grid.ChallengeEffect.toKcha);
+                return eff
             },
             unlocked() { return player[this.layer].best.gte(10) || hasMilestone('ins', 1) },
-            goal() { return new Decimal(1e300).times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id))) },
+            goal() { 
+                if (player['awaken'].current == this.layer) return new Decimal("1e4600").times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id))) 
+                return new Decimal(1e300).times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id))) 
+            },
+            onEnter(){
+                if (player['awaken'].current == this.layer){
+                    player.points = new Decimal(0);
+                    player.mem.points = new Decimal(0);
+                    player.light.points = new Decimal(0);
+                    player.dark.points = new Decimal(0);
+                    player.kou.points = new Decimal(0);
+                    player.lethe.points = new Decimal(0);
+                    player.rei.points = new Decimal(0);
+                    player.rei.roses = new Decimal(0);
+                    player.yugamu.points = new Decimal(0);
+                }
+            },
             currencyDisplayName: "Memories",
             currencyInternalName: "points",
             currencyLayer: "mem",
@@ -6605,13 +6774,32 @@ addLayer("saya", {
                 return des
             },
             debuff() {//layers
-                return 0.5 - (challengeCompletions(this.layer, this.id) * 0.05);
+                let ChallengeDepth = tmp['saya'].grid.ChallengeDepth[5]>-1?Math.max(tmp[this.layer].grid.ChallengeDepth[5],0):challengeCompletions(this.layer, this.id)
+                return 0.5 - (ChallengeDepth * 0.05);
             },
             rewardEffect() {
-                return Decimal.pow(1.25, challengeCompletions(this.layer, this.id));
+                let eff = Decimal.pow(1.25, challengeCompletions(this.layer, this.id));
+                if (player['awaken'].current == this.layer || player['awaken'].awakened.includes(this.layer)) eff = Decimal.pow(1.4, challengeCompletions(this.layer, this.id)).times(tmp.saya.grid.ChallengeEffect.toKcha)
+                return eff;
             },
             unlocked() { return player[this.layer].best.gte(15) || hasMilestone('ins', 1) },
-            goal() { return new Decimal(350).plus(Decimal.times(50, challengeCompletions(this.layer, this.id) + (Math.max(challengeCompletions(this.layer, this.id) - 1) * 0.25))) },
+            goal() { 
+                if (player['awaken'].current == this.layer) return new Decimal(6900000).plus(Decimal.times(100000,challengeCompletions(this.layer, this.id)))
+                return new Decimal(350).plus(Decimal.times(50, challengeCompletions(this.layer, this.id) + (Math.max(challengeCompletions(this.layer, this.id) - 1) * 0.25))) 
+            },
+            onEnter(){
+                if (player['awaken'].current == this.layer){
+                    player.points = new Decimal(0);
+                    player.mem.points = new Decimal(0);
+                    player.light.points = new Decimal(0);
+                    player.dark.points = new Decimal(0);
+                    player.kou.points = new Decimal(0);
+                    player.lethe.points = new Decimal(0);
+                    player.rei.points = new Decimal(0);
+                    player.rei.roses = new Decimal(0);
+                    player.yugamu.points = new Decimal(0);
+                }
+            },
             currencyDisplayName: "Red Rolls",
             currencyInternalName: "points",
             currencyLayer: "kou",
@@ -6626,16 +6814,34 @@ addLayer("saya", {
                 return des
             },
             debuff() {//layers
-                return 22 - (challengeCompletions(this.layer, this.id) * 3);
+                let ChallengeDepth = tmp['saya'].grid.ChallengeDepth[6]>-1?Math.max(tmp[this.layer].grid.ChallengeDepth[6],0):challengeCompletions(this.layer, this.id)
+                return 22 - (ChallengeDepth * 3);
             },
             rewardEffect() {
-                return Decimal.pow(1.1, challengeCompletions(this.layer, this.id));
+                let eff = Decimal.pow(1.1, challengeCompletions(this.layer, this.id));
+                if (player['awaken'].current == this.layer || player['awaken'].awakened.includes(this.layer)) eff = Decimal.pow(1.25, challengeCompletions(this.layer, this.id)).times(tmp.saya.grid.ChallengeEffect.toKcha);
+                return eff
             },
             onEnter() {
+                if (player['awaken'].current == this.layer){
+                    //if (!confirm("Think carefully before you enter this challenge! Are you sure you are going to take this challenge?")){player[this.layer].activeChallenge=null;return;}
+                    player.points = new Decimal(0);
+                    player.mem.points = new Decimal(0);
+                    player.light.points = new Decimal(0);
+                    player.dark.points = new Decimal(0);
+                    player.kou.points = new Decimal(0);
+                    player.lethe.points = new Decimal(0);
+                    player.rei.points = new Decimal(0);
+                    player.rei.roses = new Decimal(0);
+                    player.yugamu.points = new Decimal(0);
+                };
                 player.lethe.upgrades = [];
             },
             unlocked() { return player[this.layer].best.gte(25) || hasMilestone('ins', 1) },
-            goal() { return new Decimal(1e240).times(Decimal.pow(1e5, challengeCompletions(this.layer, this.id))) },
+            goal() {
+                if (player['awaken'].current == this.layer) return new Decimal("1e4700").times(Decimal.pow(1e100, challengeCompletions(this.layer, this.id)))
+                return new Decimal(1e240).times(Decimal.pow(1e5, challengeCompletions(this.layer, this.id))) 
+            },
             currencyDisplayName: "Forgotten Drops",
             currencyInternalName: "points",
             currencyLayer: "lethe",
@@ -6650,17 +6856,37 @@ addLayer("saya", {
                 return des
             },
             debuff() {//layers
-                let debuff = 10 - (challengeCompletions(this.layer, this.id) * 2)
+                let ChallengeDepth = tmp['saya'].grid.ChallengeDepth[7]>-1?Math.max(tmp[this.layer].grid.ChallengeDepth[7],0):challengeCompletions(this.layer, this.id)
+                let debuff = 10 - (ChallengeDepth * 2)
                 return Math.max(debuff, 0.5);
             },
             rewardEffect() {
-                return Decimal.pow(2, challengeCompletions(this.layer, this.id));
+                let eff = Decimal.pow(2, challengeCompletions(this.layer, this.id));
+                if (player['awaken'].current == this.layer || player['awaken'].awakened.includes(this.layer)) eff = Decimal.pow(3, challengeCompletions(this.layer, this.id)).times(tmp.saya.grid.ChallengeEffect.toKcha);
+                return eff;
             },
             onExit() {
                 player.saya.bestroses41 = new Decimal(0);
             },
             unlocked() { return player[this.layer].best.gte(35) && hasUpgrade('storylayer', 31) || hasMilestone('ins', 1) },
-            goal() { return new Decimal(500).times(Decimal.pow(2.5, challengeCompletions(this.layer, this.id))) },
+            goal() { 
+                if (player['awaken'].current == this.layer) return new Decimal("1e470").times(Decimal.pow(100, challengeCompletions(this.layer, this.id))) 
+                return new Decimal(500).times(Decimal.pow(2.5, challengeCompletions(this.layer, this.id))) 
+            },
+            onEnter(){
+                if (player['awaken'].current == this.layer){
+                    if (!confirm("Think carefully before you enter this challenge! Are you sure you are going to take this challenge?")){player[this.layer].activeChallenge=null;return;}
+                    player.points = new Decimal(0);
+                    player.mem.points = new Decimal(0);
+                    player.light.points = new Decimal(0);
+                    player.dark.points = new Decimal(0);
+                    player.kou.points = new Decimal(0);
+                    player.lethe.points = new Decimal(0);
+                    player.rei.points = new Decimal(0);
+                    player.rei.roses = new Decimal(0);
+                    player.yugamu.points = new Decimal(0);
+                }
+            },
             canComplete() {
                 let goal = this.goal();
                 return player.saya.bestroses41.gte(goal) && !inChallenge('rei', 11);
@@ -6677,14 +6903,33 @@ addLayer("saya", {
                 return des
             },
             debuff() {//layers
-                return 10 - (challengeCompletions(this.layer, this.id) * 2);
+                let ChallengeDepth = tmp['saya'].grid.ChallengeDepth[8]>-1?Math.max(tmp[this.layer].grid.ChallengeDepth[8],0):challengeCompletions(this.layer, this.id)
+                return 10 - (ChallengeDepth * 2);
             },
             rewardEffect() {
                 let LaheadD = player.light.points.div(player.dark.points.max(1));
-                return Decimal.pow(challengeCompletions(this.layer, this.id) + 1, LaheadD).max(1);
+                let eff = Decimal.pow(challengeCompletions(this.layer, this.id) + 1, LaheadD).max(1);
+                if (player['awaken'].current == this.layer || player['awaken'].awakened.includes(this.layer)) eff = Decimal.pow(challengeCompletions(this.layer, this.id) + 1, LaheadD.times(1.5)).max(1).times(tmp.saya.grid.ChallengeEffect.toKcha);
+                return eff;
             },
             unlocked() { return player[this.layer].best.gte(40) && hasUpgrade('storylayer', 31) || hasMilestone('ins', 1) },
-            goal() { return new Decimal(15000000).plus(Decimal.times(1000000, challengeCompletions(this.layer, this.id))) },
+            goal() { 
+                if (player['awaken'].current == this.layer) return new Decimal(3e21).plus(Decimal.times(1e21, challengeCompletions(this.layer, this.id))) 
+                return new Decimal(15000000).plus(Decimal.times(1000000, challengeCompletions(this.layer, this.id))) 
+            },
+            onEnter(){
+                if (player['awaken'].current == this.layer){
+                    player.points = new Decimal(0);
+                    player.mem.points = new Decimal(0);
+                    player.light.points = new Decimal(0);
+                    player.dark.points = new Decimal(0);
+                    player.kou.points = new Decimal(0);
+                    player.lethe.points = new Decimal(0);
+                    player.rei.points = new Decimal(0);
+                    player.rei.roses = new Decimal(0);
+                    player.yugamu.points = new Decimal(0);
+                }
+            },
             currencyDisplayName: "Light Tachyons",
             currencyInternalName: "points",
             currencyLayer: "light",
@@ -6693,6 +6938,166 @@ addLayer("saya", {
 
     },
 
+    grid:{
+        rows:8,
+        cols:8,
+        getStartData(id) {
+            return 0//complete time
+        },
+        getUnlocked(id) {
+            let rowNum = Math.floor(id/100)//从1开始
+            let colNum = id % 100;
+
+            return true
+        },
+        Sum_All_times(){
+            let t = 0;
+            for (index in player[this.layer].grid)
+                t += player[this.layer].grid[index]
+            return t;
+        },
+        ChallengeDepth(){
+            if (player[this.layer].CurrentPairChallenge == null) return Array(8+1).fill(-1);
+            let ChallengePrime = Math.floor(player[this.layer].CurrentPairChallenge/100)//从1开始
+            let ChallengeSub = player[this.layer].CurrentPairChallenge % 100;
+            let DepthArray = Array(8+1).fill(-1);
+            DepthArray[ChallengePrime] = 4;
+            DepthArray[ChallengeSub] = player[this.layer].grid[player[this.layer].CurrentPairChallenge];
+            return DepthArray;
+        },
+        ChallengeTarget(){
+            let basetarget = {frag:new Decimal("1e5500"),mem:new Decimal("1e7000")};
+            if (player[this.layer].CurrentPairChallenge == null) return basetarget;
+            basetarget.frag = basetarget.frag.times(Decimal.pow(1e100,this.Sum_All_times()))
+            basetarget.mem = basetarget.mem.times(Decimal.pow(1e100,this.Sum_All_times()))
+            //TODO:下面添加某些不同挑战参与时的修正值
+            if (this.ChallengeDepth()[3]>-1) {basetarget.frag = basetarget.frag.div("1e2000").div(Decimal.pow(1e50,this.Sum_All_times()));basetarget.mem = basetarget.mem.div("1e500");}
+            if (this.ChallengeDepth()[4]>-1) {basetarget.mem = basetarget.mem.div("1e2500").div(Decimal.pow(1e50,this.Sum_All_times()));basetarget.frag = basetarget.frag.div("1e500");}
+
+            if (hasAchievement('a',135)) basetarget.frag = basetarget.frag.pow(achievementEffect('a',135));
+            if (player['tempest'].grid[301].activated) basetarget.mem = basetarget.mem.pow(gridEffect('tempest',301));
+            if (hasUpgrade('storylayer',53)){
+                basetarget.frag = basetarget.frag.div(upgradeEffect('storylayer',53).EffectToMA);
+                basetarget.mem = basetarget.mem.div(upgradeEffect('storylayer',53).EffectToMA);
+            }
+
+            return basetarget;
+        },
+        ChallengeDebuff(){
+            let basedebuff = {frag:new Decimal(1),mem:new Decimal(1)};
+            if (player[this.layer].CurrentPairChallenge == null) return basedebuff;
+            basedebuff.frag = basedebuff.frag.sub(0.5*Math.sqrt(this.Sum_All_times()/280))
+            basedebuff.mem = basedebuff.mem.sub(0.3*Math.sqrt(this.Sum_All_times()/280))
+
+            //修正值
+            if (hasMilestone('tempest',2)){
+                basedebuff.frag = basedebuff.frag.pow(0.95);
+                basedebuff.mem = basedebuff.mem.pow(0.95);
+            }
+            return basedebuff
+        },
+        ChallengeEffect(){
+            let baseeff = {toKeff:new Decimal(1),toGEFO:new Decimal(1),toKcha:new Decimal(1)};
+            if (!player['awaken'].awakened.includes(this.layer)) return baseeff;
+            baseeff.toKeff = Decimal.pow(this.Sum_All_times(),0.5).max(1);
+            baseeff.toGEFO = new Decimal(this.Sum_All_times()*1.2+1)
+            baseeff.toKcha = Decimal.pow(1.1,this.Sum_All_times());
+            return baseeff;
+        },
+        getCanClick(data, id) {
+            let rowNum = Math.floor(id/100)//从1开始
+            let colNum = id % 100;
+            if (rowNum == colNum) return false
+            return true
+        },
+        onClick(data, id) {
+            if (player[this.layer].FallbackPair) {
+                if (data>0)
+                    {
+                        if (!confirm('You are going to fallback this challenge\'s Completed times by 1, are you sure?')) return;
+                        player[this.layer].grid[id]--
+                    }
+
+            }
+            else {
+                if (player[this.layer].CurrentPairChallenge != id) {
+                    player[this.layer].activeChallenge = null;
+                    doReset(this.layer);//走个过场哈哈哈哈哈
+                    player[this.layer].CurrentPairChallenge = id;
+                    player.points = new Decimal(0);
+                    player.mem.points = new Decimal(0);
+                    player.light.points = new Decimal(0);
+                    player.dark.points = new Decimal(0);
+                    player.kou.points = new Decimal(0);
+                    player.lethe.points = new Decimal(0);
+                    player.rei.points = new Decimal(0);
+                    player.rei.roses = new Decimal(0);
+                    player.yugamu.points = new Decimal(0);
+                    if (this.ChallengeDepth()[6] >= 0) player.lethe.upgrades = [];
+                }
+                else {
+                    if (player.points.gte(this.ChallengeTarget().frag) || player.mem.points.gte(this.ChallengeTarget().mem))
+                        if (player[this.layer].grid[id] < 5)
+                            player[this.layer].grid[id]++;
+                    doReset(this.layer);
+                    player[this.layer].CurrentPairChallenge = null;
+                }
+            }
+        },
+        getDisplay(data, id){
+            let rowNum = Math.floor(id/100)//从1开始
+            let colNum = id % 100;
+            if (rowNum==colNum) return "\\"
+            let ChallengeDisplay = String(rowNum)+String(colNum);
+            return ("<h1>"+ChallengeDisplay+"</h1><br>"+data)
+        },
+        getStyle(data,id){
+            let rowNum = Math.floor(id/100)//从1开始
+            let colNum = id % 100;
+            const jss = {
+                margin: '1px',
+                borderRadius: 0,
+                color: layers[this.layer].color,
+                borderColor: layers[this.layer].color,
+                backgroundColor: `${layers[this.layer].color}40`,
+                borderWidth: '2px',
+                height: '75px',
+	            width: '75px',
+            };
+            let colorArray = RGBStringToArray(HexToRGBString(layers[this.layer].color));
+            let baseArray = RGBStringToArray(HexToRGBString("#555555"));
+            for (index in colorArray)
+                colorArray[index] = Math.round((colorArray[index]-baseArray[index])*(data/5)+baseArray[index])
+            let finalcolorHex = RGBToHexString(RGBArrayToString(colorArray));
+            jss.color = finalcolorHex;
+            jss.borderColor = finalcolorHex;
+            jss.backgroundColor = `${finalcolorHex}40`;
+
+            if (id == player[this.layer].CurrentPairChallenge) {
+                jss.color = 'red';
+                if (player.points.gte(this.ChallengeTarget().frag)||player.mem.points.gte(this.ChallengeTarget().mem))
+                    {jss.borderColor = '#FFFF00'
+                    jss.backgroundColor = '#FFFF0040'}
+            };
+            if (rowNum == colNum){
+                jss.color = 'red';
+                jss.borderColor = 'red';
+                jss.backgroundColor = '#FF000040';
+            }
+            return jss;
+        },
+    },
+
+    clickables:{
+        11: {
+            title: "Fallback Progress Mode",
+            display() {return player[this.layer].FallbackPair?"ON":"OFF"},
+            unlocked() { return player.saya.unlocked },
+            canClick() { return !player[this.layer].CurrentPairChallenge},
+            onClick() { 
+                player[this.layer].FallbackPair = !player[this.layer].FallbackPair
+            },
+        },},
 })
 
 addLayer("etoluna", {
@@ -6704,6 +7109,8 @@ addLayer("etoluna", {
             total: new Decimal(0),
             starPoint: new Decimal(0),
             moonPoint: new Decimal(0),
+            starbump: 0,
+            moonbump: 0,
             allotted: 0.5,
             unlockOrder: 0,
             demile: [],
@@ -6756,6 +7163,8 @@ addLayer("etoluna", {
         if (hasUpgrade('lethe',104)) eff =eff.times(upgradeEffect('lethe',104));
         if (hasUpgrade('lethe',105)) eff =eff.times(upgradeEffect('lethe',105));
         if (hasChallenge('kou', 91)) eff = eff.times(challengeEffect('kou',91));
+
+        if (player.awaken.awakened.includes(this.layer)||player['awaken'].current==this.layer) eff = eff.pow(tmp[this.layer].BumpEffect)
         return eff;
     },
     effectDescription() {
@@ -6863,6 +7272,28 @@ addLayer("etoluna", {
         return eff;
     },
 
+    //bump releated
+    BumpDecrease(){//tmp
+        let stardecrease = Math.max(player.etoluna.starbump/10,0.05);
+        let moondecrease = Math.max(player.etoluna.moonbump/10,0.05);
+        //TODO: 修正值
+        if (player['tempest'].grid[302].activated){
+            stardecrease = stardecrease*gridEffect('tempest',302)
+            moondecrease = moondecrease*gridEffect('tempest',302)
+        }
+        if (hasUpgrade('storylayer',53)){
+            stardecrease = stardecrease*(upgradeEffect('storylayer',53).EffectToSD)
+            moondecrease = moondecrease*(upgradeEffect('storylayer',53).EffectToSD)
+        }
+        return {star:stardecrease,moon:moondecrease}
+    },
+
+    BumpEffect(){
+        let powerplus = (0.2-Math.abs(player.etoluna.starbump-player.etoluna.moonbump))*(player.etoluna.starbump+player.etoluna.moonbump)/2
+        let eff = new Decimal(1).plus(powerplus);
+        return eff.max(1);
+    },
+
     update(diff) {
         if (player.etoluna.unlocked) {
             player.etoluna.moonPoint = player.etoluna.moonPoint.plus(tmp["etoluna"].gainmoonPoints.times(diff));
@@ -6870,6 +7301,13 @@ addLayer("etoluna", {
             if (player.etoluna.moonPoint.lt(0)) player.etoluna.moonPoint = new Decimal(0);
             if (player.etoluna.starPoint.lt(0)) player.etoluna.starPoint = new Decimal(0);
         }
+        if (player['awaken'].awakened.includes(this.layer)|| player['awaken'].current == this.layer){
+            player.etoluna.starbump -= tmp.etoluna.BumpDecrease.star*diff
+            player.etoluna.moonbump -= tmp.etoluna.BumpDecrease.moon*diff
+            player.etoluna.starbump = Math.max(player.etoluna.starbump,0)
+            player.etoluna.moonbump = Math.max(player.etoluna.moonbump,0)
+        }
+        if (!(player['awaken'].awakened.includes(this.layer)|| player['awaken'].current == this.layer)&&player.subtabs.etoluna == 'Stellar Dome') player.subtabs.etoluna == 'Milestones'
     },
 
     tabFormat: {
@@ -6927,7 +7365,28 @@ addLayer("etoluna", {
                 ["row", [["upgrade", "11"], ["upgrade", "13"], ["blank", ["50px", "50px"]], ["upgrade", "14"], ["upgrade", "12"]]],
                 ["row", [["upgrade", "21"], ["upgrade", "23"], ["blank", ["50px", "50px"]], ["upgrade", "24"], ["upgrade", "22"]]],
             ]
-        }
+        },
+        "Stellar Dome":{
+            unlocked() { return player['awaken'].awakened.includes('etoluna')|| player['awaken'].current == 'etoluna'},
+            buttonStyle() { return { 'background-color': '#43354d' } },
+            content:[
+                "main-display",
+                "blank",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                ["display-text", function () { return "Two different power synergize each other, and boosts ^"+format(tmp['etoluna'].BumpEffect)+" to Star & Moon Points gain." }, {}],
+                ["bar", "etoPump"],
+                "blank",
+                ["row",[
+                    ["clickable", 41],
+                    "blank",
+                    ["clickable", 42],
+                ]],
+                "blank",
+                ["bar", "lunaPump"],
+        ]
+    },
     },
 
     milestones: {
@@ -7006,6 +7465,26 @@ addLayer("etoluna", {
             },
             fillStyle() { return { 'background-color': "#d7a9f4" } },
         },
+        etoPump: {
+            direction: RIGHT,
+            width: 500,
+            height: 25,
+            progress() { return player.etoluna.starbump },
+            barcolor() {
+                return "#bddfff"
+            },
+            fillStyle() { return { 'background-color': "#bddfff" } },
+        },
+        lunaPump: {
+            direction: LEFT,
+            width: 500,
+            height: 25,
+            progress() { return player.etoluna.moonbump },
+            barcolor() {
+                return "#d7a9f4"
+            },
+            fillStyle() { return { 'background-color': "#d7a9f4" } },
+        },
     },
 
     clickables: {
@@ -7045,6 +7524,26 @@ addLayer("etoluna", {
             canClick() { return player.etoluna.allotted != .5 },
             onClick() { player.etoluna.allotted = .5 },
             style: { "height": "50px", "width": "50px", "min-height": "50px", "background-color": "yellow" },
+        },
+        41:{
+            title: "Enhance star power",
+            unlocked(){return player['awaken'].awakened.includes(this.layer)|| player['awaken'].current == this.layer},
+            canClick() { return player.etoluna.starbump<1 && player.etoluna.moonbump<1 },
+            onClick() {
+                player.etoluna.starbump = Math.min(player.etoluna.starbump+0.05,1)
+                player.etoluna.moonbump = Math.min(player.etoluna.moonbump+0.01,1)
+            },
+            style:{"background-color": "#bddfff"},
+        },
+        42:{
+            title: "Enhance moon power",
+            unlocked(){return player['awaken'].awakened.includes(this.layer)|| player['awaken'].current == this.layer},//for now
+            canClick() { return player.etoluna.moonbump<1 && player.etoluna.starbump<1},
+            onClick() {
+                player.etoluna.moonbump = Math.min(player.etoluna.moonbump+0.05,1)
+                player.etoluna.starbump = Math.min(player.etoluna.starbump+0.01,1)
+            },
+            style:{"background-color": "#d7a9f4"},
         },
     },
 
@@ -7196,7 +7695,7 @@ addLayer("awaken", {
     type: "static",
     exponent: 1,
     base() {//pow(10,当前点数*数值+2000) = 想要的目标
-        if (player['awaken'].total.gte(7)) return new Decimal("1e2000");
+        if (player['awaken'].total.gte(8)) return new Decimal("1e2000");
         else switch (player['awaken'].total.toNumber()) {
             case (0): return new Decimal("1e300");
             case (1): return new Decimal("1e200");
@@ -7204,7 +7703,8 @@ addLayer("awaken", {
             case (3): return new Decimal("1e600");
             case (4): return new Decimal("1e1125");
             case (5): return new Decimal("1e1080");
-            case (6): return Decimal.pow(10,6200/6);
+            case (6): return Decimal.pow(10,6100/6);
+            case (7): return Decimal.pow(10,6950/7);
         }
     },
     hotkeys: [
@@ -7259,13 +7759,15 @@ addLayer("awaken", {
         if (player.awaken.awakened.includes("lethe")) desc += "<br><br><h3 style='color: #fee85d;'>Forgotten layer</h3><br><br>Effect: ^2 --> ^3.25<br>The 3rd milestone's effect changed.<br>Show Guiding Beacons' effect.<br><b>Guiding Scythes</b> base effect before <b>Uprising Tower</b> challenge: 2 --> 2.5<br><b>Guiding Scythes</b> base effect after <b>Uprising Tower</b> challenge: 4 --> 5<br><b>White Beacon</b> formula: x0.5 --> x1<br><b>Delightful-Red Synergy</b> formula: x0.5 --> x2<br><b>Joyful-White Synergy</b> formula: x0.5 --> x2<br><b>Red Beacon</b> formula: ^0.5 --> ^0.75<br><b>Delightful-Yellow Synergy</b> formula: x0.5 --> x2<br><b>Delightful Memories</b> formula: x0.5 --> x2<br><b>Monument of Light</b> formula: ÷1.5 --> ÷1<br><b>Joyful Memories</b> formula: x0.01 --> x1<br><b>Joyful-Black Synergy</b> formula: x0.5 --> x2<br><b>Forgotten-White Synergy</b> formula: x0.5 --> x2<br><b>Forgotten Memories</b> now times the number of Memories after taking logarithm twice.<br><b>Dark Memories</b> formula: x0.05 --> x1<br><b>Dark-Red Synergy</b> formula: x0.5 --> x2<br><b>Yellow Beacon</b> formula: ^0.5 --> ^0.75<br><b>Forgotten-Black Synergy</b> formula: x0.5 --> x2<br><b>Black Beacon</b> formula: x0.25 --> x1<br>Unlock Hyper Scythes.";
         if (player.awaken.awakened.includes("rei")) desc += "<br><br><h3 style='color: #ffe6f6;'>Luminous layer</h3><br><br>Gain Exponent: 1.5 --> 1.4<br>Glowing Roses have more effects.<br>Unlock Genesis Layer."
         if (player.awaken.awakened.includes("yugamu")) desc += "<br><br><h3 style='color: #716f5e;'>Flourish layer</h3><br><br>Gain Exponent: 1.5 --> 1.4<br>Unlock Direction Synergy.<br>Unlock Forbearance Layer."
+        if (player.awaken.awakened.includes("etoluna")) desc += "<br><br><h3 style='color: #bddfff;'>Gemini</h3><h3 style='color: #d7a9f4;'> layer</h3><br><br>Unlock Stellar Dome."
+        if (player.awaken.awakened.includes("saya")) desc += "<br><br><h3 style='color: #16a951;'>Knife layer</h3><br><br>Effect x1.25<br>All Memory Adjustment Challenges' Effects are better.<br>Unlock Merge Attachment."
         return desc;
     },
 
     clickables: {
         rows: 1,
         cols: 1,
-        cap: 6,//我也不知道要设多少
+        cap: 8,//我也不知道要设多少
         11: {
             title: "Power Awake",
             display() {
@@ -7273,7 +7775,7 @@ addLayer("awaken", {
                 else return player.awaken.selectionActive ? "You are in a Power Awake. Click the node of the layer you wish to attempt to Awake. Click to exit this status." : ("Begin a Power Awake.<br><br>" + ((tmp.awaken.amtAwakened >= layers["awaken"].clickables.cap) ? "MAXED (Currently)" : ("Req: " + formatWhole(tmp[this.layer].clickables[this.id].req) + " Awaken Core.")));
             },
             unlocked() { return player.awaken.unlocked },
-            req() { return [1, 2, 3, 4, 5,6,(1e300)][tmp.awaken.amtAwakened || 0] },
+            req() { return [1, 2, 3, 4, 5, 6, 7, 8,(1e300)][tmp.awaken.amtAwakened || 0] },
             canClick() { return player.awaken.unlocked && (player.awaken.selectionActive ? true : (layers["awaken"].amtAwakened() < layers["awaken"].clickables.cap && player.awaken.points.gte(tmp[this.layer].clickables[this.id].req))) },
             onClick() {
                 if (player.awaken.current !== null) {
@@ -7326,6 +7828,13 @@ addLayer("awaken", {
             else return ['rei'];
         }
 
+        //第四批
+        if (player.awaken.awakened.length == 6) return ["etoluna", "saya"];
+        if (player.awaken.awakened.length == 7) {
+            if (player.awaken.awakened.includes('etoluna')) return ['saya'];
+            else return ['etoluna'];
+        }
+
         return [];
     },
     startAwake(layer) {
@@ -7351,6 +7860,16 @@ addLayer("awaken", {
                 player.light.auto = false;
                 player.dark.auto = false;
                 showTab('mem');
+                break;
+            }
+            case 'etoluna':
+            case 'saya':{
+                player.lethe.upgrades = [11,12,13,14,15,21,22,23,24,25,31,32,33,34,35,41,42,43,44,45,51,52,53,54,55]
+                let CeleEndsid = [61,62,71,72,81,82,91,92]
+                for (id of CeleEndsid)
+                player.kou.challenges[id] = 0;
+                player.etoluna.moonPoint = new Decimal(0);
+                player.etoluna.starPoint = new Decimal(0);
                 break;
             }
             default: { player.subtabs[layer].mainTabs = "Milestones"; showTab(layer); break; }
@@ -7379,10 +7898,12 @@ addLayer("awaken", {
     awakenGoal: {
         light: new Decimal("28100"),
         dark: new Decimal("18300"),
-        kou: new Decimal("284"),
+        kou: new Decimal("280"),
         lethe: new Decimal("1e800"),
         rei : new Decimal("11250"),
         yugamu:new Decimal("18150"),
+        saya:new Decimal("630"),
+        etoluna: new Decimal("2e123")
     },
 })
 
@@ -7517,7 +8038,7 @@ addLayer("a", {
             name: "An Essence of the Broken World",
             done() { return player.mem.points.gte(100) },
             tooltip: "Gain 100 Memories.<br>Rewards:Fragments generation is a little faster.",
-            image: "img/acv/11.png",
+            image: "img/acv/mem crystal.jpg",
         },
         12: {
             name: "A Stack",
@@ -7535,6 +8056,7 @@ addLayer("a", {
             name: "Define Aspects",
             done() { return player.light.unlocked && player.dark.unlocked },
             tooltip: "Unlock Both Light And Dark Layers.<br>Rewards:They behave as they are unlocked first.",
+            image:"img/acv/define aspects.jpg"
         },
         15: {
             name: "Does Anybody Say sth About Softcap?",
@@ -7550,6 +8072,7 @@ addLayer("a", {
             name: "Define Aspects™",
             done() { return hasMilestone('light', 0) && hasMilestone('dark', 0) },
             tooltip: "Reach L&D's 1st milestone.<br>Rewards:Conclusion no longer decreases Memories gain.Optimistic Thoughts&Force Operation will always give back their cost.",
+            image:"img/acv/define aspects™.jpg"
         },
         23: {
             name: "Now You Are Useless",
@@ -7597,6 +8120,7 @@ addLayer("a", {
             name: "Scepter of The Soul Guide",
             done() { return player.lethe.upgrades.length >= 1 },
             tooltip: "Buy your first Guiding Beacon.<br>Rewards: Always gain 20% of Memories gain every second.",
+            image:"img/acv/Scepter of The Soul Guide.jpg"
         },
         42: {
             name: "Toyhouse",
@@ -7609,12 +8133,14 @@ addLayer("a", {
                 eff = eff.plus((player.a.achievements.length - 17) / 10);
                 if (eff.gt(1)) eff = new Decimal(1);
                 return eff;
-            }
+            },
+            image:"img/acv/toyhouse.jpg"
         },
         43: {
             name: "Force Balance",
             done() { return (player.light.points.gte(900) && player.dark.points.gte(900) && player.light.points.sub(player.dark.points).abs().lte(5)) },
             tooltip: "Have more than 900 Light Tachyons&Dark Matters and difference between the two is not more than 5.<br>Rewards:When one of L or D is fall behind by another, its gain will be boosted.",
+            image:"img/acv/Force balance.jpg"
         },
         44: {
             name: "I Can Idle (For) Now",
@@ -7630,6 +8156,7 @@ addLayer("a", {
             name: "e(An Essence) of the Broken World",
             done() { return player.mem.points.gte(1e100) },
             tooltip: "Gain 1e100 Memories.<br>Rewards:Starts at 100 Memories when reset.",
+            image: "img/acv/e(mem).png",
         },
         52: {
             name: "Stacks e(Stacks)",
@@ -7641,6 +8168,7 @@ addLayer("a", {
             name: "Beacons Beside Lethe",
             done() { return player.lethe.upgrades.length >= 25 },
             tooltip: "Have 25 Guiding Beacons.",
+            image: "img/acv/beacons beside lethe.jpg",
         },
         54: {
             name: "Why Did I Watch This?",
@@ -7680,6 +8208,7 @@ addLayer("a", {
             done() { return player.rei.roses.gte(100) },
             tooltip: "Gain 100 Glowing Roses.<br>Rewards:Glowing Roses now boosts The Speed of World Steps gain.",
             effect() {
+                if (player['rei'].roses.lte(0)) return new Decimal(1);
                 let eff = player.rei.roses.plus(1).log10().plus(1);
                 if (hasAchievement('a', 85)) eff = player.rei.roses.plus(1).log(7.5).plus(1);
                 if (hasAchievement('a', 93)) eff = eff.times(tmp.etoluna.starPointeffect);
@@ -7690,6 +8219,7 @@ addLayer("a", {
                 if (hasUpgrade('lethe', 85)) eff = eff.times(upgradeEffect('lethe', 85));
                 return eff;
             },
+            image:"img/acv/The true Presbyter of the world.jpg"
         },
         71: {
             name: "Dire Straits",
@@ -7750,6 +8280,7 @@ addLayer("a", {
             name: "Higher And Higher",
             done() { return player.world.points.gte(1000) },
             tooltip: "Gain 1000 World Steps.<br>Rewards:You can choose among all four directions in Maze.",
+            image: "img/acv/Higher And Higher.jpg",
         },
         92: {
             name: "Building Group",
@@ -7790,7 +8321,7 @@ addLayer("a", {
         },
         102: {
             name: "\"I told you it's useless\"",
-            done() { return inChallenge('saya', 41) && inChallenge('rei', 11) },
+            done() { return (inChallenge('saya', 41) || (player.saya.CurrentPairChallenge!=null && tmp.saya.grid.ChallengeDepth[7]!=-1)) && inChallenge('rei', 11) },
             tooltip: "Enter Zero Sky while in Otherside of Godess Challenge.<br>Rewards:Everflashing Knives also effect Glowing roses Gain.",
         },
         103: {
@@ -7800,9 +8331,9 @@ addLayer("a", {
         },
         104: {
             name: "\"Did I just see an NaN?\"",
-            done() { return (challengeCompletions('saya', 42) >= 5) && inChallenge('saya', 42) && player.tab == 'light' },
+            done() { return (challengeCompletions('saya', 42) >= 5) && (inChallenge('saya', 42)||(player.saya.CurrentPairChallenge!=null && tmp.saya.grid.ChallengeDepth[8]>=5)) && player.tab == 'light' },
             tooltip: "See an NaN which won't break the game.",
-            image: "img/acv/104.png",
+            image: "img/acv/NaN.png",
         },
         105: {
             name: "Liner ≥ Softcaps",
@@ -7841,6 +8372,7 @@ addLayer("a", {
             name: "Define Aspects®",
             done() { return player.awaken.awakened.includes('light')&&player.awaken.awakened.includes('dark') },
             tooltip: "Awake both Light and Dark layers.",
+            image:"img/acv/define aspects®.jpg"
         },
         122: {
             name: "Sea of Happiness",
@@ -7856,6 +8388,7 @@ addLayer("a", {
             name: "Clusters of Stars",
             done() { return player.etoluna.points.gte(1e100) },
             tooltip: "Have more than 1e100 Gemini Bounds.",
+            image:"img/acv/clusters of stars.jpg"
         },
         125: {
             name: "Strategist",
@@ -7866,6 +8399,7 @@ addLayer("a", {
             name: "Define Aspects Co. Ltd",
             done() { return player['awaken'].awakened.includes('rei')&&player['awaken'].awakened.includes('yugamu') },
             tooltip: "Awake both Luminous & Flourish layers.",
+            image:"img/acv/define aspects coltd.jpg"
         },
         132: {
             name: "Worldwide Communication",
@@ -7877,41 +8411,87 @@ addLayer("a", {
             done() { return player.fracture.ElementEssence.gte(500) },
             tooltip: "Have more than 500 Element Essences.<br>Rewards: Element Essence itself now slightly boosts its cap.",
         },
+        134: {
+            name: "Hold it!",
+            done() { return (player.etoluna.starbump>0.9 && player.etoluna.moonbump<0.1)||(player.etoluna.moonbump>0.9 && player.etoluna.starbump<0.1) },
+            tooltip: "Push Star/Moon Power while ignoring another.",
+        },
+        135: {
+            name: "\"Oh, No. Another Pair Challenge.\"",
+            done() { return (tmp.saya.grid.Sum_All_times>=5) },
+            tooltip: "Complete Merge Attachment 5 times.<br>Rewards: Fragment goal of Merge Attachment decreases by Merge Attachment you completed.",
+            effect(){
+                let eff = new Decimal(tmp.saya.grid.Sum_All_times/280)*0.2
+                return new Decimal(1).sub(eff);
+            },
+            image: "img/acv/PC.jpg",
+        },
+        141: {
+            name: "Super Expander",
+            done() { return (layers['fracture'].grid.return_Equiped_Equipment_Num(11)==9) },
+            tooltip: "Equip 9 Element Capacity++ in Equipment slot.",
+        },
+        142: {
+            name: "e(An Essence^2) of the Broken World",
+            done() { return player.mem.points.gte("1e10000") },
+            tooltip: "Gain 1e10000 Memories.",
+            image: "img/acv/e(mem^2).png",
+        },
         16: {
             name: "The Flash of Creation",
             unlocked() { return hasAchievement('a', 115) },
             done() { return player['awaken'].awakened.includes('light') },
             tooltip: "Awake Light layer.",
+            image: "img/acv/the flash of creation.jpg",
         },
         26: {
             name: "Hide Capacities",
             unlocked() { return hasAchievement('a', 115) },
             done() { return player['awaken'].awakened.includes('dark') },
             tooltip: "Awake Dark layer.",
+            image: "img/acv/hide capacities.jpg",
         },
         36: {
             name: "Gorgeous Petard",
             unlocked() { return hasAchievement('a', 115) },
             done() { return player['awaken'].awakened.includes('kou') },
             tooltip: "Awake Red layer.",
+            image: "img/acv/Gorgeous Petard.jpg",
         },
         46: {
             name: "Spiritfarer",
             unlocked() { return hasAchievement('a', 115) },
             done() { return player['awaken'].awakened.includes('lethe') },
             tooltip: "Awake Forgotten layer.",
+            image: "img/acv/Spiritfarer.jpg",
         },
         56: {
             name: "Uitima",
             unlocked() { return hasAchievement('a', 115) },
             done() { return player['awaken'].awakened.includes('rei') },
             tooltip: "Awake Luminous layer.",
+            image: "img/acv/Ultima.jpg",
         },
         66: {
             name: "Nightmare Before the Storm",
             unlocked() { return hasAchievement('a', 115) },
             done() { return player['awaken'].awakened.includes('yugamu') },
             tooltip: "Awake Flourish layer.",
+            image: "img/acv/Nightmare before storm.jpg",
+        },
+        76: {
+            name: "Meteor Shower",
+            unlocked() { return hasAchievement('a', 115) },
+            done() { return player['awaken'].awakened.includes('etoluna') },
+            tooltip: "Awake Gemini layer.",
+            image: "img/acv/Meteor Shower.png",
+        },
+        86: {
+            name: "Merge Conflict of Mind",
+            unlocked() { return hasAchievement('a', 115) },
+            done() { return player['awaken'].awakened.includes('saya') },
+            tooltip: "Awake Knife layer.",
+            image: "img/acv/Merge Conflict of Mind.jpg",
         },
     },
     tabFormat: [

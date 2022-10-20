@@ -13,11 +13,16 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.6.0",
-	name: "Define Aspects Co. Ltd",
+	num: "0.0.7.0",
+	name: "e(An Essence^2) of the Broken World",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.7.0</h3><br>
+	- Add Awake layer stage 4.<br>
+	- Bug fixes & typo fixes.<br>
+	- Added lots of Achievement images(Thanks to NovelAI)<br>
+	- Minor basic component optimization and balance adjustment.<br><br>
 	<h3>v0.0.6.0</h3><br>
 		- Add Awake layer stage 3.<br>
 		- Add two new layers.<br>
@@ -105,7 +110,10 @@ function getPointGen() {
 	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Can())
 	if (hasMilestone('ins',5)) gain = gain.times(layers.ins.insEffect().Bra())
 	if (hasAchievement('a',113)) gain = gain.times(buyableEffect('lab',12).eff2());
-	if (player.fracture.unlocked) gain = gain.times(Decimal.pow(750,layers['fracture'].grid.return_Equiped_Equipment_Num(2)+layers['fracture'].grid.return_Equiped_Equipment_Num(5)))
+	if (player.fracture.unlocked) {
+		gain = gain.times(Decimal.pow(750,layers['fracture'].grid.return_Equiped_Equipment_Num(2)+layers['fracture'].grid.return_Equiped_Equipment_Num(5)));
+		gain = gain.times(Decimal.pow(2500,layers['fracture'].grid.return_Equiped_Equipment_Num(13)));
+	};
 	
 	//POW
 	if (hasUpgrade('dark', 12))gain = gain.times(tmp.dark.effect.pow(0.5));
@@ -117,6 +125,7 @@ function getPointGen() {
 	if (inChallenge('rei',11)) gain = gain.pow(0.5);
 	if (player.world.restrictChallenge&&!hasUpgrade('storylayer',14)) gain = gain.pow(0.9);
 	if (challengeCompletions('saya',21)) gain=gain.pow(challengeEffect('saya',21));
+	if (player.saya.CurrentPairChallenge != null) gain = gain.pow(tmp.saya.grid.ChallengeDebuff.frag);
 
 	if (player.tempest.activeChallenge!=null) gain = gain.pow(tmp.tempest.nerf_in_challenges.toFrag())
 
@@ -124,7 +133,7 @@ function getPointGen() {
 	if(player.tempest.grid[101].activated) gain = gain.times(gridEffect('tempest',101));
 
 	//tetrate
-	if (inChallenge('saya',21)) gain = gain.tetrate(layers.saya.challenges[21].debuff())
+	if (inChallenge('saya',21) || layers['saya'].grid.ChallengeDepth()[3]>-1) gain = gain.tetrate(layers.saya.challenges[21].debuff())
 
 
 	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
@@ -142,7 +151,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.awaken.points.gte(7)
+	return player.mem.points.gte("1e10000")
 }
 
 

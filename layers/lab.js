@@ -38,7 +38,10 @@ addLayer("lab", {
         if (hasUpgrade('lab',64)) mult = mult.times(upgradeEffect('lab',64));
         if (hasUpgrade('world',11)) mult = mult.times(upgradeEffect('world',11));
         if (hasMilestone('ins',0)) mult = mult.times(layers.ins.insEffect().Eng());
-        if (player.fracture.unlocked) mult = mult.times(Decimal.pow(200,layers['fracture'].grid.return_Equiped_Equipment_Num(6))).times(Decimal.pow(250,layers['fracture'].grid.return_Equiped_Equipment_Num(8)));
+        if (player.fracture.unlocked) 
+        {
+            mult = mult.times(Decimal.pow(200,layers['fracture'].grid.return_Equiped_Equipment_Num(6))).times(Decimal.pow(250,layers['fracture'].grid.return_Equiped_Equipment_Num(8))).times(Decimal.pow(500,layers['fracture'].grid.return_Equiped_Equipment_Num(14)));
+        };
         mult = mult.pow(tmp["lab"].powerexp)
         return mult;
     },

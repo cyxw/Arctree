@@ -21,6 +21,9 @@ function toggleOpt(name) {
 	if (name == "oldStyle" && styleCooldown > 0)
 		return;
 
+	/*if (name == 'offlineProd' && player.saya.CurrentPairChallenge!=null)
+		return;*/
+
 	options[name] = !options[name];
 	if (name == "hqTree")
 		changeTreeQuality();

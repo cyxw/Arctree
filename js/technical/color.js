@@ -265,7 +265,7 @@ function HexMaxLight(Hexinput,maxLight){
     else return Hexinput;
 }
 
-function GlowingColor(input, timefactor = 1){
+function GlowingColor(input, timefactor = 1, basecolor = "#000000"){
 	//目标：通过正弦函数实现颜色的浮动, 输出16进制, 输入既可以是16进制，也可以是rgb
 	let RGBArray = [0,0,0];
 	if (typeof(input)==='object') RGBArray = input;
@@ -274,10 +274,18 @@ function GlowingColor(input, timefactor = 1){
 		RGBArray = RGBStringToArray(input);
 	};
 
+	let basecolorArray = [0,0,0]
 	let outputArray = [0,0,0];
+
+	if (typeof(basecolor)==='object') basecolorArray = input;
+	if (typeof(basecolor)==='string') {
+		if (basecolor != HexToRGBString(basecolor)) basecolor = HexToRGBString(basecolor);
+		basecolorArray = RGBStringToArray(basecolor);
+	};
+
 	for (index in RGBArray)
 	{
-		outputArray[index] = Math.min(Math.round(RGBArray[index]/2+RGBArray[index]/2*Math.sin(player.timePlayed/timefactor*2*Math.PI)),255);
+		outputArray[index] = Math.min(Math.round((basecolorArray[index]+RGBArray[index])/2+(RGBArray[index]-basecolorArray[index])/2*Math.sin(player.timePlayed/timefactor*2*Math.PI)),255);
 	}
 
 	return RGBToHexString(RGBArrayToString(outputArray))
