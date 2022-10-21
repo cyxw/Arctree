@@ -7901,7 +7901,7 @@ addLayer("awaken", {
         kou: new Decimal("276"),
         lethe: new Decimal("1e800"),
         rei : new Decimal("11125"),
-        yugamu:new Decimal("18150"),
+        yugamu:new Decimal("17550"),
         saya:new Decimal("630"),
         etoluna: new Decimal("2e123")
     },
