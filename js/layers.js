@@ -7898,7 +7898,7 @@ addLayer("awaken", {
     awakenGoal: {
         light: new Decimal("28100"),
         dark: new Decimal("18300"),
-        kou: new Decimal("275"),
+        kou: new Decimal("276"),
         lethe: new Decimal("1e800"),
         rei : new Decimal("11250"),
         yugamu:new Decimal("18150"),
