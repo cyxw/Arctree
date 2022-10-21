@@ -1803,7 +1803,7 @@ addLayer("kou", {
             unlocked() { return hasMilestone('kou', 7) },
             goal() {
                 let gol = new Decimal(1e23);
-                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e565');
+                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e545');
                 return gol;
             },
             onExit() {
@@ -1834,7 +1834,7 @@ addLayer("kou", {
             unlocked() { return hasChallenge('kou', 11) },
             goal() {
                 let gol = new Decimal(1e63);
-                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1075');
+                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('5e1067');
                 return gol;
             },
             onEnter() {
@@ -1870,7 +1870,7 @@ addLayer("kou", {
             unlocked() { return hasChallenge('kou', 12) },
             goal() {
                 let gol = new Decimal(5e54);
-                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1175');
+                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1140');
                 return gol;
             },
             onEnter(){
@@ -1903,7 +1903,7 @@ addLayer("kou", {
             unlocked() { return hasChallenge('kou', 21) },
             goal() {
                 let gol = new Decimal(5e53);
-                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1125');
+                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1095');
                 return gol;
             },
             onExit() {
@@ -1936,7 +1936,7 @@ addLayer("kou", {
             unlocked() { return hasChallenge('kou', 22) },
             canComplete() {
                 let gol = new Decimal(2200);
-                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal(1.4e11);
+                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal(5e10);
                 return player.light.points.plus(player.dark.points).gte(gol)
             },
             onEnter() {
@@ -1951,7 +1951,7 @@ addLayer("kou", {
                 player.lethe.buyables[11] = new Decimal(0);
             },
             fullDisplay() {
-                let show = "When L or D is fallen behind by others, its own gain will be massively boosted, but another's gain x0.1.<br>Goal: Have a total of " + ((player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) ? '1.4e11' : '2200') + " Light Tachyons&Dark Matters.<Br>Reward: When L or D is fall behind by others, its own gain will be boosted."
+                let show = "When L or D is fallen behind by others, its own gain will be massively boosted, but another's gain x0.1.<br>Goal: Have a total of " + ((player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) ? '5.0e10' : '2200') + " Light Tachyons&Dark Matters.<Br>Reward: When L or D is fall behind by others, its own gain will be boosted."
                 if (maxedChallenge('kou', this.id) && (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou'))) show += "<br>Currently: Boost Light Tachyons gain by " + format(player.dark.points.sub(player.light.points).times(2).max(1)) + "x<br>Boost Dark Matters gain by " + format(player.light.points.sub(player.dark.points).times(2).max(1)) + "x";
                 return show;
             },
@@ -1966,7 +1966,7 @@ addLayer("kou", {
             //goal() { return new Decimal(2e53) },
             goal() {
                 let gol = new Decimal(2e53);
-                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1111');
+                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1080');
                 return gol;
             },
             onExit() {
@@ -1997,7 +1997,7 @@ addLayer("kou", {
             unlocked() { return hasChallenge('kou', 32) },
             goal() {
                 let gol = new Decimal(2e48);
-                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1135');
+                if (player['awaken'].current == 'kou' || player['awaken'].awakened.includes('kou')) gol = new Decimal('1e1100');
                 return gol;
             },
             onEnter() {
@@ -7898,7 +7898,7 @@ addLayer("awaken", {
     awakenGoal: {
         light: new Decimal("28100"),
         dark: new Decimal("18300"),
-        kou: new Decimal("280"),
+        kou: new Decimal("275"),
         lethe: new Decimal("1e800"),
         rei : new Decimal("11250"),
         yugamu:new Decimal("18150"),
