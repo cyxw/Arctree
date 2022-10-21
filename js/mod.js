@@ -86,9 +86,10 @@ function getPointGen() {
 
 		
 	let gain = new Decimal(1)
+	if(inChallenge('kou',62)) return challengeEffect('kou',62);
 
 	//ADD
-	if (hasAchievement("a", 11)) gain=gain.add(0.5);
+	if (hasAchievement("a", 11)) gain=gain.add(1);
 
 
 	//MULT
@@ -116,8 +117,12 @@ function getPointGen() {
 	};
 	
 	//POW
-	if (hasUpgrade('dark', 12))gain = gain.times(tmp.dark.effect.pow(0.5));
-	if (hasUpgrade('mem', 33)&& !hasMilestone('kou',2)) gain = gain.pow(hasUpgrade('light', 23)?0.75:0.5);
+	if (hasUpgrade('dark', 12))gain = gain.times(upgradeEffect('dark',12));
+	if (hasUpgrade('mem', 33)&& !hasMilestone('kou',2)) {
+		if(player['awaken'].current=='light'||player['awaken'].awakened.includes(this.layer)) gain=gain.times(upgradeEffect('mem',33))
+		else gain = gain.pow(hasUpgrade('light', 23)?0.75:0.5);
+	}//很抱歉上下两行并不是POW
+	if (hasUpgrade('mem', 33)&&hasMilestone('kou',2)&&(player['awaken'].current=='light'||player['awaken'].awakened.includes(this.layer))) gain=gain.times(upgradeEffect('mem',33))
 	if (hasChallenge("kou",21)) gain = gain.pow(1.025);
 	if (inChallenge("kou",11)) gain = gain.pow(0.75);
 	if (inChallenge("kou",21)) gain = gain.pow(1.05);
@@ -136,7 +141,8 @@ function getPointGen() {
 	if (inChallenge('saya',21) || layers['saya'].grid.ChallengeDepth()[3]>-1) gain = gain.tetrate(layers.saya.challenges[21].debuff())
 
 
-	if (hasUpgrade('dark', 11)&&player.points.lt(upgradeEffect('dark',11))) gain = gain.times(2);
+	if (hasUpgrade('dark', 11)&&player.points.lt(new Decimal(upgradeEffect('dark',11)))&&!(player['awaken'].current=='dark'||player['awaken'].awakened.includes('dark'))) gain = gain.times(2);
+	if (hasUpgrade('dark', 11)&&player.points.gt(new Decimal(upgradeEffect('dark',11)))&&(player['awaken'].current=='dark'||player['awaken'].awakened.includes('dark'))) gain = gain.times(3);
 	if (isNaN(gain.toNumber())) return new Decimal(1);
         return gain
 }
