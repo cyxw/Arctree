@@ -134,7 +134,7 @@ Awaking Forgotten layer first may be very annoying since the autobuyer of Light 
 
 After entering F awaking, do some F reset and then get _Memorize_ (F33), then set _Forgotten Memories_ (F42) as your priority. F42, F22 and F44 are the first bunch of beacons you could buy, then three color beacons at the corner. From now on the remaining processes of F awaking should be very easy. If you can't reset F layer at when you want, you could just wait for a while so that L layer won't reset that often. After you bought all 15 beacons not related to Red Dolls, you will be able to get e800 Drops and awake Forgotten layer.
 
-Awaking Forgotten layer will unlock 25 new _Hyper Beacons_, which related to K, G, LC and FL layers. Since your next goal is to get more memories, _Hyper Beacons_ related to K is what you want right now. After bought 3 to 5 _Hyper Beacons_, you should be able to get 4th Core and that's quite easy for you.
+Awaking Forgotten layer will unlock 25 new _Hyper Beacons_, which related to K, G, LC and FL layers. Since your next goal is to get more memories, _Hyper Beacons_ related to K is what you want right now. After bought 3 to 5 _Hyper Beacons_, you should be able to get 4th Core and that's quite easy for you to awake Red layer.
 ### 12.3 Before 5th Core
 After awaking both R&F layers, remember to complete all Challenges again since they were reset. With the help of awaken Red layer, you could buy the outermost sixteen _Hyper Beacons_ easily. You will hit a building limit on 16, just as what you had met when you first play Forgotten layer. At this time Rc17 (_Hyper Forgotten_) will be unlocked to break this limit. It's like a lottery. You could complete it with the help of Isreal & China or just click again and again until it chooses _Memorize_ (F33) in normal Beacons.
 
@@ -160,14 +160,69 @@ With the help of _Genesis Overload_ and Isreal/China, you could gain 6th Core an
 ### 13.2 Awake Flourish layer first
 Just don't open China/Isreal while USA/Egypt is open and you will pass the easiest awaking process of the game. Do FL reset twice and you should success. However, you will endure a much harder challenge after awaking FL layer.
 
-Awaking FL will display the next new layer of dark route: Forbearance layer (FO), but you still need 1e100 Times Moved in Maze to unlock it. This won't be hard if you idle without China/Isreal for a while.
+Awaking FL will display the next new layer of dark route: Forbearance layer (FO), but you still need 3e100 Times Moved in Maze to unlock it. This won't be hard if you idle without China/Isreal for a while.
 
 Forbearance layer has a new challenge in it: _Overwhelming Growth_. This challenge has a completion limit, which equals to the number of Forbearance Endurances. 
 
-Eyes of the Storm is another currency of FO layer. It can be gained by completing milestone and completing _Overwhelming Growth_ challenge.
-### 12.3 Before 7th Core-Institution Upgrades
+Eyes of the Storm is another currency of FO layer. It can be gained by completing milestone and completing _Overwhelming Growth_ challenge. By using Eyes of the Storm, you could activate Storm effects. FO11 will help you to finish _Overwhelming Growth_ challenge, FO12 could help you to get more FO while FO13 helps you push main progress.
+
+When you gain the 4th Eyes of the Storm, you could switch FO11 to FO22, which will help you push Memories. The ideal situation to gain next Core is that you have 3FO and FO11, FO12, FO13, FO22 on. Of course you may gain it even if you have only 2FO by idle. With the help of FL layer, there's no barrier you will meet when awaking LC.
+### 13.3 Before 7th Core-Institution Upgrades
 After your completion of both awaking LC&FL layers, it seems that you can't reach 7th Core even with _Genesis Overload_ and Isreal/China. So this stage you should switch your task to the next story upgrade: _Instruction Construction_ (S52), which will unlock Institution Upgrades.
 
 Institution Upgrades is an upgrade tree. You cannot buy them all at a time, so you need to respec them frequently in different situations. When Respecing Upgrades, Site levels exceeding its max won't be respeced to its max, so upgrades like _Euratom_ (I33) can be bought only once to gain its effect.
 
 The first Institution Upgrades _Nature Paper_ (I11) will boost Lab layer massively, and that should be enough. You could gain the 7th Core around 8GE & 2FO, 9GE & 3FO if played well. That's the end of this stage.
+
+> *__Stage 14: Awake layer Stage 4-G&K Awake:__*
+
+Which one would you like? Two pumps which may destroy your mouse or another Pair Challenge just like _NG+3_?
+### 14.1 Awake Gemini layer first
+Before entering Gemini layer awaking, open all sites except France/Russia permanently, China/Isreal temporarily.
+
+After entering Gemini awake, **DO NOT TOUCH FL**, they will be reset since you don't have K layer, and try to gaining them will reset _Celebration Ends_ challenges and _Hyper Beacons_. Do all _Celebration Ends_ challenges you can do and buy all _Hyper Beacons_ you could buy. After doing these, open China and Isreal, then go to Gemini layer and enter _Stellar Dome_. You need to enhance both power hard, keep them full, so that you may gain a ^1.20 boost to Star & Moon Points gain which is massive. If you do these step quickly it shouldn't be very hard for you to reach the goal.
+
+Awaking Gemini layers may bring the fewest new things in AW mechanic: It only brings you _Stellar Dome_, whose mechanic likes bicycle pumps. If you want to get the boost of _Stellar Dome_, you need to click quickly to let Star/Moon Power bar full. However, the ^1.20 boost to Star & Moon Points gain is so powerful that it will boost everything. By _Stellar Dome_ and _Compute Matrix+_ equipment, you will finish Institution row2 Upgrades.
+
+After farming Institution Funds, open France up so that you could reach the 3rd milestone of GE layer. 3x3 Equipment slot brings much more complex equipment strategy. Here's what you should do one by one:
+
+1. _Super Expander_ achievement (a141) and shopping/upgrading new equipments: 9 _Element Capacity++_
+2. Institution Funds Farming: 2 _Compute Matrix++_ and 3 _Enjoyment Puzzle++_
+3. Memory pushing: 1 _Genesis Overload_, 1 _NE Syngrey Booster_ and 3 _Enjoyment Puzzle++_
+
+After farming Institution Funds, you could buy _The Silk Road_ (I41) and _Energy Modernization_ (I46) Institution Upgrades by respec I Upgrades. If so, buy I46 first to farm more Funds, then respec and buy I41 to do memory pushing, that should push you to the 8th Core and you can awake K layer. Although _Stellar Dome_ can help you awake K layer much easier, it's still not that easy: You need to do some Kc3.
+### 14.2 Awake Knife layer first
+Because of the same reason of awaking Red layer, awaking Knife layer first is **NOT** recommended. The process of awaking Knife layer has low fault tolerance. If you choose to awake Knife layer first, remember the key to success is to finish Kc3x1.
+
+Before entering Knife layer awaking, open all sites except France/Russia permanently. During the awaking process, you need to switch China/Isreal frequently.
+
+When entering Knife layer awaking, take a glance at your Fragments first. If you can't reach e4100, you have zero possibility to success.
+
+**DO NOT TOUCH LC** since it will reset almost everything you got. **DO NOT TOUCH RC13 (_Crazy Lab_) EITHER** since it will reset your research point which is one of few things you could bring into awaking process.
+
+To awake Knife layer successfully, you need to do these steps quickly and without any mistakes:
+
+1. Do Rc10~Rc13 immediately.
+2. Set Institution sites back with China/Isreal on at last. They have been reset by Rc12 (_Happy Reality_). Do not waste too much time here.
+3. Buy all _Hyper Beacons_ you chould buy and push _Hyper Scythes_ to 45. You should be able to buy the first column and _Hurtful Steps_ (F72)/_Confusing Steps_ (F92).
+4. Do Kc1x1 --> Kc1x2 --> Kc2x1 --> Kc2x2 --> Kc4x1 --> **Kc3x1**
+5. Do Kc1x3 --> Kc1x4 --> Kc1x5 --> Kc2x3 --> Kc2x4
+
+By now you should have already got 620 Everflashing Knives. If not, do the extra step below and check if you could reach 620 Knives:
+
+6. Push _Hyper Scythes_, then switch China/Isreal off to do Kc5x1 --> Kc5x2 --> Kc8x1 --> Kc8x2 --> Kc6x1
+
+Finally you awake Knife layer, and this will unlock a new mechanic for Knife layer: _Merge Attachment_ challenges. This mechanic draws lessons from Pair Challenge mechanic of _NG+3_. You will endure two different _Memory Adjustment_ challenges at the same time. What's worse is that there's a global debuff on Fragments and Memories while you completing _Merge Attachment_ more times.
+
+At this stage, author could reach 8 _Merge Attachment_ completion by this order, with proper sites and _Genesis Overload_:
+* 13-1 --> 23-1 --> 24-1 --> 53-1 --> 73-1 --> 83-1 --> 73-2 --> 83-2
+
+With 8 _Merge Attachment_ completion, the buff it provide is enough for you to get the 8th Core and you could awake Gemini layer, which is a piece of cake now.
+
+### 14.3 Before 1e10,000 Memories
+After G&K layers awaken, you can do more _Merge Attachment_ with the help of more Equipments, more Storm effects and _Stellar Dome_. FO31 would decrease the Memory goal of _Merge Attachment_ massively, making the 4th column of _Merge Attachment_ possible. Besides, MA78 & MA87 become achievable too. Author could reach 19 _Merge Attachment_ completion by this order, of course you need memory pushing equipment setup and use sites/_Stellar Dome_:
+* (Order given in paragraph 14.2) --> 14-1 --> 14-2 --> 24-2 --> 54-1 --> 87-1 --> 78-1 --> 87-2 --> 74-1 --> 84-1 --> 74-2 --> 84-2
+
+If you changed order or farmed more Funds that you bought more Institution Upgrades, you may complete more.
+
+That's not a big problem if you could only complete _Merge Attachment_ around 15 times, that's enough. By using Institution Funds farming equipment setup, I46 upgrade and _Stellar Dome_ you could reach the next Strory Upgrade (_Objective Optimization Algorithm_, S53) and could afford I41 with more Institution upgrades. Finally, combining I41, 5FO, China/Isreal, memory pushing equipment setup and _Stellar Dome_ together, you will reach 1e10000 Memories finally. That's the end of this stage and current endgame.
