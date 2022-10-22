@@ -417,6 +417,8 @@ addLayer("ins", {
                 if (layers.ins.insEffect().Isr().Neg().lt(1)) exponent = exponent.plus(1);
                 if (layers.ins.insEffect().Chn().Neg().lt(1)) exponent = exponent.plus(1);
                 if (layers.ins.insEffect().Chn().fixedNeg().lt(1)) exponent = exponent.plus(1);
+                if (layers.ins.insEffect().Chn().Pos41().gt(1)) exponent = exponent.plus(1);
+                if (layers.ins.insEffect().Sau().Pos42().gt(1)) exponent = exponent.plus(1);
                 let eff = Decimal.pow(2, exponent).times(player.ins.inslevel.Che);
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
@@ -637,6 +639,25 @@ addLayer("ins", {
                 if (player.ins.inslevel.Usa.gt(0) && player.ins.inslevel.Aus.gte(0)) exponent = exponent.plus(1.5);
                 if (player.ins.inslevel.Usa.gt(0) && player.ins.inslevel.Nzl.gte(0)) exponent = exponent.plus(1.5);
                 //USA系结束
+                //Iu41
+                if (hasUpgrade('ins',41)){
+                    if (player.ins.inslevel.Chn.gt(0)){
+                        if (player.ins.inslevel.Fra.gte(0)) exponent = exponent.plus(1.5);
+                        if (player.ins.inslevel.Deu.gte(0)) exponent = exponent.plus(1.5);
+                        if (player.ins.inslevel.Che.gte(0)) exponent = exponent.plus(1.5);
+                        if (player.ins.inslevel.Nor.gte(0)) exponent = exponent.plus(1.5);
+                        if (player.ins.inslevel.Rus.gte(0)) exponent = exponent.plus(1.5);
+                    }
+                }
+                //Iu42
+                if (hasUpgrade('ins',42))
+                    if (player.ins.inslevel.Sau.gte(0)&&player.ins.inslevel.Nga.gte(0)) exponent = exponent.plus(1.5);
+                //Iu44
+                if (hasUpgrade('ins',44))
+                    {
+                        if (player.ins.inslevel.Pol.gt(0) && player.ins.inslevel.Fra.gte(0)) exponent = exponent.plus(1.5);
+                        if (player.ins.inslevel.Pol.gt(0) && player.ins.inslevel.Che.gte(0)) exponent = exponent.plus(1.5);
+                    }
                 let eff = Decimal.pow(1.25, exponent).times(player.ins.inslevel.Ind);
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
@@ -989,7 +1010,7 @@ addLayer("ins", {
             title: "OPEC",
             fullDisplay(){
                 let disp = "<b>OPEC</b>"
-                disp += "<br>Sau & Ngl sites formulas become better, and they boost each other"
+                disp += "<br>Sau & Nga sites formulas become better, and they boost each other"
                 disp += "<br>Cost: 35,000 Institution Funds"
                 return disp;
             },
