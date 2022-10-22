@@ -6705,7 +6705,7 @@ addLayer("saya", {
             },
             unlocked() { return player[this.layer].best.gte(5) || hasMilestone('ins', 1) },
             goal() { 
-                if (player['awaken'].current == this.layer) return new Decimal("1e3750").times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id)))
+                if (player['awaken'].current == this.layer) return new Decimal("1e3650").times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id)))
                 return new Decimal(1e220).times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id))) 
             },
             onEnter(){
@@ -6744,7 +6744,7 @@ addLayer("saya", {
             },
             unlocked() { return player[this.layer].best.gte(10) || hasMilestone('ins', 1) },
             goal() { 
-                if (player['awaken'].current == this.layer) return new Decimal("1e4600").times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id))) 
+                if (player['awaken'].current == this.layer) return new Decimal("1e4470").times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id))) 
                 return new Decimal(1e300).times(Decimal.pow(1e10, challengeCompletions(this.layer, this.id))) 
             },
             onEnter(){
@@ -6839,7 +6839,7 @@ addLayer("saya", {
             },
             unlocked() { return player[this.layer].best.gte(25) || hasMilestone('ins', 1) },
             goal() {
-                if (player['awaken'].current == this.layer) return new Decimal("1e4700").times(Decimal.pow(1e100, challengeCompletions(this.layer, this.id)))
+                if (player['awaken'].current == this.layer) return new Decimal("1e4600").times(Decimal.pow(1e100, challengeCompletions(this.layer, this.id)))
                 return new Decimal(1e240).times(Decimal.pow(1e5, challengeCompletions(this.layer, this.id))) 
             },
             currencyDisplayName: "Forgotten Drops",
@@ -7902,7 +7902,7 @@ addLayer("awaken", {
         lethe: new Decimal("1e800"),
         rei : new Decimal("11125"),
         yugamu:new Decimal("17550"),
-        saya:new Decimal("630"),
+        saya:new Decimal("620"),
         etoluna: new Decimal("2e123")
     },
 })

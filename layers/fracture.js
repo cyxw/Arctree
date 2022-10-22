@@ -833,6 +833,7 @@ addLayer("fracture", {
         },
         return_Equiped_Equipment_Num(Equipid){
             if ((Equipid<0 || Equipid == undefined)&&Equipid!='all'||player['fracture'].deactivated) return 0;
+            if (player['awaken'].selectionActive && player['awaken'].current != null && player['awaken'].current != this.layer && !player['awaken'].awakened.includes(this.layer)) return 0;
             let TempEquipArray = [];
             for (Gid in player[this.layer].grid)
                 if (player[this.layer].grid[Gid].BelongTo >= 0 && player[this.layer].grid[Gid].Central)
