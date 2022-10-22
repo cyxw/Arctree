@@ -418,7 +418,7 @@ addLayer("ins", {
                 if (layers.ins.insEffect().Chn().Neg().lt(1)) exponent = exponent.plus(1);
                 if (layers.ins.insEffect().Chn().fixedNeg().lt(1)) exponent = exponent.plus(1);
                 if (layers.ins.insEffect().Chn().Pos41().gt(1)) exponent = exponent.plus(1);
-                if (layers.ins.insEffect().Sau().Pos42().gt(1)) exponent = exponent.plus(1);
+                if (layers.ins.insEffect().Sau().Pos42()>1) exponent = exponent.plus(1);
                 let eff = Decimal.pow(2, exponent).times(player.ins.inslevel.Che);
                 if (inChallenge('kou', 71)) eff = eff.log10().max(1);
                 //pos
