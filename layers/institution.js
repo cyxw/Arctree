@@ -1194,7 +1194,7 @@ addLayer("ins", {
                 player.ins.inslevel.Nzl = new Decimal(0);
                 //---------
                 //player.ins.best = player.ins.total;
-                player.ins.points = player.ins.total.sub(player.ins.upgTotalCost).sub(player[this.layer].upgTotalCost);
+                player.ins.points = player.ins.total.sub(player[this.layer].upgTotalCost);
             },
             style: { "height": "50px", "width": "100px", "min-height": "50px", },
         },
