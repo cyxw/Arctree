@@ -991,7 +991,6 @@ addLayer("ins", {
             fullDisplay(){
                 let disp = "<b>The Silk Road</b>"
                 disp += "<br>Chn no longer nerf Kaz, and slightly boosts Europe sites<br>(Except Eng & Pol)"
-                if (hasUpgrade(this.layer,this.id)) disp += "<br>Currently: " + format(upgradeEffect(this.layer,this.id)) +"x"
                 disp += "<br>Cost: 37,500 Institution Funds"
                 return disp;
             },
