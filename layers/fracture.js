@@ -552,7 +552,7 @@ addLayer("fracture", {
                 return "Institution resets nothing."
             },
             onComplete(){
-                player[this.layer].BuyProgress+=1;
+                player[this.layer].BuyProgress=1;
             },
         },
         2: {
@@ -563,7 +563,7 @@ addLayer("fracture", {
                 return "Equipment slot expands to 3x3 & Shop's refresh CD set to 30s."
             },
             onComplete(){
-                player[this.layer].BuyProgress+=1;
+                player[this.layer].BuyProgress=2;
                 player[this.layer].gridrow=3;
                 player[this.layer].gridcol=3;
             },
