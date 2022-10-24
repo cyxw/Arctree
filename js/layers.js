@@ -6858,6 +6858,7 @@ addLayer("saya", {
             debuff() {//layers
                 let ChallengeDepth = tmp['saya'].grid.ChallengeDepth[7]>-1?Math.max(tmp[this.layer].grid.ChallengeDepth[7],0):challengeCompletions(this.layer, this.id)
                 let debuff = 10 - (ChallengeDepth * 2)
+                if ((player.saya.CurrentPairChallenge == null&&challengeCompletions('saya',this.id)>=5)||tmp['saya'].grid.ChallengeDepth[7]>=5) debuff = 60
                 return Math.max(debuff, 0.5);
             },
             rewardEffect() {
