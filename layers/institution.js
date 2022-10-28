@@ -857,7 +857,7 @@ addLayer("ins", {
         if (hasAchievement('lab', 33)) gm = gm.div(achievementEffect('lab', 33));
         if (hasMilestone('ins', 7)) gm = gm.div(layers.ins.insEffect().Aus())
         if (hasUpgrade('ins',34)) gm = gm.div(upgradeEffect('ins',34));
-        if (player['tempest'].grid[302].activated) gm = gm.div(gridEffect('tempest',303))
+        if (player['tempest'].grid[303].activated) gm = gm.div(gridEffect('tempest',303))
         if (hasUpgrade('ins',46)) gm = gm.div(upgradeEffect('ins',46));
         return gm;
     },
