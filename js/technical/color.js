@@ -285,7 +285,7 @@ function GlowingColor(input, timefactor = 1, basecolor = "#000000"){
 
 	for (index in RGBArray)
 	{
-		outputArray[index] = Math.min(Math.round((basecolorArray[index]+RGBArray[index])/2+(RGBArray[index]-basecolorArray[index])/2*Math.sin(player.timePlayed/timefactor*2*Math.PI)),255);
+		outputArray[index] = Math.min(Math.round((basecolorArray[index]+RGBArray[index])/2+(RGBArray[index]-basecolorArray[index])/2*Math.sin((Date.now()/1000)/timefactor*2*Math.PI)),255);
 	}
 
 	return RGBToHexString(RGBArrayToString(outputArray))
