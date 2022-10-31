@@ -7121,7 +7121,7 @@ addLayer("etoluna", {
 
     name: "Gemini",
     symbol: "G",
-    color: "#d7a9f4",
+    color() {return GlowingColor("#d7a9f4",10,"#bddfff")},
     resource: "Gemini Bounds",
     row: 4,
     displayRow: 1,
@@ -7369,7 +7369,7 @@ addLayer("etoluna", {
         },
         "Stellar Dome":{
             unlocked() { return player['awaken'].awakened.includes('etoluna')|| player['awaken'].current == 'etoluna'},
-            buttonStyle() { return { 'background-color': '#43354d' } },
+            buttonStyle() { return { 'background-color': `${GlowingColor("#d7a9f4",10,"#bddfff")}40` } },
             content:[
                 "main-display",
                 "blank",
@@ -7577,6 +7577,7 @@ addLayer("etoluna", {
             pay() {
                 player[this.layer].moonPoint = player[this.layer].moonPoint.sub(25000);
             },
+            style: { "background-color"() { if (!hasUpgrade("etoluna", 12)) return canAffordUpgrade("etoluna", 12) ? "#d7a9f4" : "rgb(191,143,143)"; else return "rgb(119,191,95)" } },
         },
         13: {
             title: "Sticky Steps",
@@ -7606,6 +7607,7 @@ addLayer("etoluna", {
             pay() {
                 player[this.layer].moonPoint = player[this.layer].moonPoint.sub(50000);
             },
+            style: { "background-color"() { if (!hasUpgrade("etoluna", 14)) return canAffordUpgrade("etoluna", 14) ? "#d7a9f4" : "rgb(191,143,143)"; else return "rgb(119,191,95)" } },
         },
         21: {
             title: "Desire for Victory",
@@ -7635,6 +7637,7 @@ addLayer("etoluna", {
             pay() {
                 player[this.layer].moonPoint = player[this.layer].moonPoint.sub(900000);
             },
+            style: { "background-color"() { if (!hasUpgrade("etoluna", 22)) return canAffordUpgrade("etoluna", 22) ? "#d7a9f4" : "rgb(191,143,143)"; else return "rgb(119,191,95)" } },
         },
         23: {
             title: "Memory of rhythm",
@@ -7660,6 +7663,7 @@ addLayer("etoluna", {
             pay() {
                 player[this.layer].moonPoint = player[this.layer].moonPoint.sub(1200000);
             },
+            style: { "background-color"() { if (!hasUpgrade("etoluna", 24)) return canAffordUpgrade("etoluna", 24) ? "#d7a9f4" : "rgb(191,143,143)"; else return "rgb(119,191,95)" } },
         },
     },
 
@@ -8607,6 +8611,13 @@ addLayer("sc", {
     row: "side",
     layerShown() { return hasUpgrade('lab', 194) },
     tooltip: "Softcaps",
+
+    nodeStyle(){
+        return {
+            animation: 'aniforsc 2.5s infinite alternate',
+            '-webkit-animation':'aniforsc 2.5s infinite alterbate'
+        }
+    },
 
 
     tabFormat:
